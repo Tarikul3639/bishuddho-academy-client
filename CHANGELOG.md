@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.2.0...v0.3.0) (2026-05-17)
+
+
+### Features
+
+* **ui:** restructure public layout and add new contact & courses pages ([80fd393](https://github.com/Tarikul3639/bishuddho-academy-client/commit/80fd393606522100db9ab95e8e5b16bce1632bd9))
+
 # [0.2.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.1.0...v0.2.0) (2026-05-17)
 
 
