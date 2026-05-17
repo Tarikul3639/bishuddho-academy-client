@@ -28,10 +28,10 @@ export default function Logo({ className = "", size = "lg" }: LogoProps) {
             Bishudd
             <span className="text-primary ml-0.5">HO</span>
           </span>
-          <div className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 uppercase tracking-[0.2em]">
+          <div className="flex items-center gap-1 text-[10px] font-medium text-primary uppercase tracking-[0.2em]">
             Academy
 
-            <div className="h-px w-4 bg-emerald-600" />
+            <div className="h-px w-4 bg-primary" />
           </div>
         </div>
       )}

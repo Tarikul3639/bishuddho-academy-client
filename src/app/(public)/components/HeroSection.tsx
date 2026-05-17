@@ -22,7 +22,7 @@ const stagger: Variants = {
 
 export default function HeroSection() {
     return (
-        <section className="relative px-4 pb-20 pt-20 sm:pt-36">
+        <section className="relative px-4 py-20 sm:pt-36">
 
             {/* ── Decorative Blobs — no solid bg, just soft light ───────── */}
 
