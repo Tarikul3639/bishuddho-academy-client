@@ -1,88 +1,117 @@
 ```bash
 client/
 ├── app/
-│   │
-│   ├── (public)/                           # Auth লাগবে না এই routes এ
+│   ├── (public)/
 │   │   ├── layout.tsx                      # Public layout (Navbar, Footer)
 │   │   ├── page.tsx                        # Landing page
+│   │   ├── components/
+│   │   │   ├── HeroSection.tsx
+│   │   │   ├── StatsBar.tsx
+│   │   │   ├── CourseTypesSection.tsx
+│   │   │   ├── FeaturesSection.tsx
+│   │   │   ├── SampleCoursesSection.tsx
+│   │   │   ├── TrustedBySection.tsx
+│   │   │   └── CTABanner.tsx
 │   │   ├── courses/
-│   │   │   ├── page.tsx                    # সব courses browse করা
+│   │   │   ├── page.tsx                    # All courses browse
 │   │   │   └── [slug]/
 │   │   │       └── page.tsx                # Course details + buy button
 │   │   ├── login/
-│   │   │   └── page.tsx                    # Login form
+│   │   │   └── page.tsx
 │   │   └── register/
-│   │       └── page.tsx                    # Student registration form
+│   │       └── page.tsx
 │   │
-│   ├── (student)/                          # শুধু logged-in students
+│   ├── (student)/
 │   │   ├── layout.tsx                      # Student layout + auth check
 │   │   ├── dashboard/
-│   │   │   └── page.tsx                    # Welcome, stats, continue learning
+│   │   │   └── page.tsx
 │   │   ├── my-courses/
-│   │   │   ├── page.tsx                    # Enrolled courses list
+│   │   │   ├── page.tsx
 │   │   │   └── [courseId]/
-│   │   │       └── page.tsx                # Course content (video/pdf viewer)
+│   │   │       └── page.tsx                # Video/PDF viewer
 │   │   └── profile/
-│   │       └── page.tsx                    # Profile view + edit
+│   │       └── page.tsx
 │   │
-│   ├── (admin)/                            # শুধু admin
+│   ├── (admin)/
 │   │   ├── layout.tsx                      # Admin layout + role check
 │   │   ├── dashboard/
-│   │   │   └── page.tsx                    # Stats overview (users, revenue, courses)
+│   │   │   └── page.tsx
 │   │   ├── courses/
-│   │   │   ├── page.tsx                    # All courses table
+│   │   │   ├── page.tsx
 │   │   │   ├── create/
-│   │   │   │   └── page.tsx                # New course form (type: recorded | physical)
+│   │   │   │   └── page.tsx
 │   │   │   └── [id]/
 │   │   │       └── edit/
-│   │   │           └── page.tsx            # Edit existing course
+│   │   │           └── page.tsx
 │   │   ├── users/
-│   │   │   └── page.tsx                    # Student list, search, details
+│   │   │   └── page.tsx
 │   │   └── payments/
-│   │       └── page.tsx                    # Payment list, verify manual payments
+│   │       └── page.tsx
 │   │
-│   └── api/                                # Next.js route handlers
+│   └── api/
 │       └── payment/
-│           ├── success/
-│           │   └── route.ts                # SSLCommerz success callback
-│           ├── fail/
-│           │   └── route.ts                # SSLCommerz fail callback
-│           └── cancel/
-│               └── route.ts                # SSLCommerz cancel callback
+│           ├── success/route.ts
+│           ├── fail/route.ts
+│           └── cancel/route.ts
 │
 ├── components/
 │   ├── ui/                                 # shadcn/ui components
-│   ├── shared/
-│   │   ├── Navbar.tsx                      # Public navbar (logo, courses, login)
-│   │   ├── Footer.tsx                      # Footer
-│   │   └── StudentNav.tsx                  # Student dashboard sidebar/topbar
+│   │
+│   ├── navbar/
+│   │   ├── public/                         # Public navbar (landing, courses, login)
+│   │   │   ├── index.tsx                   # Main Navbar — assembles everything
+│   │   │   ├── NavLinks.tsx                # Desktop pill nav links
+│   │   │   ├── AuthSection.tsx             # Login buttons or UserDropdown
+│   │   │   ├── AuthSkeleton.tsx            # Loading skeleton
+│   │   │   ├── MobileMenu.tsx              # Mobile drawer
+│   │   │   └── UserDropdown.tsx            # Avatar dropdown (student/admin aware)
+│   │   │
+│   │   ├── student/                        # Student sidebar
+│   │   │   ├── index.tsx                   # StudentNav — assembles everything
+│   │   │   └── NavLinks.tsx                # Sidebar nav items
+│   │   │
+│   │   └── admin/                          # Admin sidebar
+│   │       ├── index.tsx                   # AdminNav — assembles everything
+│   │       └── NavLinks.tsx                # Sidebar nav items
+│   │
+│   ├── shared/                             # Genuinely shared across all layouts
+│   │   ├── Logo.tsx
+│   │   └── Footer.tsx
+│   │
 │   ├── courses/
-│   │   ├── CourseCard.tsx                  # Single course card (thumbnail, price, type)
-│   │   ├── CourseGrid.tsx                  # Course cards grid layout
-│   │   └── CourseTypeBadge.tsx             # "Recorded" / "Physical" badge
+│   │   ├── CourseCard.tsx
+│   │   ├── CourseGrid.tsx
+│   │   └── CourseTypeBadge.tsx
+│   │
 │   ├── payment/
-│   │   └── PaymentModal.tsx                # Payment method select + initiate
+│   │   └── PaymentModal.tsx
+│   │
 │   └── admin/
-│       ├── CourseForm.tsx                  # Create/edit course form (type aware)
-│       ├── UserTable.tsx                   # Students data table
-│       └── PaymentTable.tsx                # Payments data table with verify button
+│       ├── CourseForm.tsx
+│       ├── UserTable.tsx
+│       └── PaymentTable.tsx
 │
 ├── lib/
-│   ├── axios.ts                            # Axios instance with baseURL + interceptors
-│   └── utils.ts                            # Helper functions (cn, formatDate, etc.)
+│   ├── axios.ts
+│   └── utils.ts
 │
 ├── store/
-│   ├── index.ts                            # Redux store setup
+│   ├── index.ts
 │   └── slices/
-│       ├── authSlice.ts                    # User info, token, login/logout actions
-│       ├── courseSlice.ts                  # Course list, selected course state
-│       └── paymentSlice.ts                 # Payment status, initiate flow
+│       ├── authSlice.ts
+│       ├── courseSlice.ts
+│       └── paymentSlice.ts
 │
 ├── types/
-│   └── index.ts                            # Shared TS types (User, Course, Payment, Enrollment)
+│   └── index.ts
 │
-├── middleware.ts                           # Route protection (auth + role check)
-├── .env.local                              # API URL, payment keys
+├── assets/
+│   ├── logo.jpg
+│   ├── sketch.svg
+│   └── thumbnails/
+│
+├── middleware.ts
+├── .env.local
 └── package.json
 ```
 
