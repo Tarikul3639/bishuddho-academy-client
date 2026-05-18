@@ -1,1 +1,10 @@
-export { FacebookIcon } from "./FacebookIcon";
+export { Facebook } from "./Facebook";
+export { Github } from "./GitHub";
+export { Instagram } from "./Instagram";
+export { Linkedin } from "./Linkedin";
+export { Twitter } from "./Twitter";
+export { Gmail } from "./Gmail";
+export { WhatsApp } from "./WhatsApp";
+export { Clock } from "./Clock";
+export { Office } from "./Office";
+export { Map } from "./Map";

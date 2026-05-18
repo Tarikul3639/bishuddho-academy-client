@@ -16,7 +16,7 @@ export default function AuthSection({ loading, user, scrolled, onLogout }: Props
 
     return (
         <>
-            <Link href="/login">
+            <Link href="/auth">
                 <button className="cursor-pointer rounded-sm px-4 py-2 text-sm font-semibold text-[#374151] transition-colors hover:text-primary dark:text-foreground">
                     Log In
                 </button>

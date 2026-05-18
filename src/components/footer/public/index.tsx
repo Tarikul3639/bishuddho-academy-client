@@ -6,8 +6,8 @@ import { Mail, Phone, MapPin } from "lucide-react";
 
 const QUICK_LINKS = [
   { label: "Courses", href: "/courses" },
-  { label: "Log In", href: "/login" },
-  { label: "Sign Up", href: "/register" },
+  { label: "Log In", href: "/auth" },
+  { label: "Sign Up", href: "/auth" },
 ];
 
 const SOCIAL_LINKS = [

@@ -1,6 +1,4 @@
-import type { Metadata } from "next";
 import AboutHero from "./components/AboutHero";
-import AboutStats from "./components/AboutStats";
 import AboutMission from "./components/AboutMission";
 import AboutFounder from "./components/AboutFounder";
 import { createMetadata } from "@/lib/metadata";
@@ -22,9 +20,8 @@ export const metadata = createMetadata({
 
 export default function AboutPage() {
     return (
-        <main className="min-h-screen bg-white pb-20 pt-28">
+        <main className="min-h-screen bg-white py-10">
             <AboutHero />
-            <AboutStats />
             <AboutMission />
             <AboutFounder />
         </main>

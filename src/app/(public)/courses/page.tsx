@@ -1,4 +1,4 @@
-import CoursesClient from "./CoursesClient";
+import CoursesPage from "./components/CoursesPage";
 import { createMetadata } from "@/lib/metadata";
 
 export const metadata = createMetadata({
@@ -17,6 +17,6 @@ export const metadata = createMetadata({
     ],
 });
 
-export default function CoursesPage() {
-    return <CoursesClient />;
+export default function Page() {
+    return <CoursesPage />;
 }

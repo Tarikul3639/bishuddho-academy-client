@@ -3,9 +3,9 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { stagger } from "@/components/animations";
-import Header from "./components/Header";
-import SearchBox from "./components/SearchBox";
-import CoursesGrid from "./components/CoursesGrid";
+import Header from "./Header";
+import SearchBox from "./SearchBox";
+import CoursesGrid from "./CoursesGrid";
 import { Course } from "@/components/courses/CourseCard";
 
 import one from "@/assets/thumbnails/one.jpg";
