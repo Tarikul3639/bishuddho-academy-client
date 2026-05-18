@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/navbar/public";
 import Footer from "@/components/footer/public";
+import { siteConfig } from "@/lib/metadata";
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
-
 export const metadata: Metadata = {
-  title: "Bishuddho Academy",
-  description: "Bangladesh's trusted learning platform for recorded courses and physical classes.",
+  metadataBase: new URL(siteConfig.url),
 };
-
 // ─── Layout ───────────────────────────────────────────────────────────────────
 
 export default function PublicLayout({

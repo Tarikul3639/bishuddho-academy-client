@@ -95,12 +95,12 @@ export default function MobileMenu({
               </>
             ) : (
               <>
-                <Link href="/login" onClick={onClose}>
+                <Link href="/auth" onClick={onClose}>
                   <button className="w-full rounded-sm border border-white/50 bg-white/30 px-4 py-2.5 text-sm font-semibold text-[#374151] backdrop-blur-sm transition-colors hover:text-primary">
                     Log In
                   </button>
                 </Link>
-                <Link href="/register" onClick={onClose}>
+                <Link href="/auth" onClick={onClose}>
                   <button className="w-full rounded-sm bg-primary/80 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_2px_12px_0_rgba(26,86,219,0.30)] backdrop-blur-sm transition-colors hover:bg-primary">
                     Sign Up
                   </button>
