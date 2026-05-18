@@ -1,3 +1,11 @@
+# [0.4.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.3.0...v0.4.0) (2026-05-18)
+
+
+### Features
+
+* add About, Contact, Courses pages with SEO optimization ([cc6f29b](https://github.com/Tarikul3639/bishuddho-academy-client/commit/cc6f29b59f49e3365a22e2679c8cd8057bf9b6c6))
+* redesign auth, contact, courses & about pages with reusable UI components ([41c5af9](https://github.com/Tarikul3639/bishuddho-academy-client/commit/41c5af91533ddfd7ef6566b39a1239f20f6744c2))
+
 # [0.3.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.2.0...v0.3.0) (2026-05-17)
 
 
