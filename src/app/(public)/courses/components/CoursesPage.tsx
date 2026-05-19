@@ -17,6 +17,7 @@ import four from "@/assets/thumbnails/foure.jpg";
 
 const COURSES: Course[] = [
     {
+        courseId: "course-1",
         title: "Introduction to JavaScript",
         instructor: "MD Tarikul Islam",
         thumbnail: one,
@@ -25,6 +26,7 @@ const COURSES: Course[] = [
         reviewCount: 4,
     },
     {
+        courseId: "course-2",
         title: "Advanced Python Programming",
         instructor: "MD Nayem Hossain",
         thumbnail: two,
@@ -32,7 +34,8 @@ const COURSES: Course[] = [
         rating: 4,
         reviewCount: 5,
     },
-    {
+    {   
+        courseId: "course-3",
         title: "Cloud Computing Essentials",
         instructor: "MD Arifur Rahman",
         thumbnail: three,
@@ -41,6 +44,7 @@ const COURSES: Course[] = [
         reviewCount: 5,
     },
     {
+        courseId: "course-4",
         title: "Cybersecurity Basics",
         instructor: "MD Tanvir Ahmed",
         thumbnail: four,

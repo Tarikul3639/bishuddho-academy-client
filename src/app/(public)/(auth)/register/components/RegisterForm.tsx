@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, User, Phone, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Toast from "./Toast";
+import Link from "next/link";
 
 function PasswordStrength({ password }: { password: string }) {
     const checks = [
@@ -89,7 +90,7 @@ function InputGroupField({
     );
 }
 
-export function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
+export function RegisterForm() {
     const [form, setForm] = useState({
         firstName: "",
         lastName: "",
@@ -141,7 +142,6 @@ export function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
         setToast({ message: "Account created! Please sign in.", type: "success" });
         setTimeout(() => {
             setToast(null);
-            onSwitch();
         }, 2500);
     };
 
@@ -285,12 +285,12 @@ export function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
             {/* Switch to Login */}
             <p className="mt-3 text-center text-sm text-gray-500">
                 Already have an account?{" "}
-                <button
-                    onClick={onSwitch}
+                <Link
+                    href="/login"
                     className="font-semibold text-primary hover:text-primary/80 transition-colors cursor-pointer"
                 >
                     Sign in
-                </button>
+                </Link>
             </p>
         </div>
     );

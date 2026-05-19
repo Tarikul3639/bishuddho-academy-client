@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
 import Toast from "./Toast";
+import Link from "next/link";
 
-export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
+export function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPass, setShowPass] = useState(false);
@@ -128,13 +128,13 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
                     </div>
 
                     {/* Forgot Password */}
-                    <Button
-                        variant="link"
+                    <Link
+                        href="/forgot"
                         type="button"
-                        className="text-sm p-0 h-auto font-medium text-primary hover:text-primary/80 cursor-pointer"
+                        className="text-sm p-0 h-auto font-medium text-primary hover:text-primary/80 cursor-pointer hover:underline transition-colors"
                     >
                         Forgot password?
-                    </Button>
+                    </Link>
                 </div>
 
                 <button
@@ -147,12 +147,12 @@ export function LoginForm({ onSwitch }: { onSwitch: () => void }) {
 
             <p className="mt-6 text-center text-sm text-gray-500">
                 Don't have an account?{" "}
-                <button
-                    onClick={onSwitch}
+                <Link
+                    href="/register"
                     className="font-semibold text-primary hover:text-primary/80 transition-colors cursor-pointer"
                 >
                     Create one free
-                </button>
+                </Link>
             </p>
         </div>
     );

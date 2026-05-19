@@ -1,17 +1,9 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { Star } from "lucide-react";
-
-const fadeUp: Variants = {
-    hidden: { opacity: 0, y: 26 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.0, 0.0, 0.2, 1] } },
-};
-
-const stagger: Variants = {
-    hidden: {},
-    visible: { transition: { staggerChildren: 0.1 } },
-};
+import { fadeUp, stagger } from "@/components/animations";
+import Image from "next/image";
 
 const TESTIMONIALS = [
     {
@@ -19,28 +11,28 @@ const TESTIMONIALS = [
         text: "Bishuddho Academy's courses were transformative. The instructors are knowledgeable and the learning experience is seamless.",
         author: "Ahmed Hassan",
         role: "Software Developer at TechCorp",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ahmed",
+        image: "/images/testimonials/1.jpg",
     },
     {
         id: 2,
         text: "I completed the Python course and got a job within 2 months. The practical approach and real-world projects helped tremendously.",
         author: "Sarah Khan",
         role: "Data Analyst at DataPro",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+        image: "/images/testimonials/2.jpg",
     },
     {
         id: 3,
         text: "The cloud computing course opened new opportunities for my career. Highly recommended for anyone looking to upskill.",
         author: "Md Rauf",
         role: "Cloud Engineer at CloudTech",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Rauf",
+        image: "/images/testimonials/3.jpg",
     },
     {
         id: 4,
         text: "Best investment in my education. The cybersecurity fundamentals course made me job-ready in just 3 months.",
         author: "Fatima Islam",
         role: "Security Analyst at SafeGuard",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Fatima",
+        image: "/images/testimonials/4.jpg",
     },
 ];
 
@@ -93,11 +85,13 @@ export function TestimonialSection() {
 
                             {/* Author */}
                             <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0">
-                                    <img
+                                <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-gray-100">
+                                    <Image
                                         src={testimonial.image}
                                         alt={testimonial.author}
-                                        className="w-full h-full object-cover"
+                                        width={44}
+                                        height={44}
+                                        className="h-full w-full object-cover"
                                     />
                                 </div>
                                 <div>

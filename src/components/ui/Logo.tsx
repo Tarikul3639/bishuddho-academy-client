@@ -16,6 +16,7 @@ export default function Logo({ className = "", size = "lg" }: LogoProps) {
           src={LogoImg}
           alt="Bishuddho Academy"
           fill
+          priority
           sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
           className="object-contain scale-150"
         />
