@@ -1,3 +1,11 @@
+# [0.5.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.4.0...v0.5.0) (2026-06-03)
+
+
+### Features
+
+* add admin panel, student dashboard, course management and payment flow ([41a56e5](https://github.com/Tarikul3639/bishuddho-academy-client/commit/41a56e597a59124cdafc70eab4701f6c48498f46))
+* restructure public course system with new course detail UI and auth pages, add testimonials assets, and improve UI components ([19e1153](https://github.com/Tarikul3639/bishuddho-academy-client/commit/19e1153280b3351a955f3381661283853c5d462c))
+
 # [0.4.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.3.0...v0.4.0) (2026-05-18)
 
 
