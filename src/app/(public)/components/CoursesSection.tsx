@@ -26,6 +26,7 @@ const stagger: Variants = {
 
 const SAMPLE_COURSES: Course[] = [
   {
+    courseId: "js-intro",
     title: "Introduction to JavaScript",
     instructor: "MD Tarikul Islam",
     thumbnail: one,
@@ -34,6 +35,7 @@ const SAMPLE_COURSES: Course[] = [
     reviewCount: 4,
   },
   {
+    courseId: "python-advanced",
     title: "Advanced Python Programming",
     instructor: "MD Nayem Hossain",
     thumbnail: two,
@@ -42,6 +44,7 @@ const SAMPLE_COURSES: Course[] = [
     reviewCount: 5,
   },
   {
+    courseId: "cloud-computing",
     title: "Cloud Computing Essentials",
     instructor: "MD Arifur Rahman",
     thumbnail: three,
@@ -50,6 +53,7 @@ const SAMPLE_COURSES: Course[] = [
     reviewCount: 5,
   },
   {
+    courseId: "cybersecurity",
     title: "Cybersecurity Basics",
     instructor: "MD Tanvir Ahmed",
     thumbnail: four,

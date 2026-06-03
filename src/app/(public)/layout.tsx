@@ -18,7 +18,7 @@ export default function PublicLayout({
     <>
       <Navbar />
       {/* pt-16 compensates for the fixed navbar height */}
-      <div className="flex min-h-screen flex-col pt-16">
+      <div className="flex min-h-screen flex-col pt-20">
         <main className="flex-1">{children}</main>
         <Footer />
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 
 const POSTER_SRC = "/videos/Instructor-thumbnail.jpg";
 const VIDEO_SRC = "/videos/Instructor.mp4";
@@ -27,8 +28,8 @@ export default function FounderAvatar() {
         >
             {/* Outer Container - Pure White Mode */}
             <div className={`w-full overflow-hidden rounded-2xl border-[3px] bg-white transition-all duration-500 ease-out ${playing
-                    ? "border-primary shadow-2xl shadow-primary/10 scale-[1.01]"
-                    : "border-slate-200/70 shadow-md shadow-slate-100"
+                ? "border-primary shadow-2xl shadow-primary/10 scale-[1.01]"
+                : "border-slate-200/70 shadow-md shadow-slate-100"
                 }`}>
 
                 {/* ── Top: Image / Video + Content Overlay ───────────────────────── */}
@@ -46,10 +47,12 @@ export default function FounderAvatar() {
                     />
 
                     {/* Poster image — Smooth Fade */}
-                    <img
+                    <Image
                         src={POSTER_SRC}
                         alt="Tarikul Islam"
-
+                        fill
+                        priority
+                        sizes="320px"
                         className={`absolute inset-0 h-full w-full object-cover object-top transition-all duration-500 ease-out group-hover:scale-105 ${playing ? "opacity-0 pointer-events-none" : "opacity-100"
                             }`}
                     />
@@ -78,7 +81,7 @@ export default function FounderAvatar() {
                 <div className="relative flex h-28 flex-col justify-center bg-[#1c2d56] px-5 py-4 transition-colors duration-300">
 
                     {/* Active Indigo/Blue top line effect */}
-                    <div className={`absolute top-0 left-0 h-0.75 bg-primary transition-all duration-500 ${playing ? "w-full" : "w-12"}`} />
+                    <div className={`absolute top-0 left-0 h-0.75 bg-primary transition-all duration-500 ${playing ? "w-12" : "w-12"}`} />
 
                     <p className="mb-1 line-clamp-1 text-sm text-gray-400">
                         With{" "}

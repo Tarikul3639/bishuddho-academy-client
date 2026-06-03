@@ -3,18 +3,10 @@ import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import StarRating from "./StarRating";
-
-
-const fadeUp: Variants = {
-    hidden: { opacity: 0, y: 24 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.45, ease: [0, 0, 0.2, 1] },
-    },
-};
+import { fadeUp } from "@/components/animations";
 
 export type Course = {
+    courseId: string;
     title: string;
     instructor: string;
     thumbnail: StaticImageData;
@@ -36,6 +28,7 @@ export default function CourseCard({ course }: { course: Course }) {
                     src={course.thumbnail}
                     alt={course.title}
                     fill
+                    loading="lazy"
                     sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                     className="object-cover"
                 />
@@ -53,7 +46,7 @@ export default function CourseCard({ course }: { course: Course }) {
 
                 <div className="mt-2.5 flex items-center justify-between">
                     <p className="text-lg font-bold text-[#111827]">{course.price}</p>
-                    <Link href="/courses">
+                    <Link href={`/courses/${course.courseId}`}>
                         <button className="flex items-center gap-0.5 text-sm font-medium text-primary hover:underline cursor-pointer">
                             View <ChevronRight className="h-3.5 w-3.5" />
                         </button>
