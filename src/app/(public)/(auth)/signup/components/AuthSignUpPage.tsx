@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { RegisterForm } from "./RegisterForm";
+import { RegisterForm } from "./SignUpForm";
 import Logo from "@/components/ui/Logo";
 import { fadeUp, stagger } from "@/components/animations";
 
-export default function AuthRegisterPage() {
+export default function AuthSignUpPage() {
     return (
         <motion.div
             variants={stagger}
@@ -41,10 +41,10 @@ export default function AuthRegisterPage() {
                         </Link>
 
                         <Link
-                            href="/register"
+                            href="/signup"
                             className="relative z-10 flex-1 py-2.5 text-center text-sm font-semibold text-gray-900"
                         >
-                            Register
+                            Sign up
                         </Link>
                     </div>
 

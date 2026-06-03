@@ -7,8 +7,8 @@ import { Facebook, Linkedin, Twitter } from "@/components/icons";
 
 const QUICK_LINKS = [
   { label: "Courses", href: "/courses" },
-  { label: "Log In", href: "/auth" },
-  { label: "Sign Up", href: "/auth" },
+  { label: "Log In", href: "/login" },
+  { label: "Sign Up", href: "/signup" },
 ];
 
 const SOCIAL_LINKS = [

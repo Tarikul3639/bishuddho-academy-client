@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { fadeUp, stagger } from "@/components/animations";
 import { ChevronDown, ChevronUp, CalendarDays } from "lucide-react";
 
 interface ClassSession {
@@ -27,7 +29,7 @@ export function CourseModule({ module, defaultOpen = false }: CourseModuleProps)
     const Icon = open ? ChevronUp : ChevronDown;
 
     return (
-        <div className="overflow-hidden rounded-xl border border-border">
+        <motion.div variants={fadeUp} className="overflow-hidden rounded-xl border border-border">
             {/* Header */}
             <button
                 onClick={() => setOpen((p) => !p)}
@@ -70,6 +72,6 @@ export function CourseModule({ module, defaultOpen = false }: CourseModuleProps)
                     ))}
                 </div>
             )}
-        </div>
+        </motion.div>
     );
 }

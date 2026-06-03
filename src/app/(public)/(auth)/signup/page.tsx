@@ -1,5 +1,5 @@
 import { createMetadata } from "@/lib/metadata";
-import AuthRegisterPage from "./components/AuthRegisterPage";
+import AuthSignUpPage from "./components/AuthSignUpPage";
 
 export const metadata = createMetadata({
   title: "Create Account",
@@ -7,10 +7,10 @@ export const metadata = createMetadata({
     "Create your Bishuddho Academy account and start learning online courses in Bangladesh.",
   ogDescription:
     "Join Bishuddho Academy — create your account and start learning today.",
-  path: "/register",
+  path: "/signup",
   image: "/og-auth.png",
   keywords: [
-    "Bishuddho Academy register",
+    "Bishuddho Academy SignUp",
     "create account",
     "online learning Bangladesh",
     "e-learning signup",
@@ -18,5 +18,5 @@ export const metadata = createMetadata({
 });
 
 export default function Page() {
-  return <AuthRegisterPage />;
+  return <AuthSignUpPage />;
 }

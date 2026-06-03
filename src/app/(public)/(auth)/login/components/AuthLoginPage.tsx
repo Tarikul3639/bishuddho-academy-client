@@ -36,10 +36,10 @@ export default function AuthLoginPage() {
                         </Link>
 
                         <Link
-                            href="/register"
+                            href="/signup"
                             className="relative z-10 flex-1 py-2.5 text-center text-sm font-semibold text-gray-500"
                         >
-                            Register
+                            Sign up
                         </Link>
                     </div>
 

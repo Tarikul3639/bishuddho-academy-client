@@ -29,7 +29,6 @@ interface Props {
 const STUDENT_MENU = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { label: "My Courses", href: "/my-courses", icon: GraduationCap },
-    { label: "Profile", href: "/profile", icon: User },
 ];
 
 const ADMIN_MENU = [
