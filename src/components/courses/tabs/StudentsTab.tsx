@@ -63,12 +63,12 @@ function TableRow({
             <td className="px-4 py-3">
                 {student.status === "pending" ? (
                     <div className="flex items-center gap-1.5">
-                        <button onClick={() => onVerify(student.id)}
+                        <button onClick={() => onVerify(student.enrollId)}
                             className="flex items-center gap-1 rounded-sm bg-[#dcfce7] px-2.5 py-1.5 text-[11px] font-bold text-[#16a34a] hover:bg-[#bbf7d0]">
                             <CheckCircle className="h-3.5 w-3.5" />
                             <span className="hidden sm:block">Verify</span>
                         </button>
-                        <button onClick={() => onReject(student.id)}
+                        <button onClick={() => onReject(student.enrollId)}
                             className="flex items-center gap-1 rounded-sm bg-[#fee2e2] px-2.5 py-1.5 text-[11px] font-bold text-[#ef4444] hover:bg-[#fecaca]">
                             <XCircle className="h-3.5 w-3.5" />
                             <span className="hidden sm:block">Reject</span>
@@ -162,7 +162,7 @@ export default function StudentsTab({
                         <motion.tbody initial="hidden" animate="visible" variants={stagger}>
                             {filtered.length > 0 ? (
                                 filtered.map((s) => (
-                                    <TableRow key={s.id} student={s} onVerify={onVerify} onReject={onReject} />
+                                    <TableRow key={s.enrollId} student={s} onVerify={onVerify} onReject={onReject} />
                                 ))
                             ) : (
                                 <tr>

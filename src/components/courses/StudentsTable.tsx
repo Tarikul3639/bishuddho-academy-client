@@ -82,14 +82,14 @@ function TableRow({
                 {student.status === "pending" ? (
                     <div className="flex items-center gap-1.5">
                         <button
-                            onClick={() => onVerify(student.id)}
+                            onClick={() => onVerify(student.enrollId)}
                             className="flex items-center gap-1 rounded-lg bg-[#dcfce7] px-2.5 py-1.5 text-[11px] font-bold text-[#16a34a] transition-colors hover:bg-[#bbf7d0]"
                         >
                             <CheckCircle className="h-3.5 w-3.5" />
                             <span className="hidden sm:block">Verify</span>
                         </button>
                         <button
-                            onClick={() => onReject(student.id)}
+                            onClick={() => onReject(student.enrollId)}
                             className="flex items-center gap-1 rounded-lg bg-[#fee2e2] px-2.5 py-1.5 text-[11px] font-bold text-[#ef4444] transition-colors hover:bg-[#fecaca]"
                         >
                             <XCircle className="h-3.5 w-3.5" />
@@ -210,7 +210,7 @@ export default function StudentsTable({
                             {filtered.length > 0 ? (
                                 filtered.map((s) => (
                                     <TableRow
-                                        key={s.id}
+                                        key={s.enrollId}
                                         student={s}
                                         onVerify={onVerify}
                                         onReject={onReject}

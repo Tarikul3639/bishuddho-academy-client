@@ -5,23 +5,25 @@ import { FileImage, ImageUp, RefreshCcw, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function AboutTab({
-    banner,
+    thumbnailUrl,
+    thumbnailFile,
     tagline,
     description,
     onChange,
-    onBannerChange,
+    onThumbnailChange,
 }: {
-    banner?: string;
+    thumbnailUrl?: string;
+    thumbnailFile?: File | null;
     tagline: string;
     description: string;
     onChange: (field: string, value: string) => void;
-    onBannerChange: (file: File | null) => void;
+    onThumbnailChange: (file: File | null) => void;
 }) {
-    const [preview, setPreview] = useState<string | null>(banner || null);
+    const [preview, setPreview] = useState<string | null>(thumbnailUrl || null);
 
     useEffect(() => {
-        setPreview(banner || null);
-    }, [banner]);
+        setPreview(thumbnailUrl || null);
+    }, [thumbnailUrl]);
 
     return (
         <div className="space-y-6">
@@ -47,7 +49,7 @@ export default function AboutTab({
                         const file = e.dataTransfer.files?.[0];
                         if (file && file.type.startsWith("image/")) {
                             setPreview(URL.createObjectURL(file));
-                            onBannerChange(file);
+                            onThumbnailChange(file);
                         }
                     }}
                 >
@@ -92,7 +94,7 @@ export default function AboutTab({
                             const file = e.target.files?.[0];
                             if (!file) return;
                             setPreview(URL.createObjectURL(file));
-                            onBannerChange(file);
+                            onThumbnailChange(file);
                         }}
                     />
                 </label>
@@ -101,14 +103,14 @@ export default function AboutTab({
                     <div className="mt-2.5 flex items-center justify-between">
                         <div className="flex items-center gap-1.5 text-[#6b7280]">
                             <FileImage className="size-4" />
-                            <span className="text-xs">banner-image.jpg</span>
+                            <span className="text-xs">thumbnail-image.jpg</span>
                         </div>
                         <button
                             type="button"
                             className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 cursor-pointer"
                             onClick={() => {
                                 setPreview(null);
-                                onBannerChange(null);
+                                onThumbnailChange(null);
                             }}
                         >
                             <X className="size-3" />

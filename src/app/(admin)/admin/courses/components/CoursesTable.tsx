@@ -8,9 +8,9 @@ import Link from "next/link";
 import { STATUS_CONFIG, type AdminCourse } from "../../_data/courses";
 
 function TableRow({ course }: { course: AdminCourse }) {
-    const status   = STATUS_CONFIG[course.status];
-    const seatPct  = Math.round((course.bookedSeats / course.totalSeats) * 100);
-    const seatsLeft = course.totalSeats - course.bookedSeats;
+    const status = STATUS_CONFIG[course.status];
+    const seatPct = Math.round(((course.bookedSeats ?? 0) / (course.totalSeats ?? 1)) * 100);
+    const seatsLeft = (course.totalSeats ?? 0) - (course.bookedSeats ?? 0);
 
     return (
         <motion.tr
@@ -53,8 +53,8 @@ function TableRow({ course }: { course: AdminCourse }) {
                                     width: `${seatPct}%`,
                                     background:
                                         seatPct >= 90 ? "#ef4444" :
-                                        seatPct >= 60 ? "#f59e0b" :
-                                        "#1a56db",
+                                            seatPct >= 60 ? "#f59e0b" :
+                                                "#1a56db",
                                 }}
                             />
                         </div>
@@ -87,7 +87,7 @@ function TableRow({ course }: { course: AdminCourse }) {
 
             {/* Action */}
             <td className="px-4 py-3">
-                <Link href={`/admin/courses/${course.id}`}>
+                <Link href={`/admin/courses/${course.courseId}`}>
                     <button className="flex items-center gap-1 rounded-lg bg-[#eef3ff] px-2.5 py-1.5 text-[11px] font-bold text-[#1a56db] transition-colors hover:bg-[#c7d7fd]">
                         View
                         <ChevronRight className="h-3.5 w-3.5" />
@@ -115,12 +115,12 @@ export default function CoursesTable({ data }: { data: AdminCourse[] }) {
                     <thead>
                         <tr className="border-b border-[#e5e7eb] bg-[#f9fafb]">
                             {[
-                                { label: "Course",   cls: ""                      },
-                                { label: "Schedule", cls: "hidden lg:table-cell"  },
-                                { label: "Seats",    cls: "hidden md:table-cell"  },
-                                { label: "Revenue",  cls: "hidden sm:table-cell"  },
-                                { label: "Status",   cls: ""                      },
-                                { label: "",         cls: ""                      },
+                                { label: "Course", cls: "" },
+                                { label: "Schedule", cls: "hidden lg:table-cell" },
+                                { label: "Seats", cls: "hidden md:table-cell" },
+                                { label: "Revenue", cls: "hidden sm:table-cell" },
+                                { label: "Status", cls: "" },
+                                { label: "", cls: "" },
                             ].map((h, i) => (
                                 <th
                                     key={i}
@@ -132,7 +132,7 @@ export default function CoursesTable({ data }: { data: AdminCourse[] }) {
                         </tr>
                     </thead>
                     <motion.tbody initial="hidden" animate="visible" variants={stagger}>
-                        {data.map((c) => <TableRow key={c.id} course={c} />)}
+                        {data.map((c) => <TableRow key={c.courseId} course={c} />)}
                     </motion.tbody>
                 </table>
             </div>

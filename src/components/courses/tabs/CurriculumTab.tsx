@@ -2,9 +2,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, Pencil, Check, X, ChevronDown } from "lucide-react";
+import {
+    Plus,
+    Trash2,
+    Pencil,
+    Check,
+    X,
+    ChevronDown,
+} from "lucide-react";
 import { motion } from "framer-motion";
-import { type CourseModule, type CourseClass } from "../../../app/(admin)/admin/_data/courseDetail";
+import { CourseModule, CourseClass } from "@/types/course-create";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -30,13 +37,21 @@ function calcCurrentSession(modules: CourseModule[]): number {
 // ── Inline Input ──────────────────────────────────────────────────────────────
 
 function InlineInput({
-    value, onSave, onCancel, placeholder = "",
+    value,
+    onSave,
+    onCancel,
+    placeholder = "",
 }: {
-    value: string; onSave: (v: string) => void; onCancel: () => void; placeholder?: string;
+    value: string;
+    onSave: (v: string) => void;
+    onCancel: () => void;
+    placeholder?: string;
 }) {
     const [draft, setDraft] = useState(value);
 
-    useEffect(() => { setDraft(value); }, [value]);
+    useEffect(() => {
+        setDraft(value);
+    }, [value]);
 
     return (
         <div className="flex items-center gap-1.5">
@@ -51,12 +66,16 @@ function InlineInput({
                 placeholder={placeholder}
                 className="flex-1 rounded-sm border border-[#c7d7fd] bg-[#f8faff] px-2.5 py-1.5 text-[13px] text-[#0d1b3e] outline-none placeholder:text-[#9ca3af]"
             />
-            <button onClick={() => draft.trim() && onSave(draft.trim())}
-                className="rounded-sm bg-[#dcfce7] p-1.5 text-[#16a34a] hover:bg-[#bbf7d0]">
+            <button
+                onClick={() => draft.trim() && onSave(draft.trim())}
+                className="rounded-sm bg-[#dcfce7] p-1.5 text-[#16a34a] hover:bg-[#bbf7d0]"
+            >
                 <Check className="h-3.5 w-3.5" />
             </button>
-            <button onClick={onCancel}
-                className="rounded-sm bg-[#fee2e2] p-1.5 text-[#ef4444] hover:bg-[#fecaca]">
+            <button
+                onClick={onCancel}
+                className="rounded-sm bg-[#fee2e2] p-1.5 text-[#ef4444] hover:bg-[#fecaca]"
+            >
                 <X className="h-3.5 w-3.5" />
             </button>
         </div>
@@ -66,10 +85,13 @@ function InlineInput({
 // ── Class Row ─────────────────────────────────────────────────────────────────
 
 function ClassRow({
-    cls, index, onUpdate, onDelete,
+    cls,
+    index,
+    onUpdate,
+    onDelete,
 }: {
-    cls:      CourseClass;
-    index:    number;
+    cls: CourseClass;
+    index: number;
     onUpdate: (cls: CourseClass) => void;
     onDelete: () => void;
 }) {
@@ -78,17 +100,17 @@ function ClassRow({
     const toggleComplete = () => onUpdate({ ...cls, completed: !cls.completed });
 
     return (
-        <div className={`flex items-center gap-3 rounded-sm px-3 py-2.5 transition-colors ${
-            cls.completed ? "bg-[#f0fdf4]" : "bg-[#f9fafb]"
-        }`}>
+        <div
+            className={`flex items-center gap-3 rounded-sm px-3 py-2.5 transition-colors ${cls.completed ? "bg-[#f0fdf4]" : "bg-[#f9fafb]"
+                }`}
+        >
             {/* Complete toggle */}
             <button
                 onClick={toggleComplete}
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border-2 transition-all ${
-                    cls.completed
+                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border-2 transition-all ${cls.completed
                         ? "border-[#16a34a] bg-[#16a34a]"
                         : "border-[#d1d5db] bg-white hover:border-[#16a34a]"
-                }`}
+                    }`}
             >
                 {cls.completed && <Check className="h-3 w-3 text-white" />}
             </button>
@@ -97,43 +119,42 @@ function ClassRow({
                 <div className="flex flex-1 flex-col gap-1.5">
                     <InlineInput
                         value={cls.title}
-                        onSave={(v) => { onUpdate({ ...cls, title: v }); setEditing(false); }}
+                        onSave={(v) => {
+                            onUpdate({ ...cls, title: v });
+                            setEditing(false);
+                        }}
                         onCancel={() => setEditing(false)}
                         placeholder="Class title"
                     />
-                    <InlineInput
-                        value={cls.session}
-                        onSave={(v) => { onUpdate({ ...cls, session: v }); }}
-                        onCancel={() => setEditing(false)}
-                        placeholder="e.g. Session 1–2"
-                    />
-                    <button
-                        onClick={() => setEditing(false)}
-                        className="self-start rounded-sm bg-[#eef3ff] px-2.5 py-1 text-[11px] font-semibold text-[#1a56db] hover:bg-[#c7d7fd]"
-                    >
-                        Done
-                    </button>
                 </div>
             ) : (
                 <>
                     <div className="flex-1 min-w-0">
-                        <p className={`text-[13px] font-medium truncate ${
-                            cls.completed ? "text-[#374151]" : "text-[#374151]"
-                        }`}>
+                        <p
+                            className={`flex items-center text-[13px] font-medium truncate ${cls.completed ? "text-[#374151]" : "text-[#374151]"
+                                }`}
+                        >
                             {cls.completed && (
-                                <span className="mr-1.5 text-[10px] font-bold text-[#16a34a]">✓</span>
+                                <Check
+                                    strokeWidth={2.5}
+                                    className="size-3 mr-1.5 text-[#16a34a]"
+                                />
                             )}
                             {cls.title}
                         </p>
                         <p className="text-[11px] text-[#9ca3af]">{cls.session}</p>
                     </div>
 
-                    <button onClick={() => setEditing(true)}
-                        className="rounded-sm p-1 text-[#9ca3af] hover:bg-[#eef3ff] hover:text-[#1a56db]">
+                    <button
+                        onClick={() => setEditing(true)}
+                        className="rounded-sm p-1 text-[#9ca3af] hover:bg-[#eef3ff] hover:text-[#1a56db]"
+                    >
                         <Pencil className="h-3 w-3" />
                     </button>
-                    <button onClick={onDelete}
-                        className="rounded-sm p-1 text-[#9ca3af] hover:bg-[#fee2e2] hover:text-[#ef4444]">
+                    <button
+                        onClick={onDelete}
+                        className="rounded-sm p-1 text-[#9ca3af] hover:bg-[#fee2e2] hover:text-[#ef4444]"
+                    >
                         <Trash2 className="h-3 w-3" />
                     </button>
                 </>
@@ -145,20 +166,22 @@ function ClassRow({
 // ── Module Item ───────────────────────────────────────────────────────────────
 
 function ModuleItem({
-    mod, onUpdate, onDelete,
+    mod,
+    onUpdate,
+    onDelete,
 }: {
-    mod:      CourseModule;
+    mod: CourseModule;
     onUpdate: (m: CourseModule) => void;
     onDelete: () => void;
 }) {
-    const [open,         setOpen        ] = useState(false);
+    const [open, setOpen] = useState(false);
     const [editingTitle, setEditingTitle] = useState(false);
-    const [addingClass,  setAddingClass ] = useState(false);
+    const [addingClass, setAddingClass] = useState(false);
 
     const completedCount = mod.classes.filter((c) => c.completed).length;
-    const totalCount     = mod.classes.length;
-    const allDone        = totalCount > 0 && completedCount === totalCount;
-    const anyDone        = completedCount > 0 && !allDone;
+    const totalCount = mod.classes.length;
+    const allDone = totalCount > 0 && completedCount === totalCount;
+    const anyDone = completedCount > 0 && !allDone;
 
     const updateClass = (i: number, cls: CourseClass) => {
         const classes = [...mod.classes];
@@ -172,44 +195,68 @@ function ModuleItem({
     const addClass = (title: string) =>
         onUpdate({
             ...mod,
-            classes: [...mod.classes, { title, session: `Session ${mod.classes.length + 1}`, completed: false }],
+            classes: [
+                ...mod.classes,
+                {
+                    title,
+                    session: `Session ${mod.classes.length + 1}`,
+                    completed: false,
+                },
+            ],
         });
 
     return (
         <div className="overflow-hidden rounded-sm border border-[#e5e7eb] bg-white">
             {/* Header */}
             <div className="flex items-center gap-3 px-4 py-3">
-                <button onClick={() => setOpen(!open)} className="flex flex-1 items-center gap-3 text-left">
+                <div
+                    onClick={() => setOpen(!open)}
+                    className="flex flex-1 items-center gap-3 text-left"
+                >
                     {/* Module status indicator */}
                     <div
                         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm text-[12px] font-bold"
                         style={{
                             background: allDone ? "#dcfce7" : anyDone ? "#eef3ff" : "#f3f4f6",
-                            color:      allDone ? "#16a34a" : anyDone ? "#1a56db" : "#9ca3af",
+                            color: allDone ? "#16a34a" : anyDone ? "#1a56db" : "#9ca3af",
                         }}
                     >
-                        {allDone ? "✓" : mod.id}
+                        {allDone ? (
+                            <Check strokeWidth={3} className="size-4" />
+                        ) : (
+                            mod.moduleId
+                        )}
                     </div>
 
                     {editingTitle ? (
-                        <div onClick={(e) => e.stopPropagation()} className="flex-1">
+                        <div className="flex-1">
                             <InlineInput
                                 value={mod.title}
-                                onSave={(v) => { onUpdate({ ...mod, title: v }); setEditingTitle(false); }}
+                                onSave={(v) => {
+                                    onUpdate({ ...mod, title: v });
+                                    setEditingTitle(false);
+                                }}
                                 onCancel={() => setEditingTitle(false)}
                             />
                         </div>
                     ) : (
                         <div className="flex-1">
-                            <p className="text-[14px] font-bold text-[#0d1b3e]">{mod.title}</p>
+                            <p className="text-[14px] font-bold text-[#0d1b3e]">
+                                {mod.title}
+                            </p>
                             <div className="mt-0.5 flex items-center gap-2">
                                 <p className="text-[11px] text-[#9ca3af]">
-                                    {mod.sessions} sessions · {mod.duration}
+                                    {mod.classes.length} sessions
                                 </p>
                                 {totalCount > 0 && (
-                                    <span className={`text-[10px] font-bold ${
-                                        allDone ? "text-[#16a34a]" : anyDone ? "text-[#1a56db]" : "text-[#9ca3af]"
-                                    }`}>
+                                    <span
+                                        className={`text-[10px] font-bold ${allDone
+                                                ? "text-[#16a34a]"
+                                                : anyDone
+                                                    ? "text-[#1a56db]"
+                                                    : "text-[#9ca3af]"
+                                            }`}
+                                    >
                                         {completedCount}/{totalCount} done
                                     </span>
                                 )}
@@ -224,7 +271,7 @@ function ModuleItem({
                                 <div
                                     className="h-full rounded-full transition-all duration-300"
                                     style={{
-                                        width:      `${Math.round((completedCount / totalCount) * 100)}%`,
+                                        width: `${Math.round((completedCount / totalCount) * 100)}%`,
                                         background: allDone ? "#16a34a" : "#1a56db",
                                     }}
                                 />
@@ -232,18 +279,28 @@ function ModuleItem({
                         </div>
                     )}
 
-                    <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                    <motion.div
+                        animate={{ rotate: open ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                    >
                         <ChevronDown className="h-4 w-4 text-[#9ca3af]" />
                     </motion.div>
-                </button>
+                </div>
 
-                <div className="flex shrink-0 gap-1" onClick={(e) => e.stopPropagation()}>
-                    <button onClick={() => setEditingTitle(true)}
-                        className="rounded-sm p-1.5 text-[#9ca3af] hover:bg-[#eef3ff] hover:text-[#1a56db]">
+                <div
+                    className="flex shrink-0 gap-1"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <button
+                        onClick={() => setEditingTitle(true)}
+                        className="rounded-sm p-1.5 text-[#9ca3af] hover:bg-[#eef3ff] hover:text-[#1a56db]"
+                    >
                         <Pencil className="h-3.5 w-3.5" />
                     </button>
-                    <button onClick={onDelete}
-                        className="rounded-sm p-1.5 text-[#9ca3af] hover:bg-[#fee2e2] hover:text-[#ef4444]">
+                    <button
+                        onClick={onDelete}
+                        className="rounded-sm p-1.5 text-[#9ca3af] hover:bg-[#fee2e2] hover:text-[#ef4444]"
+                    >
                         <Trash2 className="h-3.5 w-3.5" />
                     </button>
                 </div>
@@ -260,17 +317,23 @@ function ModuleItem({
                     {/* Mark all button */}
                     {totalCount > 0 && (
                         <div className="mb-2 flex items-center justify-between">
-                            <p className="text-[11px] text-[#9ca3af]">{completedCount} of {totalCount} completed</p>
+                            <p className="text-[11px] text-[#9ca3af]">
+                                {completedCount} of {totalCount} completed
+                            </p>
                             <button
-                                onClick={() => onUpdate({
-                                    ...mod,
-                                    classes: mod.classes.map((c) => ({ ...c, completed: !allDone })),
-                                })}
-                                className={`text-[11px] font-semibold transition-colors ${
-                                    allDone
+                                onClick={() =>
+                                    onUpdate({
+                                        ...mod,
+                                        classes: mod.classes.map((c) => ({
+                                            ...c,
+                                            completed: !allDone,
+                                        })),
+                                    })
+                                }
+                                className={`text-[11px] font-semibold transition-colors ${allDone
                                         ? "text-[#9ca3af] hover:text-[#ef4444]"
                                         : "text-[#1a56db] hover:text-[#1346c4]"
-                                }`}
+                                    }`}
                             >
                                 {allDone ? "Unmark All" : "Mark All Done"}
                             </button>
@@ -291,13 +354,18 @@ function ModuleItem({
                         {addingClass ? (
                             <InlineInput
                                 value=""
-                                onSave={(v) => { addClass(v); setAddingClass(false); }}
+                                onSave={(v) => {
+                                    addClass(v);
+                                    setAddingClass(false);
+                                }}
                                 onCancel={() => setAddingClass(false)}
                                 placeholder="New class title..."
                             />
                         ) : (
-                            <button onClick={() => setAddingClass(true)}
-                                className="flex items-center gap-1.5 rounded-sm border border-dashed border-[#c7d7fd] py-2 text-[12px] font-semibold text-[#1a56db] hover:bg-[#eef3ff]">
+                            <button
+                                onClick={() => setAddingClass(true)}
+                                className="flex items-center gap-1.5 rounded-sm border border-dashed border-[#c7d7fd] py-2 text-[12px] font-semibold text-[#1a56db] hover:bg-[#eef3ff]"
+                            >
                                 <Plus className="ml-3 h-3.5 w-3.5" /> Add Class
                             </button>
                         )}
@@ -311,10 +379,13 @@ function ModuleItem({
 // ── Overall Progress Bar ──────────────────────────────────────────────────────
 
 function OverallProgress({ modules }: { modules: CourseModule[] }) {
-    const total     = modules.reduce((s, m) => s + m.classes.length, 0);
-    const completed = modules.reduce((s, m) => s + m.classes.filter((c) => c.completed).length, 0);
-    const pct       = total > 0 ? Math.round((completed / total) * 100) : 0;
-    const current   = calcCurrentSession(modules);
+    const total = modules.reduce((s, m) => s + m.classes.length, 0);
+    const completed = modules.reduce(
+        (s, m) => s + m.classes.filter((c) => c.completed).length,
+        0,
+    );
+    const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const current = calcCurrentSession(modules);
 
     return (
         <div className="rounded-sm border border-[#e5e7eb] bg-[#f9fafb] p-4">
@@ -347,8 +418,8 @@ export default function CurriculumTab({
     onChange,
     onSessionChange,
 }: {
-    modules:         CourseModule[];
-    onChange:        (modules: CourseModule[]) => void;
+    modules: CourseModule[];
+    onChange: (modules: CourseModule[]) => void;
     onSessionChange: (session: number) => void;
 }) {
     const [adding, setAdding] = useState(false);
@@ -368,14 +439,19 @@ export default function CurriculumTab({
     };
 
     const addModule = (title: string) => {
-        const updated = [...modules, { id: modules.length + 1, title, sessions: 0, duration: "", classes: [] }];
+        const updated = [
+            ...modules,
+            {
+                title,
+                classes: [],
+            },
+        ];
         onChange(updated);
         setAdding(false);
     };
 
     return (
         <div className="space-y-4">
-
             {/* Overall progress */}
             <OverallProgress modules={modules} />
 
@@ -385,15 +461,17 @@ export default function CurriculumTab({
                     <p className="text-[11px] font-bold uppercase tracking-widest text-[#9ca3af]">
                         {modules.length} modules
                     </p>
-                    <button onClick={() => setAdding(true)}
-                        className="flex items-center gap-1 rounded-sm bg-[#eef3ff] px-2.5 py-1 text-[11px] font-semibold text-[#1a56db] hover:bg-[#c7d7fd]">
+                    <button
+                        onClick={() => setAdding(true)}
+                        className="flex items-center gap-1 rounded-sm bg-[#eef3ff] px-2.5 py-1 text-[11px] font-semibold text-[#1a56db] hover:bg-[#c7d7fd] cursor-pointer"
+                    >
                         <Plus className="h-3 w-3" /> Add Module
                     </button>
                 </div>
 
                 {modules.map((mod, i) => (
                     <ModuleItem
-                        key={mod.id}
+                        key={mod.moduleId || i}
                         mod={mod}
                         onUpdate={(m) => handleModuleChange(i, m)}
                         onDelete={() => deleteModule(i)}

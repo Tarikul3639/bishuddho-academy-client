@@ -44,7 +44,7 @@ export default function AdminCourseDetailPage() {
     const [saved, setSaved] = useState(false);
     const [initialCourse] = useState(COURSE_DETAIL);
     const { isDirty, dirtyFields, getChangedValues, resetBaseline } = useFormDirty(course, {
-        ignore: ["id"]
+        ignore: ["courseId"]
     });
 
     const handleChange = (field: string, value: string) => {
@@ -62,14 +62,14 @@ export default function AdminCourseDetailPage() {
         setCourse((prev) => ({
             ...prev,
             students: prev.students.map((s) =>
-                s.id === id ? { ...s, status: "active" as const } : s,
+                s.enrollId === id ? { ...s, status: "active" as const } : s,
             ),
         }));
 
     const handleReject = (id: string) =>
         setCourse((prev) => ({
             ...prev,
-            students: prev.students.filter((s) => s.id !== id),
+            students: prev.students.filter((s) => s.enrollId !== id),
         }));
 
     return (
@@ -160,14 +160,18 @@ export default function AdminCourseDetailPage() {
                     {/* Tab content */}
                     {activeTab === "about" && (
                         <AboutTab
-                            banner={course.banner}
+                            thumbnailUrl={course.thumbnailUrl}
+                            thumbnailFile={course.thumbnailFile}
                             tagline={course.tagline}
                             description={course.description}
                             onChange={handleChange}
-                            onBannerChange={(file) => {
+                            onThumbnailChange={(file) => {
                                 setCourse((prev) => ({
                                     ...prev,
-                                    bannerFile: file,
+                                    thumbnailFile: file,
+                                    ...(file === null && {
+                                        thumbnailUrl: "",
+                                    }),
                                 }));
                             }}
                         />
@@ -193,13 +197,14 @@ export default function AdminCourseDetailPage() {
                     )}
                     {activeTab === "batch" && (
                         <BatchInfoTab
+                            instructor={course.instructor}
+                            status={course.status}
                             bookedSeats={course.bookedSeats}
                             totalSeats={course.totalSeats}
                             schedule={course.schedule}
                             location={course.location}
                             duration={course.duration}
                             startDate={course.startDate}
-                            lessons={course.lessons}
                             onChange={(field, value) =>
                                 setCourse((prev) => ({ ...prev, [field]: value }))
                             }
@@ -217,7 +222,6 @@ export default function AdminCourseDetailPage() {
                         <PricingTab
                             price={course.price}
                             originalPrice={course.originalPrice}
-                            discount={course.discount}
                             discountStarts={course.discountStarts}
                             discountEnds={course.discountEnds}
                             onChange={(field, value) =>

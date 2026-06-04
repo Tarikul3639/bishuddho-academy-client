@@ -43,14 +43,12 @@ function InputNumber({
 export default function PricingTab({
     price,
     originalPrice,
-    discount,
     discountStarts,
     discountEnds,
     onChange,
 }: {
     price: number;
     originalPrice: number;
-    discount: number;
     discountStarts: Date | null;
     discountEnds: Date | null;
     onChange: (
@@ -58,24 +56,18 @@ export default function PricingTab({
         value: string | number | Date | null
     ) => void;
 }) {
-    const savings =
-        originalPrice - price;
+    const savings = originalPrice - price;
 
-    const discountPercent =
+    // Derived State: Discount Percentage
+    const discount =
         originalPrice > 0
-            ? Math.round(
-                ((originalPrice - price) /
-                    originalPrice) *
-                100
-            )
+            ? Math.round(((originalPrice - price) / originalPrice) * 100)
             : 0;
 
     return (
         <div className="space-y-4">
-
             {/* ── Prices ───────────────────────────── */}
             <div className="grid grid-cols-2 gap-4">
-
                 <div className="rounded-lg border bg-white p-5">
                     <p className="text-[11px] font-bold text-[#9ca3af]">
                         Original Price
@@ -85,9 +77,7 @@ export default function PricingTab({
                         <InputNumber
                             value={originalPrice}
                             prefix="৳"
-                            onChange={(v) =>
-                                onChange("originalPrice", v)
-                            }
+                            onChange={(v) => onChange("originalPrice", v)}
                         />
                     </div>
                 </div>
@@ -101,9 +91,9 @@ export default function PricingTab({
                         <InputNumber
                             value={price}
                             prefix="৳"
-                            onChange={(v) =>
-                                onChange("price", v)
-                            }
+                            onChange={(v) => {
+                                onChange("price", v);
+                            }}
                         />
                     </div>
                 </div>
@@ -126,14 +116,13 @@ export default function PricingTab({
 
                     <p className="text-[13px] font-bold text-[#16a34a]">
                         Students save ৳{savings.toLocaleString()} (
-                        {discountPercent}% off)
+                        {discount}% off)
                     </p>
                 </div>
             )}
 
             {/* ── Discount Schedule ───────────────────────────── */}
             <div className="rounded-lg border bg-white p-5">
-
                 <div className="mb-4">
                     <p className="text-[14px] font-bold text-[#0d1b3e]">
                         Discount Schedule
@@ -144,10 +133,8 @@ export default function PricingTab({
                 </div>
 
                 <div className="space-y-3">
-
                     {/* Start Date */}
                     <div className="flex items-center justify-between rounded-xl bg-[#f9fafb] px-4 py-3">
-
                         <div className="flex items-center gap-3">
                             <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-[#dcfce7]">
                                 <Calendar className="h-4 w-4 text-[#16a34a]" />
@@ -167,11 +154,9 @@ export default function PricingTab({
                             type="date"
                             value={
                                 discountStarts
-                                    ? new Date(
-                                        discountStarts
-                                    )
-                                        .toISOString()
-                                        .split("T")[0]
+                                    ? new Date(discountStarts)
+                                          .toISOString()
+                                          .split("T")[0]
                                     : ""
                             }
                             onChange={(e) =>
@@ -188,7 +173,6 @@ export default function PricingTab({
 
                     {/* End Date */}
                     <div className="flex items-center justify-between rounded-xl bg-[#f9fafb] px-4 py-3">
-
                         <div className="flex items-center gap-3">
                             <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-[#fee2e2]">
                                 <Calendar className="h-4 w-4 text-[#ef4444]" />
@@ -208,11 +192,9 @@ export default function PricingTab({
                             type="date"
                             value={
                                 discountEnds
-                                    ? new Date(
-                                        discountEnds
-                                    )
-                                        .toISOString()
-                                        .split("T")[0]
+                                    ? new Date(discountEnds)
+                                          .toISOString()
+                                          .split("T")[0]
                                     : ""
                             }
                             onChange={(e) =>
@@ -229,7 +211,6 @@ export default function PricingTab({
 
                     {/* Discount */}
                     <div className="flex items-center justify-between rounded-xl bg-[#f9fafb] px-4 py-3">
-
                         <div className="flex items-center gap-3">
                             <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-[#fde68a]">
                                 <Tag className="h-4 w-4 text-[#b45309]" />
@@ -249,17 +230,14 @@ export default function PricingTab({
                             value={discount}
                             suffix="%"
                             onChange={(v) => {
-                                const newDiscount = v;
-
+                            // Just updating the discount percentage will auto-calculate the price based on originalPrice --- IGNORE ---
                                 const newPrice =
                                     originalPrice > 0
                                         ? Math.round(
-                                            originalPrice *
-                                            (1 - newDiscount / 100)
-                                        )
+                                              originalPrice * (1 - v / 100)
+                                          )
                                         : price;
 
-                                onChange("discount", newDiscount);
                                 onChange("price", newPrice);
                             }}
                             className="text-2xl font-extrabold text-[#dc2626]"
@@ -268,7 +246,6 @@ export default function PricingTab({
 
                     {/* Preview */}
                     <div className="rounded-xl border border-[#fde68a] bg-[#fffbeb] p-4">
-
                         <p className="mb-2 text-[11px] font-bold text-[#92400e]">
                             Student Preview
                         </p>
@@ -283,17 +260,14 @@ export default function PricingTab({
                             </span>
 
                             <span className="rounded-full bg-[#dc2626]/10 px-2 py-1 text-[11px] font-bold text-[#dc2626]">
-                                {discountPercent}% OFF
+                                {discount}% OFF
                             </span>
                         </div>
 
                         {discountEnds && (
                             <div className="mt-2 flex items-center gap-1 text-[12px] font-semibold text-[#dc2626]">
                                 <AlertTriangle className="h-3.5 w-3.5" />
-                                Ends{" "}
-                                {new Date(
-                                    discountEnds
-                                ).toDateString()}
+                                Ends {new Date(discountEnds).toDateString()}
                             </div>
                         )}
                     </div>

@@ -1,25 +1,12 @@
 // app/admin/_data/courseDetail.ts
 
 import { AdminCourse } from "./courses";
+import { CourseModule } from '@/types/course-create';
 
 export type CourseStatus = "active" | "upcoming" | "completed";
 
-export interface CourseClass {
-    title: string;
-    session: string;
-    completed?: boolean; 
-}
-
-export interface CourseModule {
-    id: number;
-    title: string;
-    sessions: number;
-    duration: string;
-    classes: CourseClass[];
-}
-
 export interface EnrolledStudent {
-    id: string;
+    enrollId: string;
     name: string;
     email: string;
     method: "bkash" | "nagad" | "cash";
@@ -30,10 +17,10 @@ export interface EnrolledStudent {
 }
 
 export interface AdminCourseDetail extends AdminCourse {
-    banner: string;
+    thumbnailUrl: string;
+    thumbnailFile?: File | null;
     price: number;
     originalPrice: number;
-    discount: number;
     discountStarts: Date | null;
     discountEnds: Date | null;
     tagline: string;
@@ -58,12 +45,12 @@ export const STUDENT_STATUS_CONFIG = {
 // ── Demo data ─────────────────────────────────────────────────────────────────
 
 export const COURSE_DETAIL: AdminCourseDetail = {
-    id: "web-dev-batch-1",
+    courseId: "web-dev-batch-1",
     title: "Complete Web Development — Batch 1",
     tagline: "Hands-on classroom training from HTML to full-stack",
     description:
         "A structured physical training program designed for students who want to learn web development in a real classroom environment. Each session is hands-on with direct guidance from the instructor.",
-    banner: "/images/course-banners/web-dev-batch-1.jpg",
+    thumbnailUrl: "/images/course-thumbnails/web-dev-batch-1.jpg",
     instructor: "Tarikul Islam",
     schedule: "Sat & Mon, 10:00 AM – 12:00 PM",
     location: "Bishuddho Academy, Kafrul, Dhaka",
@@ -75,9 +62,8 @@ export const COURSE_DETAIL: AdminCourseDetail = {
     revenue: 77000,
     price: 3500,
     originalPrice: 5000,
-    discount: 30,
     discountStarts: new Date("Jan 1, 2026"),
-    discountEnds: new Date("Jan 14, 2026"), 
+    discountEnds: new Date("Jan 14, 2026"),
     status: "active",
     includes: [
         "Live face-to-face instruction",
@@ -88,62 +74,111 @@ export const COURSE_DETAIL: AdminCourseDetail = {
     ],
     modules: [
         {
-            id: 1,
+            moduleId: "module-1",
             title: "HTML & CSS Fundamentals",
-            sessions: 6,
-            duration: "3 weeks",
             classes: [
                 {
+                    classId: "class-1",
                     title: "Introduction to HTML & Document Structure",
                     session: "Session 1–2",
                     completed: true,
                 },
-                { title: "CSS Basics, Selectors & Box Model", session: "Session 3–4", completed: false },
-                { title: "Flexbox, Grid & Responsive Design", session: "Session 5–6", completed: false },
+                {
+                    classId: "class-2",
+                    title: "CSS Basics, Selectors & Box Model",
+                    session: "Session 3–4",
+                    completed: false,
+                },
+                {
+                    classId: "class-3",
+                    title: "Flexbox, Grid & Responsive Design",
+                    session: "Session 5–6",
+                    completed: false,
+                },
             ],
         },
         {
-            id: 2,
+            moduleId: "module-2",
             title: "JavaScript Fundamentals",
-            sessions: 8,
-            duration: "4 weeks",
             classes: [
                 {
+                    classId: "class-4",
                     title: "Variables, Functions & Control Flow",
                     session: "Session 7–9",
                     completed: false,
                 },
-                { title: "DOM Manipulation & Events", session: "Session 10–11", completed: false },
-                { title: "ES6+, Async & Fetch API", session: "Session 12–14", completed: false },
+                {
+                    classId: "class-5",
+                    title: "DOM Manipulation & Events",
+                    session: "Session 10–11",
+                    completed: false,
+                },
+                {
+                    classId: "class-6",
+                    title: "ES6+, Async & Fetch API",
+                    session: "Session 12–14",
+                    completed: false,
+                },
             ],
         },
         {
-            id: 3,
+            moduleId: "module-3",
             title: "React & Modern Frontend",
-            sessions: 10,
-            duration: "5 weeks",
             classes: [
-                { title: "React Basics & JSX", session: "Session 15–17", completed: false },
-                { title: "Hooks, State & Props", session: "Session 18–20", completed: false },
-                { title: "React Router & Context API", session: "Session 21–22", completed: false },
-                { title: "Final Frontend Project", session: "Session 23–24", completed: false },
+                {
+                    classId: "class-7",
+                    title: "React Basics & JSX",
+                    session: "Session 15–17",
+                    completed: false,
+                },
+                {
+                    classId: "class-8",
+                    title: "Hooks, State & Props",
+                    session: "Session 18–20",
+                    completed: false,
+                },
+                {
+                    classId: "class-9",
+                    title: "React Router & Context API",
+                    session: "Session 21–22",
+                    completed: false,
+                },
+                {
+                    classId: "class-10",
+                    title: "Final Frontend Project",
+                    session: "Session 23–24",
+                    completed: false,
+                },
             ],
         },
         {
-            id: 4,
+            moduleId: "module-4",
             title: "Backend & Final Project",
-            sessions: 8,
-            duration: "4 weeks",
             classes: [
-                { title: "Node.js & Express Basics", session: "Session 25–27", completed: false },
-                { title: "MongoDB & REST API", session: "Session 28–30", completed: false },
-                { title: "Full-Stack Capstone Project", session: "Session 31–36", completed: false },
+                {
+                    classId: "class-11",
+                    title: "Node.js & Express Basics",
+                    session: "Session 25–27",
+                    completed: false,
+                },
+                {
+                    classId: "class-12",
+                    title: "MongoDB & REST API",
+                    session: "Session 28–30",
+                    completed: false,
+                },
+                {
+                    classId: "class-13",
+                    title: "Full-Stack Capstone Project",
+                    session: "Session 31–36",
+                    completed: false,
+                },
             ],
         },
     ],
     students: [
         {
-            id: "1",
+            enrollId: "1",
             name: "Rafiq Islam",
             email: "rafiq@gmail.com",
             method: "bkash",
@@ -153,7 +188,7 @@ export const COURSE_DETAIL: AdminCourseDetail = {
             status: "active",
         },
         {
-            id: "2",
+            enrollId: "2",
             name: "Sadia Akter",
             email: "sadia@gmail.com",
             method: "nagad",
@@ -163,7 +198,7 @@ export const COURSE_DETAIL: AdminCourseDetail = {
             status: "pending",
         },
         {
-            id: "3",
+            enrollId: "3",
             name: "Jahid Hasan",
             email: "jahid@gmail.com",
             method: "cash",
@@ -173,7 +208,7 @@ export const COURSE_DETAIL: AdminCourseDetail = {
             status: "active",
         },
         {
-            id: "4",
+            enrollId: "4",
             name: "Mitu Begum",
             email: "mitu@gmail.com",
             method: "bkash",
@@ -183,7 +218,7 @@ export const COURSE_DETAIL: AdminCourseDetail = {
             status: "pending",
         },
         {
-            id: "5",
+            enrollId: "5",
             name: "Rubel Mia",
             email: "rubel@gmail.com",
             method: "nagad",
@@ -193,7 +228,7 @@ export const COURSE_DETAIL: AdminCourseDetail = {
             status: "completed",
         },
         {
-            id: "6",
+            enrollId: "6",
             name: "Nasrin Akter",
             email: "nasrin@gmail.com",
             method: "bkash",

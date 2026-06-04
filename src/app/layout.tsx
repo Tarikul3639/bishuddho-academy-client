@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import Provider from "./provider";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/metadata";
 
@@ -31,12 +32,14 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [{
-      url: "/og-image.png",
-      width: 1200,
-      height: 630,
-      alt: siteConfig.name,
-    }],
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
   },
 
   twitter: {
@@ -50,9 +53,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html
       lang="bn"
@@ -61,11 +64,11 @@ export default function RootLayout({
         geistSans.variable,
         geistMono.variable,
         inter.variable,
-        "font-sans",
+        "font-sans"
       )}
     >
       <body className="min-h-full flex flex-col">
-        {children}
+        <Provider>{children}</Provider>
       </body>
     </html>
   );
