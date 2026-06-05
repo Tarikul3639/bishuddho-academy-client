@@ -166,10 +166,12 @@ function ClassRow({
 // ── Module Item ───────────────────────────────────────────────────────────────
 
 function ModuleItem({
+    serial,
     mod,
     onUpdate,
     onDelete,
 }: {
+    serial: number;
     mod: CourseModule;
     onUpdate: (m: CourseModule) => void;
     onDelete: () => void;
@@ -224,7 +226,7 @@ function ModuleItem({
                         {allDone ? (
                             <Check strokeWidth={3} className="size-4" />
                         ) : (
-                            mod.moduleId
+                            serial
                         )}
                     </div>
 
@@ -471,8 +473,9 @@ export default function CurriculumTab({
 
                 {modules.map((mod, i) => (
                     <ModuleItem
-                        key={mod.moduleId || i}
+                        key={i}
                         mod={mod}
+                        serial={i + 1}
                         onUpdate={(m) => handleModuleChange(i, m)}
                         onDelete={() => deleteModule(i)}
                     />

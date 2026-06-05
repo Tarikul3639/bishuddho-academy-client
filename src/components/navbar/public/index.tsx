@@ -24,7 +24,7 @@ import { type AuthUser } from "./UserDropdown";
 const DEMO_USER: AuthUser | null = {
     name: "Tarikul Islam",
     email: "tarikul@example.com",
-    role: "admin",   // "admin" দিলে admin state test হবে
+    role: "student",   // "admin" দিলে admin state test হবে
 };
 const DEMO_LOADING = false; // true দিলে skeleton দেখাবে
 

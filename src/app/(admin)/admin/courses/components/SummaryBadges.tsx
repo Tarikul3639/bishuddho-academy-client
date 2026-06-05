@@ -1,7 +1,6 @@
-// app/admin/courses/components/SummaryBadges.tsx
-import { type AdminCourse } from "../../_data/courses";
+import type { CourseListItem } from "@/types/course-list-item";
 
-export default function SummaryBadges({ data }: { data: AdminCourse[] }) {
+export default function SummaryBadges({ data }: { data: CourseListItem[] }) {
     const active    = data.filter((c) => c.status === "active").length;
     const upcoming  = data.filter((c) => c.status === "upcoming").length;
     const completed = data.filter((c) => c.status === "completed").length;

@@ -42,7 +42,7 @@ export default function AddNewCoursesPage() {
         instructor: "",
         schedule: "e.g., Mon-Wed-Fri, 6-8 PM",
         location: "e.g., Online / Dhaka / Chittagong",
-        startDate: new Date(),
+        startDate: new Date().toISOString().split("T")[0],
 
         duration: "",
         totalSeats: 0,
@@ -234,6 +234,7 @@ export default function AddNewCoursesPage() {
                     <AboutTab
                         thumbnailUrl={course.thumbnailUrl}
                         thumbnailFile={course.thumbnailFile}
+                        title={course.title}
                         tagline={course.tagline}
                         description={course.description}
                         onChange={(field, value) =>

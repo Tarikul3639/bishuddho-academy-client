@@ -49,11 +49,11 @@ export default function PricingTab({
 }: {
     price: number;
     originalPrice: number;
-    discountStarts: Date | null;
-    discountEnds: Date | null;
+    discountStarts: string | null;
+    discountEnds: string | null;
     onChange: (
         field: string,
-        value: string | number | Date | null
+        value: string | number | null
     ) => void;
 }) {
     const savings = originalPrice - price;
@@ -155,16 +155,14 @@ export default function PricingTab({
                             value={
                                 discountStarts
                                     ? new Date(discountStarts)
-                                          .toISOString()
-                                          .split("T")[0]
+                                        .toISOString()
+                                        .split("T")[0]
                                     : ""
                             }
                             onChange={(e) =>
                                 onChange(
                                     "discountStarts",
-                                    e.target.value
-                                        ? new Date(e.target.value)
-                                        : null
+                                    e.target.value || null
                                 )
                             }
                             className="rounded-lg border border-[#e5e7eb] bg-white px-3 py-2 text-[13px] outline-none focus:border-[#1a56db]"
@@ -193,17 +191,12 @@ export default function PricingTab({
                             value={
                                 discountEnds
                                     ? new Date(discountEnds)
-                                          .toISOString()
-                                          .split("T")[0]
+                                        .toISOString()
+                                        .split("T")[0]
                                     : ""
                             }
                             onChange={(e) =>
-                                onChange(
-                                    "discountEnds",
-                                    e.target.value
-                                        ? new Date(e.target.value)
-                                        : null
-                                )
+                                onChange("discountEnds", e.target.value || null)
                             }
                             className="rounded-lg border border-[#e5e7eb] bg-white px-3 py-2 text-[13px] outline-none focus:border-[#1a56db]"
                         />
@@ -230,12 +223,12 @@ export default function PricingTab({
                             value={discount}
                             suffix="%"
                             onChange={(v) => {
-                            // Just updating the discount percentage will auto-calculate the price based on originalPrice --- IGNORE ---
+                                // Just updating the discount percentage will auto-calculate the price based on originalPrice --- IGNORE ---
                                 const newPrice =
                                     originalPrice > 0
                                         ? Math.round(
-                                              originalPrice * (1 - v / 100)
-                                          )
+                                            originalPrice * (1 - v / 100)
+                                        )
                                         : price;
 
                                 onChange("price", newPrice);

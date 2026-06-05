@@ -2,10 +2,19 @@
 "use client";
 
 import { Users, DollarSign, BookOpen, Clock, MapPin, Calendar } from "lucide-react";
-import { type AdminCourseDetail } from "../../app/(admin)/admin/_data/courseDetail";
+import { CourseDetails } from "@/types/course-details";
 
-export default function CourseSidebar({ course }: { course: AdminCourseDetail }) {
-    const seatPct = Math.round((course.bookedSeats?? 0 / course.totalSeats) * 100);
+export default function CourseSidebar({ course }: { course: CourseDetails }) {
+    const seatPct = Math.round((course.bookedSeats ?? 0 / course.totalSeats) * 100);
+
+    const formatDate = (
+        value?: string | null,
+    ) => {
+        if (!value) return "-";
+
+        return new Date(value)
+            .toLocaleDateString();
+    };
 
     return (
         <div className="space-y-4">
@@ -52,7 +61,8 @@ export default function CourseSidebar({ course }: { course: AdminCourseDetail })
                         { icon: Calendar, val: course.startDate },
                     ].map(({ icon: Icon, val }, i) => (
                         <span key={i} className="flex items-center gap-2">
-                            <Icon className="h-3.5 w-3.5 shrink-0 text-[#9ca3af]" />{val instanceof Date ? val.toLocaleDateString() : val}
+                            <Icon className="h-3.5 w-3.5 shrink-0 text-[#9ca3af]" />
+                            {formatDate(val)}
                         </span>
                     ))}
                 </div>

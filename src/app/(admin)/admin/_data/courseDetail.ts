@@ -74,23 +74,19 @@ export const COURSE_DETAIL: AdminCourseDetail = {
     ],
     modules: [
         {
-            moduleId: "module-1",
             title: "HTML & CSS Fundamentals",
             classes: [
                 {
-                    classId: "class-1",
                     title: "Introduction to HTML & Document Structure",
                     session: "Session 1–2",
                     completed: true,
                 },
                 {
-                    classId: "class-2",
                     title: "CSS Basics, Selectors & Box Model",
                     session: "Session 3–4",
                     completed: false,
                 },
                 {
-                    classId: "class-3",
                     title: "Flexbox, Grid & Responsive Design",
                     session: "Session 5–6",
                     completed: false,
@@ -98,23 +94,19 @@ export const COURSE_DETAIL: AdminCourseDetail = {
             ],
         },
         {
-            moduleId: "module-2",
             title: "JavaScript Fundamentals",
             classes: [
                 {
-                    classId: "class-4",
                     title: "Variables, Functions & Control Flow",
                     session: "Session 7–9",
                     completed: false,
                 },
                 {
-                    classId: "class-5",
                     title: "DOM Manipulation & Events",
                     session: "Session 10–11",
                     completed: false,
                 },
                 {
-                    classId: "class-6",
                     title: "ES6+, Async & Fetch API",
                     session: "Session 12–14",
                     completed: false,
@@ -122,29 +114,24 @@ export const COURSE_DETAIL: AdminCourseDetail = {
             ],
         },
         {
-            moduleId: "module-3",
             title: "React & Modern Frontend",
             classes: [
                 {
-                    classId: "class-7",
                     title: "React Basics & JSX",
                     session: "Session 15–17",
                     completed: false,
                 },
                 {
-                    classId: "class-8",
                     title: "Hooks, State & Props",
                     session: "Session 18–20",
                     completed: false,
                 },
                 {
-                    classId: "class-9",
                     title: "React Router & Context API",
                     session: "Session 21–22",
                     completed: false,
                 },
                 {
-                    classId: "class-10",
                     title: "Final Frontend Project",
                     session: "Session 23–24",
                     completed: false,
@@ -152,23 +139,19 @@ export const COURSE_DETAIL: AdminCourseDetail = {
             ],
         },
         {
-            moduleId: "module-4",
             title: "Backend & Final Project",
             classes: [
                 {
-                    classId: "class-11",
                     title: "Node.js & Express Basics",
                     session: "Session 25–27",
                     completed: false,
                 },
                 {
-                    classId: "class-12",
                     title: "MongoDB & REST API",
                     session: "Session 28–30",
                     completed: false,
                 },
                 {
-                    classId: "class-13",
                     title: "Full-Stack Capstone Project",
                     session: "Session 31–36",
                     completed: false,

@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import { stagger, fadeUp } from "@/components/animations";
 import { MapPin, Calendar, Users, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { STATUS_CONFIG, type AdminCourse } from "../../_data/courses";
+import { STATUS_CONFIG } from "@/constants/course.constants";
+import { CourseListItem } from "@/types/course-list-item";
 
-function TableRow({ course }: { course: AdminCourse }) {
+function TableRow({ course }: { course: CourseListItem }) {
     const status = STATUS_CONFIG[course.status];
     const seatPct = Math.round(((course.bookedSeats ?? 0) / (course.totalSeats ?? 1)) * 100);
     const seatsLeft = (course.totalSeats ?? 0) - (course.bookedSeats ?? 0);
@@ -28,11 +29,11 @@ function TableRow({ course }: { course: AdminCourse }) {
                 <div className="flex flex-col gap-1 text-[11px] text-[#6b7280]">
                     <span className="flex items-center gap-1.5">
                         <Calendar className="h-3 w-3 shrink-0 text-[#9ca3af]" />
-                        {course.schedule}
+                        {course.schedule ?? "Schedule not specified"}
                     </span>
                     <span className="flex items-center gap-1.5">
                         <MapPin className="h-3 w-3 shrink-0 text-[#9ca3af]" />
-                        {course.location}
+                        {course.location ?? "Location not specified"}
                     </span>
                 </div>
             </td>
@@ -43,7 +44,7 @@ function TableRow({ course }: { course: AdminCourse }) {
                     <Users className="h-3.5 w-3.5 shrink-0 text-[#9ca3af]" />
                     <div className="min-w-20">
                         <div className="mb-1 flex justify-between text-[10px] text-[#9ca3af]">
-                            <span>{seatsLeft} left</span>
+                            <span>{seatsLeft ?? 0} left</span>
                             <span>{seatPct}%</span>
                         </div>
                         <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#e5e7eb]">
@@ -59,7 +60,7 @@ function TableRow({ course }: { course: AdminCourse }) {
                             />
                         </div>
                         <p className="mt-0.5 text-[10px] text-[#9ca3af]">
-                            {course.bookedSeats}/{course.totalSeats}
+                            {course.bookedSeats ?? 0}/{course.totalSeats ?? 0}
                         </p>
                     </div>
                 </div>
@@ -71,7 +72,7 @@ function TableRow({ course }: { course: AdminCourse }) {
                     ৳{course.revenue.toLocaleString()}
                 </p>
                 <p className="text-[10px] text-[#9ca3af]">
-                    {course.lessons} sessions
+                    {course.lessons ?? 0} sessions
                 </p>
             </td>
 
@@ -81,16 +82,16 @@ function TableRow({ course }: { course: AdminCourse }) {
                     className="rounded-full px-2.5 py-1 text-[10px] font-bold"
                     style={{ background: status.bg, color: status.color }}
                 >
-                    {status.label}
+                    {status.label ?? "Unknown"}
                 </span>
             </td>
 
             {/* Action */}
             <td className="px-4 py-3">
                 <Link href={`/admin/courses/${course.courseId}`}>
-                    <button className="flex items-center gap-1 rounded-lg bg-[#eef3ff] px-2.5 py-1.5 text-[11px] font-bold text-[#1a56db] transition-colors hover:bg-[#c7d7fd]">
+                    <button className="group flex items-center gap-1 rounded-sm bg-[#eef3ff] px-2.5 py-1.5 text-[11px] font-bold text-[#1a56db] transition-colors hover:bg-[#c7d7fd] cursor-pointer">
                         View
-                        <ChevronRight className="h-3.5 w-3.5" />
+                        <ChevronRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </button>
                 </Link>
             </td>
@@ -98,7 +99,7 @@ function TableRow({ course }: { course: AdminCourse }) {
     );
 }
 
-export default function CoursesTable({ data }: { data: AdminCourse[] }) {
+export default function CoursesTable({ data }: { data: CourseListItem[] }) {
     if (data.length === 0) {
         return (
             <div className="rounded-lg border border-[#e5e7eb] bg-white py-16 text-center">

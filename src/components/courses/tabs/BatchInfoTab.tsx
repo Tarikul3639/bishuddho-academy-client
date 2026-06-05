@@ -1,6 +1,7 @@
 // app/admin/courses/[courseId]/components/tabs/BatchInfoTab.tsx
 "use client";
 
+import { STATUS_OPTIONS } from "@/constants/course.constants";
 import { Calendar, MapPin, Clock, Users, User } from "lucide-react";
 
 function InputRow({
@@ -49,7 +50,7 @@ function SelectRow({
     icon: React.ElementType;
     label: string;
     value: string;
-    options: string[];
+    options: { label: string; value: string }[];
     onChange: (value: string) => void;
 }) {
     return (
@@ -67,9 +68,12 @@ function SelectRow({
                     onChange={(e) => onChange(e.target.value)}
                     className="w-full rounded-sm border border-[#e5e7eb] px-3 py-2 text-[14px] outline-none focus:border-[#1a56db]"
                 >
-                    {options.map((opt) => (
-                        <option key={opt} value={opt}>
-                            {opt}
+                    {options.map((item) => (
+                        <option
+                            key={item.value}
+                            value={item.value}
+                        >
+                            {item.label}
                         </option>
                     ))}
                 </select>
@@ -96,7 +100,7 @@ export default function BatchInfoTab({
     schedule: string;
     location: string;
     duration: string;
-    startDate: Date;
+    startDate: string;
     onChange: (field: string, value: string | number | Date) => void;
 }) {
     const seatPct =
@@ -160,7 +164,7 @@ export default function BatchInfoTab({
                         icon={Clock}
                         label="Status"
                         value={status}
-                        options={["Upcoming", "Ongoing", "Completed"]}
+                        options={STATUS_OPTIONS}
                         onChange={(v) => onChange("status", v)}
                     />
 

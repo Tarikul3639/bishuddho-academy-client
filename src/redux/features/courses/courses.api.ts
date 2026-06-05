@@ -1,45 +1,176 @@
 import { baseApi } from "@/redux/api/baseApi";
 import { TAG_TYPES } from "@/redux/api/tag-types";
-import { CourseCreate } from "@/types/course-create";
 
-export interface CoursesResponse {
-    courses: CourseCreate[];
+import type { CourseCreate } from "@/types/course-create";
+import type { CourseDetails } from "@/types/course-details";
+import type { CourseListItem } from "@/types/course-list-item";
+import type { PublicCourse, PublicCoursesResponse } from "@/types/public-course";
+
+interface GetPublicCoursesParams {
+    limit?: number;
+    page?: number;
 }
 
 /* API */
 export const coursesApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        /* Create Course */
-        createCourse: builder.mutation<CourseCreate, FormData>({
-            query: (courseData) => ({
-                url: "/courses",
+
+        /* ─────────────────────────────
+           ADMIN
+        ───────────────────────────── */
+
+        createCourse: builder.mutation<
+            CourseCreate,
+            FormData
+        >({
+            query: (formData) => ({
+                url: "/admin/courses",
                 method: "POST",
-                body: courseData,
+                body: formData,
             }),
-            invalidatesTags: [{ type: TAG_TYPES.COURSES, id: "LIST" }],
+
+            invalidatesTags: [
+                {
+                    type: TAG_TYPES.COURSES,
+                    id: "LIST",
+                },
+            ],
         }),
 
-        /* GET ALL COURSES */
-        getCourses: builder.query<CoursesResponse, void>({
+        updateCourse: builder.mutation<
+            CourseDetails,
+            {
+                courseId: string;
+                formData: FormData;
+            }
+        >({
+            query: ({
+                courseId,
+                formData,
+            }) => ({
+                url: `/admin/courses/${courseId}`,
+                method: "PATCH",
+                body: formData,
+            }),
+
+            invalidatesTags: (
+                _,
+                __,
+                { courseId },
+            ) => [
+                    {
+                        type: TAG_TYPES.COURSES,
+                        id: courseId,
+                    },
+                    {
+                        type: TAG_TYPES.COURSES,
+                        id: "LIST",
+                    },
+                ],
+        }),
+
+        getAdminCourses: builder.query<
+            CourseListItem[],
+            void
+        >({
             query: () => ({
-                url: "/courses",
+                url: "/admin/courses",
                 method: "GET",
             }),
+
             providesTags: (result) =>
                 result
                     ? [
-                        // individual courses
-                        ...result.courses.map((course) => ({
+                        ...result.map((course) => ({
                             type: TAG_TYPES.COURSES,
                             id: course.courseId,
                         })),
-
-                        // list of courses
-                        { type: TAG_TYPES.COURSES, id: "LIST" },
+                        {
+                            type: TAG_TYPES.COURSES,
+                            id: "LIST",
+                        },
                     ]
-                    : [{ type: TAG_TYPES.COURSES, id: "LIST" }],
+                    : [
+                        {
+                            type: TAG_TYPES.COURSES,
+                            id: "LIST",
+                        },
+                    ],
+        }),
+
+        getAdminCourse: builder.query<
+            CourseDetails,
+            string
+        >({
+            query: (courseId) => ({
+                url: `/admin/courses/${courseId}`,
+                method: "GET",
+            }),
+
+            providesTags: (
+                _,
+                __,
+                courseId,
+            ) => [
+                    {
+                        type: TAG_TYPES.COURSES,
+                        id: courseId,
+                    },
+                ],
+        }),
+
+        /* ─────────────────────────────
+           PUBLIC
+        ───────────────────────────── */
+
+        getPublicCourses: builder.query<
+            PublicCoursesResponse,
+            GetPublicCoursesParams
+        >({
+            query: (params) => ({
+                url: "/public/courses",
+                method: "GET",
+                params,
+            }),
+        }),
+
+        getPublicCourse: builder.query<
+            PublicCourse,
+            string
+        >({
+            query: (courseId) => ({
+                url: `/public/courses/${courseId}`,
+                method: "GET",
+            }),
+        }),
+
+        /* ─────────────────────────────
+           STUDENT
+        ───────────────────────────── */
+
+        getMyCourses: builder.query<
+            PublicCourse[],
+            void
+        >({
+            query: () => ({
+                url: "/student/courses",
+                method: "GET",
+            }),
         }),
     }),
 });
 
-export const { useGetCoursesQuery, useCreateCourseMutation } = coursesApi;
+export const {
+    /* Admin */
+    useCreateCourseMutation,
+    useUpdateCourseMutation,
+    useGetAdminCoursesQuery,
+    useGetAdminCourseQuery,
+
+    /* Public */
+    useGetPublicCoursesQuery,
+    useGetPublicCourseQuery,
+
+    /* Student */
+    useGetMyCoursesQuery,
+} = coursesApi;

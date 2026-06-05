@@ -28,5 +28,5 @@ export default async function Page({
     const { courseId } = await params;
     console.log("Admin Course ID:", courseId);
 
-    return <AdminCourseDetailPage />;
+    return <AdminCourseDetailPage  courseId={courseId} />;
 }
