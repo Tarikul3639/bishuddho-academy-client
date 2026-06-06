@@ -72,13 +72,12 @@ export function InputField({
                 {/* Left Icon */}
                 {Icon && (
                     <Icon
-                        className={`absolute left-3 z-10 h-4 w-4 transition-colors ${
-                            error
+                        className={`absolute left-3 z-10 h-4 w-4 transition-colors ${error
                                 ? "text-red-500"
                                 : success
                                     ? "text-primary"
                                     : "text-gray-400 group-focus-within:text-primary"
-                        }`}
+                            }`}
                     />
                 )}
 
@@ -90,9 +89,8 @@ export function InputField({
                         placeholder={placeholder}
                         rows={rows}
                         disabled={disabled}
-                        className={`${baseClass} resize-none px-4 ${stateClass} ${
-                            Icon ? "pl-10" : ""
-                        }`}
+                        className={`${baseClass} resize-none px-4 ${stateClass} ${Icon ? "pl-10" : ""
+                            }`}
                     />
                 ) : (
                     <input
@@ -102,9 +100,8 @@ export function InputField({
                         onChange={onChange}
                         placeholder={placeholder}
                         disabled={disabled}
-                        className={`${baseClass} ${stateClass} ${
-                            Icon ? "pl-10" : "px-4"
-                        } ${isPassword ? "pr-10" : ""}`}
+                        className={`${baseClass} ${stateClass} ${Icon ? "pl-10" : "px-4"
+                            } ${isPassword ? "pr-10" : ""}`}
                     />
                 )}
 
@@ -115,7 +112,7 @@ export function InputField({
                         <button
                             type="button"
                             onClick={() => setShowPassword((p) => !p)}
-                            className="text-gray-400 transition-colors hover:text-gray-600 focus:outline-none"
+                            className="text-gray-400 transition-colors hover:text-gray-600 focus:outline-none cursor-pointer"
                         >
                             {showPassword ? (
                                 <EyeOff className="h-4 w-4" />

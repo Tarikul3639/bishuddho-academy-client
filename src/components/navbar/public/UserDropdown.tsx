@@ -8,16 +8,7 @@ import {
     LogOut, Settings, ChevronDown,
 } from "lucide-react";
 import { useClickOutside } from "@/hooks/useClickOutside";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-export type UserRole = "student" | "admin";
-
-export interface AuthUser {
-    name: string;
-    email: string;
-    role: UserRole;
-}
+import { AuthUser } from "@/types/auth-user";
 
 interface Props {
     user: AuthUser;
@@ -27,8 +18,8 @@ interface Props {
 // ─── Menu config ──────────────────────────────────────────────────────────────
 
 const STUDENT_MENU = [
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "My Courses", href: "/my-courses", icon: GraduationCap },
+    { label: "Dashboard", href: "/student/dashboard", icon: LayoutDashboard },
+    { label: "My Courses", href: "/student/my-courses", icon: GraduationCap },
 ];
 
 const ADMIN_MENU = [
@@ -56,7 +47,7 @@ export default function UserDropdown({ user, onLogout }: Props) {
             {/* Trigger */}
             <button
                 onClick={() => setOpen((p) => !p)}
-                className="flex items-center gap-2 rounded-full border border-border/40 bg-white/60 px-3 py-1.5 text-sm font-medium text-[#374151] transition-all hover:border-primary/30 hover:text-primary"
+                className="flex items-center gap-2 rounded-full border border-border/40 bg-white/60 px-3 py-1.5 text-sm font-medium text-[#374151] transition-all hover:border-primary/30 hover:text-primary cursor-pointer"
             >
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
                     {initials}

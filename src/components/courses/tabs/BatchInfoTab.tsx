@@ -1,8 +1,8 @@
 // app/admin/courses/[courseId]/components/tabs/BatchInfoTab.tsx
 "use client";
 
-import { Calendar, MapPin, Clock, Users } from "lucide-react";
-import { type AdminCourseDetail } from "../../../app/(admin)/admin/_data/courseDetail";
+import { STATUS_OPTIONS } from "@/constants/course.constants";
+import { Calendar, MapPin, Clock, Users, User } from "lucide-react";
 
 function InputRow({
     icon: Icon,
@@ -40,29 +40,74 @@ function InputRow({
     );
 }
 
+function SelectRow({
+    icon: Icon,
+    label,
+    value,
+    options,
+    onChange,
+}: {
+    icon: React.ElementType;
+    label: string;
+    value: string;
+    options: { label: string; value: string }[];
+    onChange: (value: string) => void;
+}) {
+    return (
+        <div className="flex items-center gap-3 rounded-xl border border-[#e5e7eb] px-4 py-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#f3f4f6]">
+                <Icon className="h-4 w-4 text-[#6b7280]" />
+            </div>
+
+            <div className="flex-1">
+
+                <label className="mb-1 block text-[11px] text-[#9ca3af]">{label}</label>
+
+                <select
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    className="w-full rounded-sm border border-[#e5e7eb] px-3 py-2 text-[14px] outline-none focus:border-[#1a56db]"
+                >
+                    {options.map((item) => (
+                        <option
+                            key={item.value}
+                            value={item.value}
+                        >
+                            {item.label}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        </div>
+    );
+}
+
 export default function BatchInfoTab({
-    bookedSeats,
+    instructor,
+    status,
+    bookedSeats = 0,
     totalSeats,
     schedule,
     location,
     duration,
     startDate,
-    lessons,
     onChange,
 }: {
-    bookedSeats: number;
+    instructor: string;
+    status: string;
+    bookedSeats?: number;
     totalSeats: number;
     schedule: string;
     location: string;
     duration: string;
-    startDate: Date;
-    lessons: number;
+    startDate: string;
     onChange: (field: string, value: string | number | Date) => void;
 }) {
     const seatPct =
         totalSeats > 0 ? Math.round((bookedSeats / totalSeats) * 100) : 0;
 
     const seatsLeft = totalSeats - bookedSeats;
+
 
     return (
         <div className="space-y-4">
@@ -73,6 +118,14 @@ export default function BatchInfoTab({
                 </p>
 
                 <div className="flex flex-col gap-3">
+                    <InputRow
+                        icon={User}
+                        label="Instructor"
+                        value={instructor}
+                        placeholder="e.g., John Doe"
+                        onChange={(v) => onChange("instructor", v)}
+                    />
+
                     <InputRow
                         icon={Calendar}
                         label="Schedule"
@@ -106,6 +159,15 @@ export default function BatchInfoTab({
                         onChange={(v) => onChange("startDate", v)}
                     />
 
+                    {/* Status section */}
+                    <SelectRow
+                        icon={Clock}
+                        label="Status"
+                        value={status}
+                        options={STATUS_OPTIONS}
+                        onChange={(v) => onChange("status", v)}
+                    />
+
                     <InputRow
                         icon={Users}
                         label="Total Seats"
@@ -113,15 +175,6 @@ export default function BatchInfoTab({
                         value={totalSeats}
                         placeholder="e.g., 30"
                         onChange={(v) => onChange("totalSeats", Number(v))}
-                    />
-
-                    <InputRow
-                        icon={Clock}
-                        label="Sessions"
-                        type="number"
-                        value={lessons}
-                        placeholder="e.g., 10"
-                        onChange={(v) => onChange("lessons", Number(v))}
                     />
                 </div>
             </div>

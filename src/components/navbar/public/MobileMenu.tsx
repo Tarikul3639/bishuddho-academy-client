@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { LogOut } from "lucide-react";
-import { type AuthUser } from "./UserDropdown";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { AuthUser } from "@/types/auth-user";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -39,7 +39,7 @@ export default function MobileMenu({
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
           exit={{ opacity: 0, y: -6, transition: { duration: 0.15 } }}
-          className="mx-auto mt-2 max-w-4xl rounded-2xl border border-white/50 bg-white/40 px-4 pb-4 shadow-[0_8px_32px_0_rgba(31,38,135,0.10)] backdrop-blur-xl ring-1 ring-inset ring-white/60 dark:border-white/10 dark:bg-white/5 dark:ring-white/10"
+          className="mx-auto mt-2 max-w-4xl rounded-2xl border border-white/50 bg-white/40 px-4 pb-4 shadow-[0_8px_32px_0_rgba(31,38,135,0.10)] backdrop-blur-xl ring-1 ring-inset ring-white/60 dark:border-white/10 dark:bg-white/5 dark:ring-white/10 cursor-pointer"
         >
           {/* Nav links */}
           <nav className="flex flex-col gap-1 pt-3">
@@ -66,7 +66,7 @@ export default function MobileMenu({
               <>
                 {/* User info card */}
                 <div className="flex items-center gap-3 rounded-xl bg-white/30 px-3 py-2.5">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white cursor-pointer">
                     {user.name.charAt(0).toUpperCase() + user.name.charAt(1).toUpperCase()}
                   </span>
                   <div className="min-w-0">

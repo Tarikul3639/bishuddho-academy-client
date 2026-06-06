@@ -15,8 +15,18 @@ export default function CourseHero({
     tagline?: string;
     schedule?: string;
     location?: string;
-    startDate?: Date;
+    startDate?: string;
 }) {
+
+    const formatDate = (
+        value?: string | null,
+    ) => {
+        if (!value) return "-";
+
+        return new Date(value)
+            .toLocaleDateString();
+    };
+
     return (
         <motion.div
             variants={fadeUp}
@@ -46,7 +56,7 @@ export default function CourseHero({
                         <Icon className="mt-0.5 h-4 w-4 shrink-0 text-white/40" />
                         {value && (
                             <span className="text-[13px] text-white/70">
-                                {value instanceof Date ? value.toLocaleDateString() : value}
+                                {formatDate(startDate)}
                             </span>
                         )}
                     </div>
