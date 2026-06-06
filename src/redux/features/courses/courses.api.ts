@@ -6,6 +6,7 @@ import type { CourseDetails } from "@/types/course-details";
 import type { CourseListItem } from "@/types/course-list-item";
 import type { PublicCoursesResponse } from "@/types/public-course";
 import type { PublicCourseDetails } from "@/types/public-course-details";
+import type { StudentCourseDetails } from "@/types/student-course-details";
 import type { StudentMyCourse } from "@/types/student-my-course";
 
 interface GetPublicCoursesParams {
@@ -17,8 +18,8 @@ interface GetPublicCoursesParams {
 export const coursesApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         /* ─────────────────────────────
-               ADMIN
-            ───────────────────────────── */
+                   ADMIN
+                ───────────────────────────── */
 
         createCourse: builder.mutation<CourseCreate, FormData>({
             query: (formData) => ({
@@ -101,8 +102,8 @@ export const coursesApi = baseApi.injectEndpoints({
         }),
 
         /* ─────────────────────────────
-               PUBLIC
-            ───────────────────────────── */
+                   PUBLIC
+                ───────────────────────────── */
 
         getPublicCourses: builder.query<
             PublicCoursesResponse,
@@ -123,8 +124,8 @@ export const coursesApi = baseApi.injectEndpoints({
         }),
 
         /* ─────────────────────────────
-               STUDENT
-            ───────────────────────────── */
+                   STUDENT
+                ───────────────────────────── */
 
         getMyCourses: builder.query<StudentMyCourse[], void>({
             query: () => ({
@@ -150,6 +151,13 @@ export const coursesApi = baseApi.injectEndpoints({
                         },
                     ],
         }),
+
+        getMyCourseDetails: builder.query<StudentCourseDetails, string>({
+            query: (courseId) => ({
+                url: `/student/courses/${courseId}`,
+                method: "GET",
+            }),
+        }),
     }),
 });
 
@@ -166,4 +174,5 @@ export const {
 
     /* Student */
     useGetMyCoursesQuery,
+    useGetMyCourseDetailsQuery,
 } = coursesApi;

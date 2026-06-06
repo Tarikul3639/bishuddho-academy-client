@@ -97,7 +97,7 @@ export const EnrolledCourseCard = ({ course }: { course: StudentMyCourse }) => {
                         Payment under review
                     </div>
                 ) : (
-                    <Link href={`/my-courses/${course.courseId}`} className="mt-auto">
+                    <Link href={`/student/my-courses/${course.courseId}`} className="mt-auto">
                         <button className="group/btn flex w-full items-center justify-center gap-1.5 rounded-sm bg-primary py-2.5 text-[13px] font-bold text-white transition-all duration-200 hover:bg-primary/95 hover:shadow-[0_4px_16px_rgba(26,86,219,0.3)] cursor-pointer">
                             View Details
                             <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
