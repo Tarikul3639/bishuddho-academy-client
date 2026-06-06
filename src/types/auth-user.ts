@@ -1,7 +1,15 @@
+export type UserRole =
+    | "student"
+    | "admin";
+
 export interface AuthUser {
     userId: string;
     name: string;
     email: string;
-    role: string;
-    studentId?: string;
+    role: UserRole;
+
+    enrolledCourses?: number;
+
+    createdAt: string;
+    avatarUrl?: string;
 }

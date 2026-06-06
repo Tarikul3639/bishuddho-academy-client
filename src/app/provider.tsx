@@ -3,7 +3,7 @@
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import { Toaster } from "@/components/ui/sonner";
-// import AuthProvider from "./AuthProvider";
+import AuthProvider from "./AuthProvider";
 
 export default function ProviderWrapper({
     children,
@@ -12,10 +12,10 @@ export default function ProviderWrapper({
 }) {
     return (
         <Provider store={store}>
-            {/* <AuthProvider> */}
+            <AuthProvider>
                 {children}
                 <Toaster />
-            {/* </AuthProvider> */}
+            </AuthProvider>
         </Provider>
     );
 }

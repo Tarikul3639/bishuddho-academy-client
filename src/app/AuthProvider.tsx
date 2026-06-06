@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useAppDispatch } from "@/redux/hooks";
-import { setUser, clearUser } from "@/redux/features/auth/authSlice";
+import { clearUser, setLoading, setUser } from "@/redux/features/auth/authSlice";
 import { useGetMeQuery } from "@/redux/features/auth/auth.api";
 
 export default function AuthProvider({
@@ -12,26 +12,23 @@ export default function AuthProvider({
 }) {
     const dispatch = useAppDispatch();
 
-    const {
-        data,
-        isError,
-    } = useGetMeQuery();
+    const { data, isLoading, isError } = useGetMeQuery();
+
+    useEffect(() => {
+        dispatch(setLoading(isLoading));
+    }, [dispatch, isLoading]);
 
     useEffect(() => {
         if (data) {
-            dispatch(
-                setUser(data),
-            );
+            dispatch(setUser(data));
         }
-    }, [data?.userId]);
+    }, [dispatch, data?.userId]);
 
     useEffect(() => {
         if (isError) {
-            dispatch(
-                clearUser(),
-            );
+            dispatch(clearUser());
         }
-    }, [isError]);
+    }, [dispatch, isError]);
 
     return <>{children}</>;
 }

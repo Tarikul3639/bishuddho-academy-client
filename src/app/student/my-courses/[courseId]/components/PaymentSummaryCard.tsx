@@ -1,5 +1,5 @@
 "use client";
-import { CreditCard, Banknote, Smartphone } from "lucide-react";
+import { CreditCard, Banknote, Smartphone, Check } from "lucide-react";
 import type { StudentCoursePaymentSummary } from "@/types/student-course-details";
 
 function PaymentSummaryCard({
@@ -57,12 +57,17 @@ function PaymentSummaryCard({
                     Payment Summary
                 </p>
                 <span
-                    className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${payment.status === "verified"
-                            ? "bg-[#dcfce7] text-[#16a34a]"
-                            : "bg-[#fff7ed] text-[#ea580c]"
+                    className={`flex gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold ${payment.status === "verified"
+                        ? "bg-[#dcfce7] text-[#16a34a]"
+                        : "bg-[#fff7ed] text-[#ea580c]"
                         }`}
                 >
-                    {payment.status === "verified" ? "✓ Verified" : "⏳ Pending"}
+                    {payment.status === "verified" ? <>
+                        <Check strokeWidth={3} className="h-3.5 w-3.5" />
+                        Verified
+                    </> : <>
+                        ⏳ Pending
+                    </>}
                 </span>
             </div>
             {/* Amount — big display */}

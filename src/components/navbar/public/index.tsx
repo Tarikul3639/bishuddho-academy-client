@@ -21,7 +21,8 @@ export default function Navbar() {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
-    const { isLoading } = useGetMeQuery();
+    const isLoading = useAppSelector((state) => state.auth.isLoading);
+    // const { isLoading } = useGetMeQuery();
 
     const [logout, { isLoading: logoutLoading }] = useLogoutMutation();
 
