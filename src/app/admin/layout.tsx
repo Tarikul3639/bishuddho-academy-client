@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "@/components/navbar/public";
 import Footer from "@/components/footer/public";
 import { siteConfig } from "@/lib/metadata";
-import ProfileBanner from "./admin/components/AdminBanner";
+import ProfileBanner from "../admin/components/AdminBanner";
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 export const metadata: Metadata = {

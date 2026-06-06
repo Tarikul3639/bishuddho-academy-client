@@ -5,6 +5,7 @@ import type { CourseCreate } from "@/types/course-create";
 import type { CourseDetails } from "@/types/course-details";
 import type { CourseListItem } from "@/types/course-list-item";
 import type { PublicCourse, PublicCoursesResponse } from "@/types/public-course";
+import type { PublicCourseDetails } from "@/types/public-course-details";
 
 interface GetPublicCoursesParams {
     limit?: number;
@@ -134,8 +135,8 @@ export const coursesApi = baseApi.injectEndpoints({
             }),
         }),
 
-        getPublicCourse: builder.query<
-            PublicCourse,
+        getPublicCourseDetails: builder.query<
+            PublicCourseDetails,
             string
         >({
             query: (courseId) => ({
@@ -149,7 +150,7 @@ export const coursesApi = baseApi.injectEndpoints({
         ───────────────────────────── */
 
         getMyCourses: builder.query<
-            PublicCourse[],
+            PublicCourseDetails[],
             void
         >({
             query: () => ({
@@ -169,7 +170,7 @@ export const {
 
     /* Public */
     useGetPublicCoursesQuery,
-    useGetPublicCourseQuery,
+    useGetPublicCourseDetailsQuery,
 
     /* Student */
     useGetMyCoursesQuery,

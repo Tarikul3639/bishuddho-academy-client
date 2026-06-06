@@ -16,7 +16,7 @@ export default function CoursesSection() {
     error,
   } = useGetPublicCoursesQuery({
     page: 1,
-    limit: 5,
+    limit: 3,
   });
 
   const courses = data?.courses ?? [];

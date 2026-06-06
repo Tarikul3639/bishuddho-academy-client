@@ -1,6 +1,7 @@
 import Link from "next/link";
 import AuthSkeleton from "./AuthSkeleton";
-import UserDropdown, { type AuthUser } from "./UserDropdown";
+import UserDropdown from "./UserDropdown";
+import { AuthUser } from "@/types/auth-user";
 
 interface Props {
     loading: boolean;
@@ -16,12 +17,12 @@ export default function AuthSection({ loading, user, scrolled, onLogout }: Props
 
     return (
         <>
-            <Link href="/auth">
+            <Link href="/login">
                 <button className="cursor-pointer rounded-sm px-4 py-2 text-sm font-semibold text-[#374151] transition-colors hover:text-primary dark:text-foreground">
                     Log In
                 </button>
             </Link>
-            <Link href="/register">
+            <Link href="/signup">
                 <button className={`cursor-pointer rounded-sm px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-primary/75 ${scrolled
                         ? "bg-primary/80 shadow-[0_2px_12px_0_rgba(26,86,219,0.30)] backdrop-blur-sm"
                         : "bg-primary"

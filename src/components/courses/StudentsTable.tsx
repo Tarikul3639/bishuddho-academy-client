@@ -8,7 +8,7 @@ import { CheckCircle, XCircle, Search, RotateCcw, ChevronDown } from "lucide-rea
 import {
     METHOD_CONFIG, STUDENT_STATUS_CONFIG,
     type EnrolledStudent,
-} from "../../app/(admin)/admin/_data/courseDetail";
+} from "../../app/admin/_data/courseDetail";
 
 function getInitials(name: string) {
     return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);

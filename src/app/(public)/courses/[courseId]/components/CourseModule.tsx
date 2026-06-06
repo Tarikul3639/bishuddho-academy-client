@@ -4,22 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { fadeUp, stagger } from "@/components/animations";
 import { ChevronDown, ChevronUp, CalendarDays } from "lucide-react";
-
-interface ClassSession {
-    title: string;
-    session: string;
-}
-
-interface ModuleType {
-    id: number;
-    title: string;
-    sessions: number;
-    duration: string;
-    classes: ClassSession[];
-}
+import type { CourseModuleType, CourseClassType } from "@/types/public-course-details";
 
 interface CourseModuleProps {
-    module: ModuleType;
+    module: CourseModuleType;
     defaultOpen?: boolean;
 }
 
@@ -46,14 +34,14 @@ export function CourseModule({ module, defaultOpen = false }: CourseModuleProps)
                 </div>
 
                 <span className="shrink-0 text-sm text-[#6b7280]">
-                    {module.sessions} sessions · {module.duration}
+                    {module.classes.length} sessions
                 </span>
             </button>
 
             {/* Body */}
             {open && (
                 <div className="divide-y divide-border border-t border-border">
-                    {module.classes.map((cls) => (
+                    {module.classes.map((cls: CourseClassType) => (
                         <div
                             key={cls.title}
                             className="flex items-center justify-between px-5 py-3"
