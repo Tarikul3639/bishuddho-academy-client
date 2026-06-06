@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
@@ -11,11 +11,7 @@ import MobileMenu from "./MobileMenu";
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { clearUser } from "@/redux/features/auth/authSlice";
-import {
-    useLogoutMutation,
-    useGetMeQuery,
-} from "@/redux/features/auth/auth.api";
-import { setUser } from "@/redux/features/auth/authSlice";
+import { useGetMeQuery, useLogoutMutation } from "@/redux/features/auth/auth.api";
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -23,29 +19,17 @@ export default function Navbar() {
 
     const pathname = usePathname();
     const router = useRouter();
-
     const dispatch = useAppDispatch();
-
-    const { data, isLoading } = useGetMeQuery();
-
-    useEffect(() => {
-        if (data) {
-            dispatch(setUser(data));
-        }
-    }, [data, dispatch]);
-
     const user = useAppSelector((state) => state.auth.user);
+    const isLoading = useAppSelector((state) => state.auth.isLoading);
+    // const { isLoading } = useGetMeQuery();
 
     const [logout, { isLoading: logoutLoading }] = useLogoutMutation();
-
-    const loading = isLoading || logoutLoading;
 
     const handleLogout = async () => {
         try {
             await logout().unwrap();
-
             dispatch(clearUser());
-
             router.push("/login");
         } catch (error) {
             console.error("Logout failed:", error);
@@ -57,9 +41,7 @@ export default function Navbar() {
             setScrolled(window.scrollY > 60);
         };
 
-        window.addEventListener("scroll", onScroll, {
-            passive: true,
-        });
+        window.addEventListener("scroll", onScroll, { passive: true });
 
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
@@ -79,9 +61,9 @@ export default function Navbar() {
 
                 <NavLinks pathname={pathname} />
 
-                <div className="hidden items-center gap-2 md:flex cursor-pointer">
+                <div className="hidden items-center gap-2 md:flex">
                     <AuthSection
-                        loading={loading}
+                        loading={isLoading || logoutLoading}
                         user={user}
                         scrolled={scrolled}
                         onLogout={handleLogout}
@@ -89,8 +71,8 @@ export default function Navbar() {
                 </div>
 
                 <button
-                    onClick={() => setMobileOpen((p) => !p)}
-                    className="rounded-lg p-2 text-[#6b7280] hover:text-primary md:hidden cursor-pointer"
+                    onClick={() => setMobileOpen((prev) => !prev)}
+                    className="cursor-pointer rounded-lg p-2 text-[#6b7280] hover:text-primary md:hidden"
                 >
                     {mobileOpen ? (
                         <X className="h-5 w-5" />
@@ -103,7 +85,7 @@ export default function Navbar() {
             <MobileMenu
                 isOpen={mobileOpen}
                 pathname={pathname}
-                loading={loading}
+                loading={isLoading || logoutLoading}
                 user={user}
                 onClose={() => setMobileOpen(false)}
                 onLogout={handleLogout}

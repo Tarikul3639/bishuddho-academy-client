@@ -1,28 +1,29 @@
 "use client";
 
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { fadeUp, stagger } from "@/components/animations";
 import { ShieldCheck, BookOpen, CalendarDays, Camera, GraduationCap, Mail } from "lucide-react";
-import { useRef } from "react";
-
-const USER = {
-    name:       "Tarikul Islam",
-    email:      "tarikul.dev@nexion.com",
-    studentId:  "BA-2026-0512",
-    enrolled:   4,
-    joinedDate: "Jan 2026",
-    avatar:     "",
-};
+import { useAppSelector } from "@/redux/hooks";
+import { ProfileBannerSkeleton } from "./ProfileBannerSkeleton";
 
 export default function ProfileBanner() {
+    const user = useAppSelector((state) => state.auth.user);
+    const isLoading = useAppSelector((state) => state.auth.isLoading);
+
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const initials = USER.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2);
+    const initials = user?.name
+        ? user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
+        : "?";
+
+    const joinedDate = user?.createdAt
+        ? new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })
+        : "—";
+
+    if (isLoading) {
+        return <ProfileBannerSkeleton />;
+    }
 
     return (
         <motion.section
@@ -64,10 +65,10 @@ export default function ProfileBanner() {
                     <motion.div variants={fadeUp} className="relative shrink-0">
                         <div className="relative h-24 w-24 overflow-hidden rounded-full border-[3px] border-[#e5e7eb] bg-white p-0.5 shadow-[0_8px_24px_rgba(0,0,0,0.08)] md:h-28 md:w-28">
                             <div className="h-full w-full overflow-hidden rounded-full">
-                                {USER.avatar ? (
+                                {user?.avatarUrl ? (
                                     <img
-                                        src={USER.avatar}
-                                        alt={USER.name}
+                                        src={user.avatarUrl}
+                                        alt={user.name}
                                         className="h-full w-full object-cover"
                                     />
                                 ) : (
@@ -101,7 +102,7 @@ export default function ProfileBanner() {
                         {/* Name + badge */}
                         <div className="flex flex-wrap items-center gap-3">
                             <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#0d1b3e] md:text-3xl">
-                                {USER.name}
+                                {user?.name}
                             </h1>
                             <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#c7d7fd] bg-[#eef3ff] px-3 py-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#1a56db]">
                                 <GraduationCap className="h-3.5 w-3.5" />
@@ -110,20 +111,20 @@ export default function ProfileBanner() {
                         </div>
 
                         {/* Email */}
-                         <div className="flex items-center gap-2 text-blue-950">
+                        <div className="flex items-center gap-2 text-blue-950">
                             <Mail className="h-4 w-4 text-blue-950" />
-                            <span>{USER.email}</span>
+                            <span>{user?.email}</span>
                         </div>
 
                         {/* Pills */}
                         <div className="flex flex-wrap items-center gap-2 pt-1">
                             {[
-                                { icon: ShieldCheck,  label: USER.studentId                    },
-                                { icon: BookOpen,     label: `${USER.enrolled} Active Courses` },
-                                { icon: CalendarDays, label: `Joined ${USER.joinedDate}`       },
-                            ].map((pill) => (
+                                { icon: ShieldCheck, label: user?.userId?.toUpperCase() },
+                                { icon: BookOpen, label: `${user?.enrolledCourses ?? 0} Active Courses` },
+                                { icon: CalendarDays, label: `Joined ${joinedDate}` },
+                            ].map((pill, index) => (
                                 <span
-                                    key={pill.label}
+                                    key={index}
                                     className="inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-white/70 backdrop-blur-xl px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold text-[#374151] transition-colors hover:border-[#c7d7fd] hover:bg-[#eef3ff] hover:text-[#1a56db]"
                                 >
                                     <pill.icon className="h-3.5 w-3.5 text-[#1a56db]" />

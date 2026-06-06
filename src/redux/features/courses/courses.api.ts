@@ -4,8 +4,10 @@ import { TAG_TYPES } from "@/redux/api/tag-types";
 import type { CourseCreate } from "@/types/course-create";
 import type { CourseDetails } from "@/types/course-details";
 import type { CourseListItem } from "@/types/course-list-item";
-import type { PublicCourse, PublicCoursesResponse } from "@/types/public-course";
+import type { PublicCoursesResponse } from "@/types/public-course";
 import type { PublicCourseDetails } from "@/types/public-course-details";
+import type { StudentCourseDetails } from "@/types/student-course-details";
+import type { StudentMyCourse } from "@/types/student-my-course";
 
 interface GetPublicCoursesParams {
     limit?: number;
@@ -15,15 +17,11 @@ interface GetPublicCoursesParams {
 /* API */
 export const coursesApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-
         /* ─────────────────────────────
-           ADMIN
-        ───────────────────────────── */
+                   ADMIN
+                ───────────────────────────── */
 
-        createCourse: builder.mutation<
-            CourseCreate,
-            FormData
-        >({
+        createCourse: builder.mutation<CourseCreate, FormData>({
             query: (formData) => ({
                 url: "/admin/courses",
                 method: "POST",
@@ -45,35 +43,25 @@ export const coursesApi = baseApi.injectEndpoints({
                 formData: FormData;
             }
         >({
-            query: ({
-                courseId,
-                formData,
-            }) => ({
+            query: ({ courseId, formData }) => ({
                 url: `/admin/courses/${courseId}`,
                 method: "PATCH",
                 body: formData,
             }),
 
-            invalidatesTags: (
-                _,
-                __,
-                { courseId },
-            ) => [
-                    {
-                        type: TAG_TYPES.COURSES,
-                        id: courseId,
-                    },
-                    {
-                        type: TAG_TYPES.COURSES,
-                        id: "LIST",
-                    },
-                ],
+            invalidatesTags: (_, __, { courseId }) => [
+                {
+                    type: TAG_TYPES.COURSES,
+                    id: courseId,
+                },
+                {
+                    type: TAG_TYPES.COURSES,
+                    id: "LIST",
+                },
+            ],
         }),
 
-        getAdminCourses: builder.query<
-            CourseListItem[],
-            void
-        >({
+        getAdminCourses: builder.query<CourseListItem[], void>({
             query: () => ({
                 url: "/admin/courses",
                 method: "GET",
@@ -99,30 +87,23 @@ export const coursesApi = baseApi.injectEndpoints({
                     ],
         }),
 
-        getAdminCourse: builder.query<
-            CourseDetails,
-            string
-        >({
+        getAdminCourse: builder.query<CourseDetails, string>({
             query: (courseId) => ({
                 url: `/admin/courses/${courseId}`,
                 method: "GET",
             }),
 
-            providesTags: (
-                _,
-                __,
-                courseId,
-            ) => [
-                    {
-                        type: TAG_TYPES.COURSES,
-                        id: courseId,
-                    },
-                ],
+            providesTags: (_, __, courseId) => [
+                {
+                    type: TAG_TYPES.COURSES,
+                    id: courseId,
+                },
+            ],
         }),
 
         /* ─────────────────────────────
-           PUBLIC
-        ───────────────────────────── */
+                   PUBLIC
+                ───────────────────────────── */
 
         getPublicCourses: builder.query<
             PublicCoursesResponse,
@@ -135,10 +116,7 @@ export const coursesApi = baseApi.injectEndpoints({
             }),
         }),
 
-        getPublicCourseDetails: builder.query<
-            PublicCourseDetails,
-            string
-        >({
+        getPublicCourseDetails: builder.query<PublicCourseDetails, string>({
             query: (courseId) => ({
                 url: `/public/courses/${courseId}`,
                 method: "GET",
@@ -146,15 +124,37 @@ export const coursesApi = baseApi.injectEndpoints({
         }),
 
         /* ─────────────────────────────
-           STUDENT
-        ───────────────────────────── */
+                   STUDENT
+                ───────────────────────────── */
 
-        getMyCourses: builder.query<
-            PublicCourseDetails[],
-            void
-        >({
+        getMyCourses: builder.query<StudentMyCourse[], void>({
             query: () => ({
                 url: "/student/courses",
+                method: "GET",
+            }),
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.map((course) => ({
+                            type: TAG_TYPES.ENROLLMENTS,
+                            id: course.courseId,
+                        })),
+                        {
+                            type: TAG_TYPES.ENROLLMENTS,
+                            id: "LIST",
+                        },
+                    ]
+                    : [
+                        {
+                            type: TAG_TYPES.ENROLLMENTS,
+                            id: "LIST",
+                        },
+                    ],
+        }),
+
+        getMyCourseDetails: builder.query<StudentCourseDetails, string>({
+            query: (courseId) => ({
+                url: `/student/courses/${courseId}`,
                 method: "GET",
             }),
         }),
@@ -174,4 +174,5 @@ export const {
 
     /* Student */
     useGetMyCoursesQuery,
+    useGetMyCourseDetailsQuery,
 } = coursesApi;

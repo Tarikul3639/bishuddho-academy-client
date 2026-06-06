@@ -4,21 +4,7 @@ import Image, { type StaticImageData } from "next/image";
 import { MapPin, Clock, Calendar, AlertCircle, ChevronRight, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeUp } from "@/components/animations";
-
-type EnrollStatus = "active" | "pending" | "completed";
-
-export interface EnrolledCourse {
-    id: string;
-    title: string;
-    instructor: string;
-    thumbnail: StaticImageData | string;
-    status: EnrollStatus;
-    schedule: string;
-    location: string;
-    duration: string;
-    currentSession: number;
-    totalSessions: number;
-}
+import type { StudentMyCourse } from "@/types/student-my-course";
 
 const STATUS_CONFIG = {
     active: { label: "Active", bg: "#dcfce7", color: "#16a34a" },
@@ -26,7 +12,7 @@ const STATUS_CONFIG = {
     completed: { label: "Completed", bg: "#eef3ff", color: "#1a56db" },
 };
 
-export const EnrolledCourseCard = ({ course }: { course: EnrolledCourse }) => {
+export const EnrolledCourseCard = ({ course }: { course: StudentMyCourse }) => {
     const status = STATUS_CONFIG[course.status];
     const pct = Math.round((course.currentSession / course.totalSessions) * 100);
 
@@ -35,13 +21,13 @@ export const EnrolledCourseCard = ({ course }: { course: EnrolledCourse }) => {
 
             {/* Thumbnail */}
             <div className="relative h-40 w-full overflow-hidden bg-[#f0f5ff]">
-                {typeof course.thumbnail === "string" ? (
+                {typeof course.thumbnailUrl === "string" ? (
                     <div className="flex h-full items-center justify-center">
                         <MapPin className="h-10 w-10 text-[#1a56db]/20" />
                     </div>
                 ) : (
                     <Image
-                        src={course.thumbnail}
+                        src={course.thumbnailUrl}
                         alt={course.title}
                         fill
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -111,7 +97,7 @@ export const EnrolledCourseCard = ({ course }: { course: EnrolledCourse }) => {
                         Payment under review
                     </div>
                 ) : (
-                    <Link href={`/my-courses/${course.id}`}>
+                    <Link href={`/student/my-courses/${course.courseId}`} className="mt-auto">
                         <button className="group/btn flex w-full items-center justify-center gap-1.5 rounded-sm bg-primary py-2.5 text-[13px] font-bold text-white transition-all duration-200 hover:bg-primary/95 hover:shadow-[0_4px_16px_rgba(26,86,219,0.3)] cursor-pointer">
                             View Details
                             <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
