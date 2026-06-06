@@ -1,3 +1,12 @@
+# [0.6.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.5.0...v0.6.0) (2026-06-06)
+
+
+### Features
+
+* add course creation workflow with RTK Query ([0a304d0](https://github.com/Tarikul3639/bishuddho-academy-client/commit/0a304d0d47d8c1137773a00105d556990a8ab923))
+* **auth,routing:** implement role-based authentication and dashboard architecture ([3525ace](https://github.com/Tarikul3639/bishuddho-academy-client/commit/3525acef2a46f6420ff1d2621ae193d23f489c38))
+* **courses:** add public course pages, API integration, and admin course improvements ([477130d](https://github.com/Tarikul3639/bishuddho-academy-client/commit/477130d5f4ff286338c5fbe28efb56a992546a9a))
+
 # [0.5.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.4.0...v0.5.0) (2026-06-03)
 
 
