@@ -1,3 +1,12 @@
+# [0.7.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.6.0...v0.7.0) (2026-06-06)
+
+
+### Features
+
+* add student my courses and course details  integration ([4b4d393](https://github.com/Tarikul3639/bishuddho-academy-client/commit/4b4d39360d89496856354ddc4e71cc52231581d7))
+* add student my courses and course details  integration ([2b12aac](https://github.com/Tarikul3639/bishuddho-academy-client/commit/2b12aacb7579f67d4d65b7e76f0b37a8489a0a56))
+* add student my courses integration ([d86bad5](https://github.com/Tarikul3639/bishuddho-academy-client/commit/d86bad56da2a61aeb93153d05385a6350af345a2))
+
 # [0.6.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.5.0...v0.6.0) (2026-06-06)
 
 
