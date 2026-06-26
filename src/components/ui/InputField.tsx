@@ -17,7 +17,7 @@ interface InputFieldProps {
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => void;
     placeholder?: string;
-    type?: "text" | "email" | "password" | "number" | "tel";
+    type?: "text" | "email" | "password" | "number" | "tel" | "date";
     textarea?: boolean;
     rows?: number;
     disabled?: boolean;
@@ -49,6 +49,7 @@ export function InputField({
     const [showPassword, setShowPassword] = useState(false);
 
     const isPassword = type === "password";
+    const isDate = type === "date";
 
     const baseClass =
         "w-full rounded-md border py-3 text-sm outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-50";
@@ -58,6 +59,17 @@ export function InputField({
         : success
             ? "border-primary focus:border-primary focus:ring-2 focus:ring-primary/20"
             : "border-gray-200 bg-gray-50 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20";
+
+    // Date inputs have their own browser-native calendar icon on the right.
+    // Left icon conflicts with pl-10 on narrow fields, so we skip it for dates.
+    const showLeftIcon = Icon && !isDate;
+
+    // Right-side icons (error/success) push into the browser date picker area,
+    // so we suppress them for date inputs too.
+    const showRightIcons = !isDate;
+
+    const leftPadding = showLeftIcon ? "pl-10" : "px-4";
+    const rightPadding = isPassword ? "pr-10" : "";
 
     return (
         <div className={className}>
@@ -69,8 +81,8 @@ export function InputField({
             )}
 
             <div className="relative group flex items-center">
-                {/* Left Icon */}
-                {Icon && (
+                {/* Left Icon — hidden for date inputs */}
+                {showLeftIcon && (
                     <Icon
                         className={`absolute left-3 z-10 h-4 w-4 transition-colors ${error
                                 ? "text-red-500"
@@ -89,8 +101,7 @@ export function InputField({
                         placeholder={placeholder}
                         rows={rows}
                         disabled={disabled}
-                        className={`${baseClass} resize-none px-4 ${stateClass} ${Icon ? "pl-10" : ""
-                            }`}
+                        className={`${baseClass} resize-none px-4 ${stateClass}`}
                     />
                 ) : (
                     <input
@@ -100,36 +111,42 @@ export function InputField({
                         onChange={onChange}
                         placeholder={placeholder}
                         disabled={disabled}
-                        className={`${baseClass} ${stateClass} ${Icon ? "pl-10" : "px-4"
-                            } ${isPassword ? "pr-10" : ""}`}
+                        // Date inputs need full px-4 on both sides; no custom right icons
+                        className={`${baseClass} ${stateClass} ${leftPadding} ${rightPadding} ${isDate
+                                ? // Let the native date widget breathe; clip colour tint on webkit
+                                "[color-scheme:light] cursor-pointer"
+                                : ""
+                            }`}
                     />
                 )}
 
-                {/* Right Action Icons Container */}
-                <div className="absolute right-3 flex items-center gap-1.5">
-                    {/* Password Toggle */}
-                    {isPassword && !textarea && (
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword((p) => !p)}
-                            className="text-gray-400 transition-colors hover:text-gray-600 focus:outline-none cursor-pointer"
-                        >
-                            {showPassword ? (
-                                <EyeOff className="h-4 w-4" />
-                            ) : (
-                                <Eye className="h-4 w-4" />
-                            )}
-                        </button>
-                    )}
+                {/* Right Action Icons — hidden for date inputs */}
+                {showRightIcons && (
+                    <div className="absolute right-3 flex items-center gap-1.5">
+                        {/* Password Toggle */}
+                        {isPassword && !textarea && (
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((p) => !p)}
+                                className="text-gray-400 transition-colors hover:text-gray-600 focus:outline-none cursor-pointer"
+                            >
+                                {showPassword ? (
+                                    <EyeOff className="h-4 w-4" />
+                                ) : (
+                                    <Eye className="h-4 w-4" />
+                                )}
+                            </button>
+                        )}
 
-                    {/* Error Icon */}
-                    {error && <AlertCircle className="h-4 w-4 text-red-500" />}
+                        {/* Error Icon */}
+                        {error && <AlertCircle className="h-4 w-4 text-red-500" />}
 
-                    {/* Success Icon */}
-                    {success && !error && (
-                        <CheckCircle2 className="h-4 w-4 text-primary" />
-                    )}
-                </div>
+                        {/* Success Icon */}
+                        {success && !error && (
+                            <CheckCircle2 className="h-4 w-4 text-primary" />
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Bottom Feedbacks */}
