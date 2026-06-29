@@ -9,13 +9,11 @@ import { useRouter } from "next/navigation";
 interface EnrollCardProps {
     course: PublicCourseDetails;
     thumbnailImg: StaticImageData | string;
-    onEnroll?: () => void;
 }
 
 export function EnrollCard({
     course,
     thumbnailImg,
-    onEnroll,
 }: EnrollCardProps) {
     const router = useRouter();
     const {
@@ -111,7 +109,7 @@ export function EnrollCard({
                         : "bg-primary text-white hover:bg-primary/90 active:scale-[0.98]"
                         }`}
                     onClick={
-                        isEnrolled ? () => router.push(`/my-courses/${courseId}`) : onEnroll
+                        isEnrolled ? () => router.push(`/student/my-courses/${courseId}`) : () => router.push(`/courses/${courseId}/payment`)
                     }
                 >
                     {isEnrolled ? "Continue Learning" : "Book Your Seat"}

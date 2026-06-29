@@ -59,15 +59,17 @@ export default function FilterBar({
             <div className="flex flex-wrap items-center gap-2">
                 <SelectBox value={status} onChange={onStatus}>
                     <option value="">All Status</option>
-                    <option value="active">Active</option>
                     <option value="pending">Pending</option>
-                    <option value="completed">Completed</option>
+                    <option value="verified">Verified</option>
+                    <option value="rejected">Rejected</option>
                 </SelectBox>
 
                 <SelectBox value={method} onChange={onMethod}>
                     <option value="">All Methods</option>
                     <option value="bkash">bKash</option>
                     <option value="nagad">Nagad</option>
+                    <option value="rocket">Rocket</option>
+                    <option value="bank_transfer">Bank Transfer</option>
                     <option value="cash">Cash</option>
                 </SelectBox>
 

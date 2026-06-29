@@ -5,11 +5,13 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { useGetPublicCoursesQuery } from "@/redux/features/courses/courses.api";
+import { useAppSelector } from "@/redux/hooks";
 
 import CoursesGrid from "../courses/components/CoursesGrid";
 import { fadeUp, stagger } from "@/components/animations";
 
 export default function CoursesSection() {
+  const user = useAppSelector((state) => state.auth.user);
   const {
     data,
     isLoading,
@@ -17,6 +19,7 @@ export default function CoursesSection() {
   } = useGetPublicCoursesQuery({
     page: 1,
     limit: 3,
+    userId: user?.userId,
   });
 
   const courses = data?.courses ?? [];

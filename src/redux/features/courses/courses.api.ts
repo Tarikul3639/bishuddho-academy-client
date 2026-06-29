@@ -12,6 +12,7 @@ import type { StudentMyCourse } from "@/types/student-my-course";
 interface GetPublicCoursesParams {
     limit?: number;
     page?: number;
+    userId?: string;
 }
 
 /* API */

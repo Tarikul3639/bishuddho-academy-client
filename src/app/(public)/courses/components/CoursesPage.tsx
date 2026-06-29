@@ -10,8 +10,11 @@ import SearchBox from "./SearchBox";
 import CoursesGrid from "./CoursesGrid";
 
 import { useGetPublicCoursesQuery } from "@/redux/features/courses/courses.api";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function CoursesClient() {
+    const user = useAppSelector((state) => state.auth.user);
+
     const {
         data,
         isLoading,
@@ -19,6 +22,7 @@ export default function CoursesClient() {
     } = useGetPublicCoursesQuery({
         page: 1,
         limit: 10,
+        userId: user?.userId,
     });
 
     const courses = data?.courses ?? [];

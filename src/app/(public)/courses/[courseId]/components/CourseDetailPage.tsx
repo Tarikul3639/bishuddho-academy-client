@@ -1,14 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
 
 import { CourseHeader } from "./CourseHeader";
 import { CourseModule } from "./CourseModule";
 import { CourseDescription } from "./CourseDescription";
 import { EnrollCard } from "./EnrollCard";
 import { CourseDetailSkeleton } from "./CourseDetailSkeleton";
-import PaymentModal from "@/components/payment/PaymentModal";
 
 import { fadeUp, stagger } from "@/components/animations";
 import thumbnailImg from "@/assets/thumbnails/one.jpg";
@@ -17,8 +15,6 @@ import { useGetPublicCourseDetailsQuery } from "@/redux/features/courses/courses
 import type { CourseModuleType } from "@/types/public-course-details";
 
 export function CourseDetailPage({ courseId }: { courseId: string }) {
-    const [modalOpen, setModalOpen] = useState(false);
-
     const {
         data: course,
         isLoading,
@@ -88,7 +84,6 @@ export function CourseDetailPage({ courseId }: { courseId: string }) {
                                 <EnrollCard
                                     course={course}
                                     thumbnailImg={thumbnailImg}
-                                    onEnroll={() => setModalOpen(true)}
                                 />
                             </div>
                         </motion.div>
@@ -132,13 +127,6 @@ export function CourseDetailPage({ courseId }: { courseId: string }) {
                     </div>
                 </div>
             </motion.main>
-
-            {/* Payment Modal*/}
-            <PaymentModal
-                isOpen={modalOpen}
-                onClose={() => setModalOpen(false)}
-                course={{ title: course.title, price: course.price }}
-            />
         </>
     );
 }

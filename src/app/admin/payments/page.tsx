@@ -6,7 +6,9 @@ import { motion } from "framer-motion";
 import { stagger, fadeUp } from "@/components/animations";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { ENROLLMENTS } from "../_data/enrollments";
+import { toast } from "sonner";
+
+import { useGetAdminPurchasesQuery, useUpdatePurchaseStatusMutation } from "@/redux/features/purchases/admin-purchases.api";
 import FilterBar     from "./components/FilterBar";
 import SummaryBadges from "./components/SummaryBadges";
 import PaymentsTable from "./components/PaymentsTable";
@@ -18,29 +20,38 @@ export default function PaymentsPage() {
     const [method, setMethod] = useState("");
     const [course, setCourse] = useState("");
 
+    const { data: payments = [], isLoading } = useGetAdminPurchasesQuery({ status, method });
+    const [updateStatus] = useUpdatePurchaseStatusMutation();
+
     const filtered = useMemo(() => {
-        return ENROLLMENTS.filter((e) => {
-            const matchSearch = !search || [e.name, e.email, e.course]
+        return payments.filter((e) => {
+            const matchSearch = !search || [e.studentName, e.studentEmail, e.courseTitle]
                 .some((f) => f.toLowerCase().includes(search.toLowerCase()));
-            const matchStatus = !status || e.status === status;
-            const matchMethod = !method || e.method === method;
-            const matchCourse = !course || e.course === course;
-            return matchSearch && matchStatus && matchMethod && matchCourse;
+            const matchCourse = !course || e.courseTitle === course;
+            return matchSearch && matchCourse;
         });
-    }, [search, status, method, course]);
+    }, [payments, search, course]);
 
     const handleReset = () => {
         setSearch(""); setStatus(""); setMethod(""); setCourse("");
     };
 
-    const handleVerify = (id: string) => {
-        // TODO: PATCH /payments/:id/verify
-        console.log("Verify:", id);
+    const handleVerify = async (id: string) => {
+        try {
+            await updateStatus({ id, status: "verified" }).unwrap();
+            toast.success("Payment verified successfully");
+        } catch {
+            toast.error("Failed to verify payment");
+        }
     };
 
-    const handleReject = (id: string) => {
-        // TODO: PATCH /payments/:id/reject
-        console.log("Reject:", id);
+    const handleReject = async (id: string) => {
+        try {
+            await updateStatus({ id, status: "rejected" }).unwrap();
+            toast.success("Payment rejected");
+        } catch {
+            toast.error("Failed to reject payment");
+        }
     };
 
     return (
@@ -68,7 +79,7 @@ export default function PaymentsPage() {
                         Manage and verify student payments
                     </p>
                 </div>
-                <SummaryBadges data={ENROLLMENTS} />
+                <SummaryBadges data={payments} />
             </motion.div>
 
             {/* Filters */}
@@ -83,13 +94,14 @@ export default function PaymentsPage() {
 
             {/* Result count */}
             <motion.p variants={fadeUp} className="text-[12px] text-[#9ca3af]">
-                Showing {filtered.length} of {ENROLLMENTS.length} payments
+                Showing {filtered.length} of {payments.length} payments
             </motion.p>
 
             {/* Table */}
             <motion.div variants={fadeUp}>
                 <PaymentsTable
                     data={filtered}
+                    isLoading={isLoading}
                     onVerify={handleVerify}
                     onReject={handleReject}
                 />

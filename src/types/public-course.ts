@@ -20,6 +20,7 @@ export interface PublicCourse {
     averageRating: number;
     reviewCount: number;
     status: CourseStatus;
+    isEnrolled?: boolean;
 }
 
 export interface PublicCoursesResponse {

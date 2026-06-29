@@ -47,11 +47,15 @@ export default function CourseCard({ course }: { course: PublicCourse }) {
                     >
                         {status.label}
                     </span>
-                    {hasDiscount && (
+                    {course.isEnrolled ? (
+                        <span className="rounded-sm bg-[#16a34a] px-2 py-0.5 text-[10px] font-bold text-white">
+                            Enrolled
+                        </span>
+                    ) : hasDiscount ? (
                         <span className="rounded-sm bg-[#dc2626] px-2 py-0.5 text-[10px] font-bold text-white">
                             {discount}% OFF
                         </span>
-                    )}
+                    ) : null}
                 </div>
             </div>
 
