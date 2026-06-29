@@ -1,41 +1,33 @@
-import type { CourseStatus } from "@/types/course-status";
-import { Banknote, Smartphone } from "lucide-react";
-
 export const METHOD_CONFIG = {
     bkash: {
         label: "bKash",
         bg: "#FDF2F8",
         color: "#E2136E",
         border: "#FBCFE8",
-        icon: Smartphone,
     },
     nagad: {
         label: "Nagad",
         bg: "#FFF8F0",
         color: "#F7941D",
         border: "#FDE68A",
-        icon: Smartphone,
     },
     rocket: {
         label: "Rocket",
         bg: "#F3E8FF",
         color: "#7C3AED",
         border: "#DDD6FE",
-        icon: Smartphone,
     },
     bank_transfer: {
         label: "Bank Transfer",
         bg: "#EFF6FF",
         color: "#2563EB",
         border: "#BFDBFE",
-        icon: Banknote,
     },
     cash: {
         label: "Cash",
         bg: "#F0FDF4",
         color: "#059669",
         border: "#BBF7D0",
-        icon: Smartphone,
     },
 } as const;
 
@@ -72,41 +64,5 @@ export const PAYMENT_STATUS_CONFIG = {
         label: "Rejected",
         bg: "#fee2e2",
         color: "#dc2626",
-    },
-} as const;
-
-export const STATUS_OPTIONS: {
-    label: string;
-    value: CourseStatus;
-}[] = [
-        {
-            label: "Active",
-            value: "active",
-        },
-        {
-            label: "Upcoming",
-            value: "upcoming",
-        },
-        {
-            label: "Completed",
-            value: "completed",
-        },
-    ];
-
-export const STATUS_CONFIG = {
-    active: {
-        label: "Active",
-        bg: "#dcfce7",
-        color: "#16a34a",
-    },
-    upcoming: {
-        label: "Upcoming",
-        bg: "#fff7ed",
-        color: "#ea580c",
-    },
-    completed: {
-        label: "Completed",
-        bg: "#eef3ff",
-        color: "#1a56db",
     },
 } as const;

@@ -15,24 +15,26 @@ const STATUS_CONFIG = {
 export const EnrolledCourseCard = ({ course }: { course: StudentMyCourse }) => {
     const status = STATUS_CONFIG[course.status];
     const pct = Math.round((course.currentSession / course.totalSessions) * 100);
+    const thumbnail = `${process.env.NEXT_PUBLIC_API_URL}${course.thumbnailUrl}`;
 
     return (
         <motion.div variants={fadeUp} className="group overflow-hidden rounded-lg border border-[#e5e7eb] bg-white">
 
             {/* Thumbnail */}
             <div className="relative h-40 w-full overflow-hidden bg-[#f0f5ff]">
-                {typeof course.thumbnailUrl === "string" ? (
+                {course.thumbnailUrl ? (
+                    <Image
+                        src={thumbnail}
+                        alt={course.title}
+                        fill
+                        unoptimized
+                        loading="eager"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                ) : (
                     <div className="flex h-full items-center justify-center">
                         <MapPin className="h-10 w-10 text-[#1a56db]/20" />
                     </div>
-                ) : (
-                    <Image
-                        src={course.thumbnailUrl}
-                        alt={course.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
                 )}
                 <div className="absolute inset-0 bg-linear-to-t from-black/25 to-transparent" />
 

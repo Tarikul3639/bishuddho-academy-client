@@ -1,9 +1,7 @@
 // types/public-course.ts
 
-/**
- * Represents the current lifecycle status of a course.
- */
-export type CourseStatus = "active" | "upcoming" | "completed";
+import { CourseStatus } from "@/types/course-status";
+import { EnrollmentStatus, PublicCoursePayment } from "./public-course-details";
 
 /**
  * Interface representing the summary view of a course, 
@@ -19,8 +17,10 @@ export interface PublicCourse {
     originalPrice: number;
     averageRating: number;
     reviewCount: number;
-    status: CourseStatus;
-    isEnrolled?: boolean;
+
+    isEnrolled: boolean;
+    enrollmentStatus?: EnrollmentStatus;
+    payment?: PublicCoursePayment;
 }
 
 export interface PublicCoursesResponse {

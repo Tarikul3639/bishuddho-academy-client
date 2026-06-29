@@ -5,10 +5,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { stagger, fadeUp } from "@/components/animations";
 import { CheckCircle, XCircle, Search, RotateCcw, ChevronDown } from "lucide-react";
-import {
-    METHOD_CONFIG, STUDENT_STATUS_CONFIG,
-    type EnrolledStudent,
-} from "../../app/admin/_data/courseDetail";
+import { METHOD_CONFIG, PAYMENT_STATUS_CONFIG } from "@/constants/course.constants";
+import type { EnrolledStudent } from "@/types/admin-course-details";
 
 function getInitials(name: string) {
     return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
@@ -21,8 +19,8 @@ function TableRow({
     onVerify: (id: string) => void;
     onReject: (id: string) => void;
 }) {
-    const m = METHOD_CONFIG[student.method];
-    const status = STUDENT_STATUS_CONFIG[student.status];
+    const m = METHOD_CONFIG[student.payment?.method || "cash"];
+    const paymentStatus = PAYMENT_STATUS_CONFIG[student.payment?.status || "pending"];
 
     return (
         <motion.tr
@@ -33,11 +31,11 @@ function TableRow({
             <td className="px-4 py-3">
                 <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#1a56db] to-[#60a5fa] text-[11px] font-bold text-white">
-                        {getInitials(student.name)}
+                        {getInitials(student.user.name)}
                     </div>
                     <div className="min-w-0">
-                        <p className="truncate text-[13px] font-bold text-[#0d1b3e]">{student.name}</p>
-                        <p className="truncate text-[11px] text-[#6b7280]">{student.email}</p>
+                        <p className="truncate text-[13px] font-bold text-[#0d1b3e]">{student.user.name}</p>
+                        <p className="truncate text-[11px] text-[#6b7280]">{student.user.email}</p>
                     </div>
                 </div>
             </td>
@@ -51,9 +49,9 @@ function TableRow({
                     >
                         {m.label}
                     </span>
-                    {student.trxId ? (
+                    {student.payment?.trxId ? (
                         <span className="rounded-md bg-[#f3f4f6] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#374151]">
-                            {student.trxId}
+                            {student.payment.trxId}
                         </span>
                     ) : (
                         <span className="text-[11px] text-[#9ca3af]">—</span>
@@ -63,33 +61,33 @@ function TableRow({
 
             {/* Amount + date */}
             <td className="hidden px-4 py-3 sm:table-cell">
-                <p className="text-[13px] font-bold text-[#0d1b3e]">৳{student.amount.toLocaleString()}</p>
-                <p className="text-[11px] text-[#9ca3af]">{student.date}</p>
+                <p className="text-[13px] font-bold text-[#0d1b3e]">৳{student.payment?.amount?.toLocaleString()}</p>
+                <p className="text-[11px] text-[#9ca3af]">{student.payment?.paidAt}</p>
             </td>
 
             {/* Status */}
             <td className="px-4 py-3">
                 <span
                     className="rounded-full px-2.5 py-1 text-[10px] font-bold"
-                    style={{ background: status.bg, color: status.color }}
+                    style={{ background: paymentStatus.bg, color: paymentStatus.color }}
                 >
-                    {status.label}
+                    {paymentStatus.label}
                 </span>
             </td>
 
             {/* Actions */}
             <td className="px-4 py-3">
-                {student.status === "pending" ? (
+                {student.payment?.status === "pending" ? (
                     <div className="flex items-center gap-1.5">
                         <button
-                            onClick={() => onVerify(student.enrollId)}
+                            onClick={() => onVerify(student.enrollment.enrollmentId)}
                             className="flex items-center gap-1 rounded-lg bg-[#dcfce7] px-2.5 py-1.5 text-[11px] font-bold text-[#16a34a] transition-colors hover:bg-[#bbf7d0]"
                         >
                             <CheckCircle className="h-3.5 w-3.5" />
                             <span className="hidden sm:block">Verify</span>
                         </button>
                         <button
-                            onClick={() => onReject(student.enrollId)}
+                            onClick={() => onReject(student.enrollment.enrollmentId)}
                             className="flex items-center gap-1 rounded-lg bg-[#fee2e2] px-2.5 py-1.5 text-[11px] font-bold text-[#ef4444] transition-colors hover:bg-[#fecaca]"
                         >
                             <XCircle className="h-3.5 w-3.5" />
@@ -115,15 +113,15 @@ export default function StudentsTable({
     const [status, setStatus] = useState("");
 
     const filtered = students.filter((s) => {
-        const matchSearch = !search || [s.name, s.email]
+        const matchSearch = !search || [s.user.name, s.user.email]
             .some((f) => f.toLowerCase().includes(search.toLowerCase()));
-        const matchStatus = !status || s.status === status;
+        const matchStatus = !status || s.payment?.status === status;
         return matchSearch && matchStatus;
     });
 
-    const pending = students.filter((s) => s.status === "pending").length;
-    const active = students.filter((s) => s.status === "active").length;
-    const completed = students.filter((s) => s.status === "completed").length;
+    const pending = students.filter((s) => s.payment?.status === "pending").length;
+    const verified = students.filter((s) => s.payment?.status === "verified").length;
+    const rejected = students.filter((s) => s.payment?.status === "rejected").length;
     const hasFilter = search || status;
 
     return (
@@ -139,9 +137,9 @@ export default function StudentsTable({
                 </h2>
                 <div className="flex flex-wrap gap-2">
                     {[
-                        { label: `${active} Active`, bg: "#dcfce7", color: "#16a34a" },
+                        { label: `${verified} Verified`, bg: "#dcfce7", color: "#16a34a" },
                         { label: `${pending} Pending`, bg: "#fff7ed", color: "#ea580c" },
-                        { label: `${completed} Done`, bg: "#eef3ff", color: "#1a56db" },
+                        { label: `${rejected} Rejected`, bg: "#fee2e2", color: "#dc2626" },
                     ].map((b) => (
                         <span key={b.label} className="rounded-full px-2.5 py-1 text-[11px] font-bold"
                             style={{ background: b.bg, color: b.color }}>{b.label}</span>
@@ -168,9 +166,9 @@ export default function StudentsTable({
                         className="appearance-none rounded-lg border border-[#e5e7eb] bg-white py-2 pl-3.5 pr-8 text-[13px] text-[#374151] outline-none focus:border-[#1a56db]"
                     >
                         <option value="">All Status</option>
-                        <option value="active">Active</option>
+                        <option value="verified">Verified</option>
                         <option value="pending">Pending</option>
-                        <option value="completed">Completed</option>
+                        <option value="rejected">Rejected</option>
                     </select>
                     <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#9ca3af]" />
                 </div>
@@ -210,7 +208,7 @@ export default function StudentsTable({
                             {filtered.length > 0 ? (
                                 filtered.map((s) => (
                                     <TableRow
-                                        key={s.enrollId}
+                                        key={s.enrollment.enrollmentId}
                                         student={s}
                                         onVerify={onVerify}
                                         onReject={onReject}

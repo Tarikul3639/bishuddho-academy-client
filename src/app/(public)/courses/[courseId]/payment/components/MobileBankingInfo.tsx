@@ -14,47 +14,55 @@ export default function MobileBankingInfo({ method, price }: MobileBankingInfoPr
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.18 }}
             className="space-y-3"
         >
-            {/* Amount to pay */}
+            {/* Amount */}
             <div
-                className="rounded-lg border-2 p-3 text-center"
-                style={{ borderColor: method.color + "40", backgroundColor: method.color + "08" }}
+                className="rounded-lg border p-3 text-center"
+                style={{
+                    borderColor: method.color + "35",
+                    backgroundColor: method.color + "06",
+                }}
             >
-                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
                     Amount to Send
                 </p>
-                <p className="mt-0.5 text-xl font-bold" style={{ color: method.color }}>
+                <p
+                    className="mt-0.5 text-xl font-bold leading-none"
+                    style={{ color: method.color }}
+                >
                     ৳{price.toLocaleString()}
                 </p>
             </div>
 
-            {/* Payment number */}
-            <div className="space-y-2">
+            {/* Payment Number */}
+            <div className="space-y-1.5">
                 <p className="text-sm font-semibold text-card-foreground">
-                    Send money to this {method.name} number:
+                    Send money to {method.name}
                 </p>
+
                 <CopyField
-                    label={`${method.name} ${method.accountType || "Personal"} Number`}
+                    label={`${method.name} ${method.accountType ?? "Personal"} Number`}
                     value={method.number}
                 />
             </div>
 
             {/* Reference */}
-            <div className="rounded border border-dashed border-border bg-muted/30 p-3">
-                <p className="text-[11px] font-medium text-muted-foreground">
-                    Reference / Note (when sending)
-                </p>
-                <div className="mt-1.5">
-                    <CopyField label="Reference Code" value={ref} />
+            <div className="rounded-lg border border-dashed border-border bg-muted/20 p-3 space-y-2">
+                <div>
+                    <p className="text-[11px] font-medium text-muted-foreground">
+                        Reference Code
+                    </p>
+                    <p className="text-[10px] text-muted-foreground">
+                        Use this when sending payment
+                    </p>
                 </div>
-                <p className="mt-1.5 text-[10px] text-muted-foreground">
-                    Add this reference so we can identify your payment.
-                </p>
+
+                <CopyField label="Ref ID" value={ref} />
             </div>
         </motion.div>
     );

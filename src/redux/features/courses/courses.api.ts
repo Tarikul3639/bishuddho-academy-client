@@ -2,7 +2,7 @@ import { baseApi } from "@/redux/api/baseApi";
 import { TAG_TYPES } from "@/redux/api/tag-types";
 
 import type { CourseCreate } from "@/types/course-create";
-import type { CourseDetails } from "@/types/course-details";
+import type { CourseDetails } from "@/types/admin-course-details";
 import type { CourseListItem } from "@/types/course-list-item";
 import type { PublicCoursesResponse } from "@/types/public-course";
 import type { PublicCourseDetails } from "@/types/public-course-details";
@@ -102,6 +102,50 @@ export const coursesApi = baseApi.injectEndpoints({
             ],
         }),
 
+        verifyPayment: builder.mutation<
+            void,
+            {
+                courseId: string;
+                paymentId: string;
+            }
+        >({
+            query: ({ paymentId }) => ({
+                url: `/admin/courses/payments/${paymentId}/verify`,
+                method: "PATCH",
+            }),
+
+            invalidatesTags: (_, __, { courseId }) => [
+                {
+                    type: TAG_TYPES.COURSES,
+                    id: courseId,
+                },
+            ],
+        }),
+
+        rejectPayment: builder.mutation<
+            void,
+            {
+                courseId: string;
+                paymentId: string;
+                reason: string;
+            }
+        >({
+            query: ({ paymentId, reason }) => ({
+                url: `/admin/courses/payments/${paymentId}/reject`,
+                method: "PATCH",
+                body: {
+                    reason,
+                },
+            }),
+
+            invalidatesTags: (_, __, { courseId }) => [
+                {
+                    type: TAG_TYPES.COURSES,
+                    id: courseId,
+                },
+            ],
+        }),
+
         /* ─────────────────────────────
                    PUBLIC
                 ───────────────────────────── */
@@ -168,6 +212,8 @@ export const {
     useUpdateCourseMutation,
     useGetAdminCoursesQuery,
     useGetAdminCourseQuery,
+    useVerifyPaymentMutation,
+    useRejectPaymentMutation,
 
     /* Public */
     useGetPublicCoursesQuery,

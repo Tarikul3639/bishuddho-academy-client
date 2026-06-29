@@ -1,6 +1,7 @@
 // app/admin/courses/[courseId]/components/tabs/BatchInfoTab.tsx
 "use client";
 
+import type { CourseStatus } from "@/types/course-status";
 import { STATUS_OPTIONS } from "@/constants/course.constants";
 import { Calendar, MapPin, Clock, Users, User } from "lucide-react";
 
@@ -94,7 +95,7 @@ export default function BatchInfoTab({
     onChange,
 }: {
     instructor: string;
-    status: string;
+    status: CourseStatus;
     bookedSeats?: number;
     totalSeats: number;
     schedule: string;

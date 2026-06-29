@@ -418,11 +418,9 @@ function OverallProgress({ modules }: { modules: CourseModule[] }) {
 export default function CurriculumTab({
     modules,
     onChange,
-    onSessionChange,
 }: {
     modules: CourseModule[];
     onChange: (modules: CourseModule[]) => void;
-    onSessionChange: (session: number) => void;
 }) {
     const [adding, setAdding] = useState(false);
 
@@ -430,14 +428,11 @@ export default function CurriculumTab({
         const updated = [...modules];
         updated[i] = mod;
         onChange(updated);
-        // Auto-update currentSession from completed classes
-        onSessionChange(calcCurrentSession(updated));
     };
 
     const deleteModule = (i: number) => {
         const updated = modules.filter((_, idx) => idx !== i);
         onChange(updated);
-        onSessionChange(calcCurrentSession(updated));
     };
 
     const addModule = (title: string) => {

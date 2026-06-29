@@ -256,10 +256,6 @@ export default function AddNewCoursesPage() {
                     <CurriculumTab
                         modules={course.modules}
                         onChange={(modules) => setCourse((p) => ({ ...p, modules }))}
-                        onSessionChange={(session) => {
-                            // TODO: PATCH /admin/enrollments/:id { currentSession: session }
-                            console.log("Current session:", session);
-                        }}
                     />
                 )}
 

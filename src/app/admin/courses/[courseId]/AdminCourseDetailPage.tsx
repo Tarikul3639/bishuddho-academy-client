@@ -5,15 +5,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { stagger, fadeUp } from "@/components/animations";
 import { ArrowLeft, CircleAlert, Loader2, RefreshCw, Save } from "lucide-react";
 
 import { useFormDirty } from "@/hooks/useFormDirty";
-
-// import {
-//     COURSE_DETAIL,
-//     type AdminCourseDetail,
-// } from "../../_data/courseDetail";
 
 import AboutTab from "@/components/courses/tabs/AboutTab";
 import IncludedTab from "@/components/courses/tabs/IncludedTab";
@@ -24,8 +20,13 @@ import PricingTab from "@/components/courses/tabs/PricingTab";
 import CourseSidebar from "@/components/courses/CourseSidebar";
 import CourseHero from "@/components/courses/CourseHero";
 
-import type { CourseDetails } from "@/types/course-details";
-import { useGetAdminCourseQuery, useUpdateCourseMutation } from "@/redux/features/courses/courses.api";
+import type { CourseDetails } from "@/types/admin-course-details";
+import {
+    useGetAdminCourseQuery,
+    useRejectPaymentMutation,
+    useUpdateCourseMutation,
+    useVerifyPaymentMutation,
+} from "@/redux/features/courses/courses.api";
 import { NormalizeError } from "@/redux/api/apiError";
 
 // ── Tab config ────────────────────────────────────────────────────────────────
@@ -55,29 +56,25 @@ export default function AdminCourseDetailPage({
         error,
     } = useGetAdminCourseQuery(courseId);
 
-    const [
-        updateCourse,
-        {
-            isLoading: isUpdating,
-            isError: isUpdateError,
-            error: updateError,
-        },
-    ] = useUpdateCourseMutation();
+    const [updateCourse, { isLoading: isUpdating, isError: isUpdateError, error: updateError }] =
+        useUpdateCourseMutation();
+
+    const [verifyPayment] = useVerifyPaymentMutation();
+    const [rejectPayment] = useRejectPaymentMutation();
+
+    const [verifyingPaymentId, setVerifyingPaymentId] = useState<string | null>(null);
+    const [rejectingPaymentId, setRejectingPaymentId] = useState<string | null>(null);
 
     const [course, setCourse] = useState<CourseDetails | null>(null);
-
     const [saved, setSaved] = useState(false);
 
     useEffect(() => {
-        if (courseData) {
-            setCourse(courseData);
-        }
+        if (courseData) setCourse(courseData);
     }, [courseData]);
 
-    const { isDirty, dirtyFields, getChangedValues, resetBaseline } =
-        useFormDirty(course, {
-            ignore: ["courseId"],
-        });
+    const { isDirty, getChangedValues, resetBaseline } = useFormDirty(course, {
+        ignore: ["courseId"],
+    });
 
     if (isLoading) {
         return (
@@ -100,67 +97,54 @@ export default function AdminCourseDetailPage({
     };
 
     const handleSave = async () => {
+        const toastId = toast.loading("Saving changes...");
         try {
-            const changedValues =
-                getChangedValues();
-
-            console.log(
-                JSON.stringify(
-                    changedValues,
-                    null,
-                    2
-                )
-            );
+            const changedValues = getChangedValues();
             const formData = new FormData();
 
             if (course.thumbnailFile) {
-                formData.append(
-                    "thumbnailFile",
-                    course.thumbnailFile,
-                );
+                formData.append("thumbnailFile", course.thumbnailFile);
             }
+            formData.append("courseData", JSON.stringify(changedValues));
 
-            formData.append(
-                "courseData",
-                JSON.stringify(changedValues),
-            );
-
-            await updateCourse({
-                courseId,
-                formData,
-            }).unwrap();
+            await updateCourse({ courseId, formData }).unwrap();
 
             resetBaseline(course);
-
             setSaved(true);
-
-        } catch (error) {
-            console.error(error);
+            toast.success("Changes saved successfully.", { id: toastId });
+        } catch (err) {
+            const message = NormalizeError(err).message || "Failed to save changes.";
+            toast.error(message, { id: toastId });
         }
     };
 
-    const handleVerify = (id: string) =>
+    const handleVerify = async (paymentId: string) => {
+        setVerifyingPaymentId(paymentId);
+        const toastId = toast.loading("Verifying payment...");
+        try {
+            await verifyPayment({ courseId, paymentId }).unwrap();
+            toast.success("Payment verified successfully.", { id: toastId });
+        } catch (err) {
+            const message = NormalizeError(err).message || "Failed to verify payment.";
+            toast.error(message, { id: toastId });
+        } finally {
+            setVerifyingPaymentId(null);
+        }
+    };
 
-        setCourse((prev) => {
-            if (!prev) return prev;
-
-            return {
-                ...prev,
-                students: prev.students.map((s) =>
-                    s.enrollId === id ? { ...s, status: "active" as const } : s,
-                ),
-            };
-        });
-
-    const handleReject = (id: string) =>
-        setCourse((prev) => {
-            if (!prev) return prev;
-
-            return {
-                ...prev,
-                students: prev.students.filter((s) => s.enrollId !== id),
-            };
-        });
+    const handleReject = async (paymentId: string, reason: string) => {
+        setRejectingPaymentId(paymentId);
+        const toastId = toast.loading("Rejecting payment...");
+        try {
+            await rejectPayment({ courseId, paymentId, reason }).unwrap();
+            toast.success("Payment rejected.", { id: toastId });
+        } catch (err) {
+            const message = NormalizeError(err).message || "Failed to reject payment.";
+            toast.error(message, { id: toastId });
+        } finally {
+            setRejectingPaymentId(null);
+        }
+    };
 
     return (
         <motion.div
@@ -170,21 +154,20 @@ export default function AdminCourseDetailPage({
             className="space-y-6 p-4 sm:p-6"
         >
             {/* Top bar */}
-            <motion.div
-                variants={fadeUp}
-                className="flex items-center justify-between"
-            >
+            <motion.div variants={fadeUp} className="flex items-center justify-between">
                 <button
                     onClick={() => router.replace("/admin/courses")}
                     className="inline-flex cursor-pointer items-center gap-2 text-xs font-bold text-[#6b7280] transition-colors hover:text-[#1a56db]"
                 >
                     <ArrowLeft className="h-3.5 w-3.5" /> Back to Courses
                 </button>
+
                 {isDirty && (
                     <div className="flex items-center gap-3">
                         <button
                             onClick={handleSave}
-                            className={`flex items-center gap-2 rounded-sm px-4 py-2 text-[13px] font-bold text-white transition-all cursor-pointer ${saved ? "bg-[#16a34a]" : "bg-[#1a56db] hover:bg-[#1346c4]"}`}
+                            className={`flex items-center gap-2 rounded-sm px-4 py-2 text-[13px] font-bold text-white transition-all cursor-pointer ${saved ? "bg-[#16a34a]" : "bg-[#1a56db] hover:bg-[#1346c4]"
+                                }`}
                         >
                             {isUpdating ? (
                                 <>
@@ -197,14 +180,11 @@ export default function AdminCourseDetailPage({
                                     {saved ? "Saved!" : "Save Changes"}
                                 </>
                             )}
-
                         </button>
 
-                        {/* Reset baseline button */}
                         <button
                             onClick={() => {
                                 if (!courseData) return;
-
                                 setCourse(courseData);
                                 resetBaseline(courseData);
                             }}
@@ -217,11 +197,16 @@ export default function AdminCourseDetailPage({
                 )}
             </motion.div>
 
-            {isError || isUpdateError && (
-                <motion.div variants={fadeUp} className="flex items-center gap-1.5 rounded-md bg-red-50 p-4">
+            {/* Course load / update error banner */}
+            {(isError || isUpdateError) && (
+                <motion.div
+                    variants={fadeUp}
+                    className="flex items-center gap-1.5 rounded-md bg-red-50 p-4"
+                >
                     <CircleAlert strokeWidth={2.5} className="h-5 w-5 text-red-600" />
                     <p className="text-sm font-medium text-red-800">
-                        {NormalizeError(updateError || error).message || "Failed to load course details. Please try again later."}
+                        {NormalizeError(updateError || error).message ||
+                            "Failed to load course details. Please try again later."}
                     </p>
                 </motion.div>
             )}
@@ -249,22 +234,17 @@ export default function AdminCourseDetailPage({
                                     router.replace(`?tab=${tab.id}`, { scroll: false })
                                 }
                                 className={`relative rounded-lg px-3.5 py-2 text-[12px] font-bold transition-colors cursor-pointer ${activeTab === tab.id
-                                    ? "text-[#0d1b3e]"
-                                    : "text-[#6b7280] hover:text-[#0d1b3e]"
+                                        ? "text-[#0d1b3e]"
+                                        : "text-[#6b7280] hover:text-[#0d1b3e]"
                                     }`}
                             >
                                 {activeTab === tab.id && (
                                     <motion.span
                                         layoutId="active-tab"
-                                        transition={{
-                                            type: "spring",
-                                            stiffness: 400,
-                                            damping: 30,
-                                        }}
+                                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
                                         className="absolute inset-0 rounded-lg bg-white shadow-sm"
                                     />
                                 )}
-
                                 <span className="relative z-10">{tab.label}</span>
                             </button>
                         ))}
@@ -283,9 +263,7 @@ export default function AdminCourseDetailPage({
                                 setCourse({
                                     ...course,
                                     thumbnailFile: file,
-                                    ...(file === null && {
-                                        thumbnailUrl: "",
-                                    }),
+                                    ...(file === null && { thumbnailUrl: "" }),
                                 });
                             }}
                         />
@@ -293,13 +271,7 @@ export default function AdminCourseDetailPage({
                     {activeTab === "curriculum" && (
                         <CurriculumTab
                             modules={course.modules}
-                            onChange={(modules) =>
-                                setCourse({
-                                    ...course,
-                                    modules,
-                                })
-                            }
-                            onSessionChange={() => { }}
+                            onChange={(modules) => setCourse({ ...course, modules })}
                         />
                     )}
                     {activeTab === "students" && (
@@ -307,6 +279,8 @@ export default function AdminCourseDetailPage({
                             students={course.students}
                             onVerify={handleVerify}
                             onReject={handleReject}
+                            verifyingPaymentId={verifyingPaymentId}
+                            rejectingPaymentId={rejectingPaymentId}
                         />
                     )}
                     {activeTab === "batch" && (
@@ -320,22 +294,14 @@ export default function AdminCourseDetailPage({
                             duration={course.duration}
                             startDate={course.startDate}
                             onChange={(field, value) =>
-                                setCourse({
-                                    ...course,
-                                    [field]: value,
-                                })
+                                setCourse({ ...course, [field]: value })
                             }
                         />
                     )}
                     {activeTab === "included" && (
                         <IncludedTab
                             includes={course.includes}
-                            onChange={(items) =>
-                                setCourse({
-                                    ...course,
-                                    includes: items,
-                                })
-                            }
+                            onChange={(items) => setCourse({ ...course, includes: items })}
                         />
                     )}
                     {activeTab === "pricing" && (
@@ -345,10 +311,7 @@ export default function AdminCourseDetailPage({
                             discountStarts={course.discountStarts}
                             discountEnds={course.discountEnds}
                             onChange={(field, value) =>
-                                setCourse({
-                                    ...course,
-                                    [field]: value,
-                                })
+                                setCourse({ ...course, [field]: value })
                             }
                         />
                     )}

@@ -1,36 +1,14 @@
 "use client";
-import { CreditCard, Banknote, Smartphone, Check } from "lucide-react";
-import type { StudentCoursePaymentSummary } from "@/types/student-course-details";
+import { CreditCard, Check } from "lucide-react";
+import type { StudentCoursePayment } from "@/types/student-course-details";
+import { METHOD_CONFIG } from "@/constants/course.constants";
 
 function PaymentSummaryCard({
     payment,
 }: {
-    payment: StudentCoursePaymentSummary;
+    payment: StudentCoursePayment;
 }) {
-    const METHOD_CONFIG = {
-        bkash: {
-            label: "bKash",
-            bg: "#FDF2F8",
-            border: "#FBCFE8",
-            color: "#E2136E",
-            icon: Smartphone,
-        },
-        nagad: {
-            label: "Nagad",
-            bg: "#FFF8F0",
-            border: "#FED7AA",
-            color: "#F7941D",
-            icon: Smartphone,
-        },
-        cash: {
-            label: "Cash On",
-            bg: "#F0FDF4",
-            border: "#BBF7D0",
-            color: "#059669",
-            icon: Banknote,
-        },
-    };
-    const m = METHOD_CONFIG[payment.method];
+    const m = METHOD_CONFIG[payment.method]
     const MethodIcon = m.icon;
     const formattedDate = new Date(payment.paidAt).toLocaleString("en-US", {
         month: "short",

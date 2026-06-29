@@ -70,7 +70,7 @@ export function CourseDetailPage({ courseId }: { courseId: string }) {
                 initial="hidden"
                 animate="visible"
                 variants={stagger}
-                className="min-h-screen bg-white pb-24 pt-24"
+                className="min-h-screen bg-white py-20"
             >
                 <div className="mx-auto max-w-7xl px-4">
                     <div className="grid gap-10 lg:grid-cols-[1fr_380px]">

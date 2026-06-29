@@ -28,7 +28,7 @@ export default function PaymentSummary({
     return (
         <div className="space-y-4">
             {/* Summary Card */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] via-background to-background shadow-sm relative overflow-hidden">
+            <div className="rounded-xl border border-primary/20 bg-linear-to-br from-primary/4 via-background to-background relative overflow-hidden">
                 {/* Subtle accent glow */}
                 <div className="absolute -top-10 -right-10 h-24 w-24 rounded-full bg-primary/5 blur-2xl" />
                 <div className="absolute -bottom-8 -left-8 h-20 w-20 rounded-full bg-primary/5 blur-2xl" />

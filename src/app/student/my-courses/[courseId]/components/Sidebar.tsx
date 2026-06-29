@@ -9,8 +9,10 @@ import type { StudentCourseDetails } from "@/types/student-course-details";
 function Sidebar({ course, progPct }: { course: StudentCourseDetails; progPct: number }) {
     return (
         <div className="space-y-4">
-            <PaymentSummaryCard payment={course.paymentSummary} />
-            <ProgressCard current={course.currentSession} total={course.lessons} />
+            <PaymentSummaryCard payment={course.payment} />
+            <ProgressCard
+                modules={course.modules}
+            />
             <CourseStatsCard
                 modules={course.modules.length}
                 lessons={course.lessons}

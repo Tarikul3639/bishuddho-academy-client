@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Users, CalendarDays, MapPin, UserCheck } from "lucide-react";
+import { Users, CalendarDays, MapPin, UserCheck, ArrowLeft } from "lucide-react";
 import { fadeUp, stagger } from "@/components/animations";
 import { Stars } from "@/components/ui/Stars";
 import type { PublicCourseDetails } from "@/types/public-course-details";
+import { useRouter } from "next/navigation";
 
 export function CourseHeader({ course }: { course: PublicCourseDetails }) {
+    const router = useRouter();
     const { title, tagline, description, averageRating, reviewCount, students, instructor, schedule, location, startDate } = course;
 
     const formattedDate = new Date(startDate).toLocaleDateString("en-US", {
@@ -23,6 +25,17 @@ export function CourseHeader({ course }: { course: PublicCourseDetails }) {
             variants={stagger}
             className="mb-8 border-b border-border pb-8"
         >
+            {/* Back */}
+            <motion.div variants={fadeUp}>
+                <button
+                    onClick={() => router.push(`/courses`)}
+                    className="mb-5 inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to Courses
+                </button>
+            </motion.div>
+
             {/* Header badge + title + tagline + description */}
             <motion.div variants={fadeUp}>
                 <span className="mb-3 inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">

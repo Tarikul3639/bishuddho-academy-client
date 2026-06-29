@@ -2,7 +2,7 @@
 "use client";
 
 import { Users, DollarSign, BookOpen, Clock, MapPin, Calendar } from "lucide-react";
-import { CourseDetails } from "@/types/course-details";
+import { CourseDetails } from "@/types/admin-course-details";
 
 export default function CourseSidebar({ course }: { course: CourseDetails }) {
     const seatPct = Math.round((course.bookedSeats ?? 0 / course.totalSeats) * 100);
