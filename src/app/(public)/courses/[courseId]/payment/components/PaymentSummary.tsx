@@ -1,12 +1,14 @@
 "use client";
 
-import Image from "next/image";
+import {
+    ArrowDown,
+    BadgeCheck,
+    Sparkles,
+    TrendingDown,
+} from "lucide-react";
 import { TakaSign } from "@/components/icons/TakaSign";
 
 interface PaymentSummaryProps {
-    title: string;
-    instructor: string;
-    thumbnailUrl: string;
     price: number;
     originalPrice: number;
     discount: number;
@@ -16,9 +18,6 @@ interface PaymentSummaryProps {
 }
 
 export default function PaymentSummary({
-    title,
-    instructor,
-    thumbnailUrl,
     price,
     originalPrice,
     discount,
@@ -29,14 +28,21 @@ export default function PaymentSummary({
     return (
         <div className="space-y-4">
             {/* Summary Card */}
-            <div className="rounded-xl border border-border bg-card">
-                <div className="border-b border-border p-5">
-                    <h3 className="font-semibold text-card-foreground">
-                        Order Summary
-                    </h3>
+            <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] via-background to-background shadow-sm relative overflow-hidden">
+                {/* Subtle accent glow */}
+                <div className="absolute -top-10 -right-10 h-24 w-24 rounded-full bg-primary/5 blur-2xl" />
+                <div className="absolute -bottom-8 -left-8 h-20 w-20 rounded-full bg-primary/5 blur-2xl" />
+
+                <div className="relative border-b border-border p-4">
+                    <div className="flex items-center gap-2">
+                        <Sparkles className="h-4 w-4 text-primary" />
+                        <h3 className="text-sm font-semibold text-card-foreground">
+                            Order Summary
+                        </h3>
+                    </div>
                 </div>
 
-                <div className="space-y-4 p-5">
+                <div className="relative space-y-3 p-4">
                     {/* Price breakdown */}
                     <div className="space-y-2">
                         <div className="flex justify-between text-sm">
@@ -47,20 +53,21 @@ export default function PaymentSummary({
                         </div>
                         {discount > 0 && (
                             <div className="flex justify-between text-sm">
-                                <span className="text-green-600">
+                                <span className="flex items-center gap-1 text-green-600">
+                                    <TrendingDown className="h-3 w-3" />
                                     Discount ({discount}%)
                                 </span>
-                                <span className="text-green-600">
+                                <span className="font-medium text-green-600">
                                     -৳{(originalPrice - price).toLocaleString()}
                                 </span>
                             </div>
                         )}
                         <div className="h-px bg-border" />
-                        <div className="flex justify-between">
-                            <span className="font-semibold text-card-foreground">Total</span>
-                            <div className="flex items-center gap-0.5">
-                                <TakaSign className="h-4 w-4 text-primary" />
-                                <span className="text-xl font-bold text-primary">
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium text-card-foreground">Total</span>
+                            <div className="flex items-center gap-0.5 rounded bg-primary/10 px-2 py-1">
+                                <TakaSign className="h-3.5 w-3.5 text-primary" />
+                                <span className="text-lg font-bold text-primary">
                                     {price.toLocaleString()}
                                 </span>
                             </div>
@@ -69,23 +76,23 @@ export default function PaymentSummary({
 
                     {/* Course meta */}
                     <div className="h-px bg-border" />
-                    <div className="space-y-2 text-xs text-muted-foreground">
+                    <div className="space-y-1.5 text-[11px] text-muted-foreground">
                         <div className="flex items-center gap-2">
-                            <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                            {bookedSeats}/{totalSeats} seats booked
+                            <BadgeCheck className="h-3 w-3 text-blue-500" />
+                            <span>{bookedSeats}/{totalSeats} seats booked</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="h-1.5 w-1.5 rounded-full bg-orange-500" />
-                            {daysLeft} days left at this price
+                            <ArrowDown className="h-3 w-3 text-orange-500" />
+                            <span>{daysLeft} days left at this price</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Help text */}
-            <div className="rounded-xl border border-border bg-muted/50 p-4">
-                <p className="text-xs font-medium text-card-foreground">Need help?</p>
-                <p className="mt-1 text-xs text-muted-foreground">
+            <div className="rounded-xl border border-border bg-muted/50 p-3">
+                <p className="text-[11px] font-medium text-card-foreground">Need help?</p>
+                <p className="mt-1 text-[11px] text-muted-foreground">
                     If you face any issues with payment, contact us at the academy
                     or send a message via the contact page.
                 </p>

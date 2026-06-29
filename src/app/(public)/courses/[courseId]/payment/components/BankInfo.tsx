@@ -28,18 +28,18 @@ export default function BankInfo({ method }: BankInfoProps) {
             transition={{ duration: 0.2 }}
             className="space-y-4"
         >
-            <div className="rounded-lg border border-border bg-card p-5">
-                <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded bg-primary/10">
-                        <Building2 className="h-5 w-5 text-primary" />
+            <div className="rounded-lg border border-border bg-card p-4">
+                <div className="mb-3 flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded bg-primary/10">
+                        <Building2 className="h-4 w-4 text-primary" />
                     </div>
                     <div>
-                        <p className="font-semibold text-card-foreground">{bank.bankName}</p>
-                        <p className="text-xs text-muted-foreground">{bank.branch}</p>
+                        <p className="text-sm font-semibold text-card-foreground">{bank.bankName}</p>
+                        <p className="text-[11px] text-muted-foreground">{bank.branch}</p>
                     </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                     <CopyField label="Account Name" value={bank.accountName} />
                     <CopyField label="Account Number" value={bank.accountNumber} />
                     <CopyField label="Branch" value={bank.branch} />

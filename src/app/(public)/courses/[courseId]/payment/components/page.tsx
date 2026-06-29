@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { ArrowLeft, Loader2, ShieldCheck, AlertCircle, BadgeCheck } from "lucide-react";
 import { toast } from "sonner";
 
@@ -11,13 +12,14 @@ import { useCreatePurchaseMutation } from "@/redux/features/purchases/purchases.
 import { fadeUp, stagger } from "@/components/animations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TakaSign } from "@/components/icons/TakaSign";
 import { type PaymentMethod, METHODS } from "@/components/payment/types";
 
-import PaymentMethodCard from "./components/PaymentMethodCard";
-import MobileBankingInfo from "./components/MobileBankingInfo";
-import BankInfo from "./components/BankInfo";
-import CashInfo from "./components/CashInfo";
-import PaymentSummary from "./components/PaymentSummary";
+import PaymentMethodCard from "./PaymentMethodCard";
+import MobileBankingInfo from "./MobileBankingInfo";
+import BankInfo from "./BankInfo";
+import CashInfo from "./CashInfo";
+import PaymentSummary from "./PaymentSummary";
 
 export default function PaymentPage() {
     const params = useParams();
@@ -154,7 +156,7 @@ export default function PaymentPage() {
 
     /* ── Main Content (composition only) ───────────────────────────── */
     return (
-        <div className="min-h-screen bg-background pb-16 pt-20">
+        <div className="min-h-screen bg-background pb-12 pt-20">
             <motion.main
                 initial="hidden"
                 animate="visible"
@@ -165,7 +167,7 @@ export default function PaymentPage() {
                 <motion.div variants={fadeUp}>
                     <button
                         onClick={() => router.push(`/courses/${courseId}`)}
-                        className="mb-6 inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                        className="mb-5 inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
                     >
                         <ArrowLeft className="h-4 w-4" />
                         Back to Course
@@ -173,30 +175,75 @@ export default function PaymentPage() {
                 </motion.div>
 
                 {/* Page Header */}
-                <motion.div variants={fadeUp} className="mb-8">
-                    <h1 className="text-2xl font-bold text-foreground md:text-3xl">
+                <motion.div variants={fadeUp} className="mb-6">
+                    <h1 className="text-xl font-bold text-foreground md:text-2xl">
                         Complete Your Booking
                     </h1>
-                    <p className="mt-2 text-muted-foreground">
-                        Choose a payment method to secure your seat in this course.
+                    <p className="mt-1 text-sm text-muted-foreground">
+                        Choose a payment method to secure your seat.
                     </p>
                 </motion.div>
 
-                <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
+                {/* ═══ Course Header Card ═══ */}
+                <motion.div variants={fadeUp} className="mb-6">
+                    <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-4 shadow-sm">
+                        <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-muted">
+                            <Image
+                                src={
+                                    course.thumbnailUrl?.startsWith("http")
+                                        ? course.thumbnailUrl
+                                        : `${process.env.NEXT_PUBLIC_API_URL}${course.thumbnailUrl}`
+                                }
+                                alt={course.title}
+                                fill
+                                unoptimized
+                                className="object-cover"
+                            />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                            <h3 className="truncate text-sm font-semibold text-card-foreground">
+                                {course.title}
+                            </h3>
+                            <p className="text-xs text-muted-foreground">
+                                {course.instructor}
+                            </p>
+                            <div className="mt-1 flex items-center gap-2">
+                                <div className="flex items-center gap-0.5">
+                                    <TakaSign className="h-3 w-3 text-primary" />
+                                    <span className="text-base font-bold text-primary">
+                                        {course.price.toLocaleString()}
+                                    </span>
+                                </div>
+                                {course.originalPrice > course.price && (
+                                    <span className="text-xs text-muted-foreground line-through">
+                                        ৳{course.originalPrice.toLocaleString()}
+                                    </span>
+                                )}
+                                {course.discount > 0 && (
+                                    <span className="rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-semibold text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                                        {course.discount}% OFF
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+
+                <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
                     {/* ── LEFT — Payment Flow ──────────────────────────── */}
-                    <div className="space-y-8">
+                    <div className="space-y-5">
                         {/* Step 1: Select Payment Method */}
                         <motion.div variants={fadeUp}>
-                            <div className="mb-4 flex items-center gap-3">
-                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                            <div className="mb-3 flex items-center gap-2">
+                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
                                     1
                                 </span>
-                                <h2 className="font-semibold text-card-foreground">
+                                <h2 className="text-sm font-semibold text-card-foreground">
                                     Choose Payment Method
                                 </h2>
                             </div>
 
-                            <div className="grid gap-3 sm:grid-cols-2">
+                            <div className="grid gap-2.5 sm:grid-cols-2">
                                 {METHODS.map((m) => (
                                     <PaymentMethodCard
                                         key={m.id}
@@ -219,13 +266,13 @@ export default function PaymentPage() {
                                     transition={{ duration: 0.3 }}
                                     className="overflow-hidden"
                                 >
-                                    <div className="space-y-6">
+                                    <div className="space-y-5">
                                         {/* Section header */}
-                                        <div className="flex items-center gap-3">
-                                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                                        <div className="flex items-center gap-2">
+                                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
                                                 2
                                             </span>
-                                            <h2 className="font-semibold text-card-foreground">
+                                            <h2 className="text-sm font-semibold text-card-foreground">
                                                 Payment Details
                                             </h2>
                                         </div>
@@ -249,12 +296,12 @@ export default function PaymentPage() {
                                         {/* Transaction ID input */}
                                         {requiresTrxId && (
                                             <div>
-                                                <p className="mb-2 text-sm font-semibold text-card-foreground">
+                                                <p className="mb-1.5 text-sm font-semibold text-card-foreground">
                                                     {selected === "bank_transfer"
                                                         ? "Enter Transaction / Reference Number"
                                                         : "Enter Transaction ID"}
                                                 </p>
-                                                <p className="mb-3 text-xs text-muted-foreground">
+                                                <p className="mb-2 text-[11px] text-muted-foreground">
                                                     After sending money, paste the Transaction ID you
                                                     received via SMS.
                                                 </p>
@@ -266,14 +313,14 @@ export default function PaymentPage() {
                                                         setTrxError("");
                                                     }}
                                                     placeholder="e.g. 8N5A2K9XQ3"
-                                                    className={`h-11 text-sm ${
+                                                    className={`h-10 text-sm ${
                                                         trxError
                                                             ? "border-destructive focus-visible:ring-destructive"
                                                             : ""
                                                     }`}
                                                 />
                                                 {trxError && (
-                                                    <p className="mt-2 text-xs font-medium text-destructive">
+                                                    <p className="mt-1.5 text-xs font-medium text-destructive">
                                                         {trxError}
                                                     </p>
                                                 )}
@@ -284,7 +331,6 @@ export default function PaymentPage() {
                                         <Button
                                             onClick={handleSubmit}
                                             disabled={isSubmitting}
-                                            size="lg"
                                             className="w-full gap-2"
                                         >
                                             {isSubmitting ? (
@@ -300,7 +346,7 @@ export default function PaymentPage() {
                                         </Button>
 
                                         {/* Security note */}
-                                        <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                                        <div className="flex items-center justify-center gap-2 text-[11px] text-muted-foreground">
                                             <ShieldCheck className="h-3.5 w-3.5 text-green-600" />
                                             Your payment is secure and manually verified by our team.
                                         </div>
@@ -314,9 +360,6 @@ export default function PaymentPage() {
                     <motion.div variants={fadeUp} className="order-1 lg:order-2">
                         <div className="sticky top-24">
                             <PaymentSummary
-                                title={course.title}
-                                instructor={course.instructor}
-                                thumbnailUrl={course.thumbnailUrl}
                                 price={course.price}
                                 originalPrice={course.originalPrice}
                                 discount={course.discount}
