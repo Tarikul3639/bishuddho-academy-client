@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Copy, Smartphone, Building2, Banknote, Wallet } from "lucide-react";
-import { type METHODS } from "@/components/payment/types";
+import { type METHODS } from "./types";
 
 const METHOD_ICONS: Record<string, React.ReactNode> = {
     bkash: <Smartphone className="h-5 w-5" />,

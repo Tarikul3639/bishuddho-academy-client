@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Building2 } from "lucide-react";
-import { type METHODS } from "@/components/payment/types";
+import { type METHODS } from "./types";
 import CopyField from "./CopyField";
 
 interface BankInfoProps {

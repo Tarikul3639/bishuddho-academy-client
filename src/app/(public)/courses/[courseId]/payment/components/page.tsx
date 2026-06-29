@@ -13,7 +13,7 @@ import { fadeUp, stagger } from "@/components/animations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TakaSign } from "@/components/icons/TakaSign";
-import { type PaymentMethod, METHODS } from "@/components/payment/types";
+import { type PaymentMethod, METHODS } from "./types";
 
 import PaymentMethodCard from "./PaymentMethodCard";
 import MobileBankingInfo from "./MobileBankingInfo";

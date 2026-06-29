@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { makeRef, SENDER_REF, type METHODS } from "@/components/payment/types";
+import { makeRef, SENDER_REF, type METHODS } from "./types";
 import CopyField from "./CopyField";
 
 interface MobileBankingInfoProps {
