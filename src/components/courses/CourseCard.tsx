@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import TakaSign from "@/components/icons/TakaSign";
+import {TakaSign} from "@/components/icons/TakaSign";
 import StarRating from "./StarRating";
 import { type PublicCourse } from "@/types/public-course";
 

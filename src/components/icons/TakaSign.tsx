@@ -1,5 +1,5 @@
 // components/icons/TakaSign.tsx
-export default function TakaSign({ className = "h-4 w-4" }: { className?: string }) {
+export const TakaSign = ({ className = "h-4 w-4" }: { className?: string }) => {
     return (
         <svg
             viewBox="345 399 220 270"
