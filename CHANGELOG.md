@@ -1,3 +1,10 @@
+# [0.8.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.7.0...v0.8.0) (2026-06-29)
+
+
+### Features
+
+* **student:** implement profile edit with partial update support ([4e65edd](https://github.com/Tarikul3639/bishuddho-academy-client/commit/4e65edd6224e5d08c510a079df2f5aae95156848))
+
 # [0.7.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.6.0...v0.7.0) (2026-06-06)
 
 
