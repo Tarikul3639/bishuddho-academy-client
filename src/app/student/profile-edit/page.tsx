@@ -1,183 +1,174 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Save, User, Mail, Phone, ArrowLeft } from "lucide-react";
+import { Loader2, Save, ArrowLeft, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeUp, stagger } from "@/components/animations";
-import { InputField } from "@/components/ui/InputField";
-import Link from "next/link";
 
-interface FormState {
-    name: string;
-    email: string;
-    phone: string;
-}
+import type { FormState, FormErrors } from "@/types/profile-data";
+import { validate } from "./components/helpers";
+import { PersonalInfoSection } from "./components/sections/PersonalInfoSection";
+import { IdentityDocsSection } from "./components/sections/IdentityDocsSection";
+import { FamilyGuardianSection } from "./components/sections/FamilyGuardianSection";
+import { EmergencyContactSection } from "./components/sections/EmergencyContactSection";
+import { AddressSection } from "./components/sections/AddressSection";
+import { ProfilePhotoSection } from "./components/sections/ProfilePhotoSection";
 
-// TODO: Replace with real initial data from Redux / API selector
-const MOCK_INITIAL_DATA: FormState = {
-    name: "Tarikul Islam",
-    email: "tarikul.dev@nexion.com",
-    phone: "01712345678", 
-};
+import { useUpdateProfileMutation, useGetProfileQuery } from "@/redux/features/auth/auth.api";
 
 export default function EditProfilePage() {
-    // Injected initial data directly into state since it's a top-level page
     const router = useRouter();
-    const [form, setForm] = useState<FormState>(MOCK_INITIAL_DATA);
-    const [loading, setLoading] = useState(false);
+
+    // API Hooks
+    const { data, isLoading: isGettingProfile, isError } = useGetProfileQuery();
+    const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
+
+    // State Management
+    const [form, setForm] = useState<FormState | null>(null);
+    const [changedFields, setChangedFields] = useState<Partial<FormState>>({});
     const [saved, setSaved] = useState(false);
-    const [errors, setErrors] = useState<Partial<FormState>>({});
+    const [errors, setErrors] = useState<FormErrors>({});
+
+    // ── Hydrate form from API ──
+    useEffect(() => {
+        if (data) {
+            setForm({
+                name: data.name ?? "",
+                phone: data.phone ?? "",
+                alternativePhone: data.alternativePhone ?? "",
+                dateOfBirth: data.dateOfBirth ? data.dateOfBirth.split('T')[0] : "",
+                gender: data.gender ?? "",
+                bloodGroup: data.bloodGroup ?? "",
+                religion: data.religion ?? "",
+                nationality: data.nationality ?? "",
+                nidNumber: data.nidNumber ?? "",
+                birthRegistrationNumber: data.birthRegistrationNumber ?? "",
+                passportNumber: data.passportNumber ?? "",
+                fatherName: data.fatherName ?? "",
+                motherName: data.motherName ?? "",
+                guardianName: data.guardianName ?? "",
+                guardianPhone: data.guardianPhone ?? "",
+                guardianOccupation: data.guardianOccupation ?? "",
+                emergencyContactName: data.emergencyContactName ?? "",
+                emergencyContactNumber: data.emergencyContactNumber ?? "",
+                relationship: data.relationship ?? "",
+                presentAddress: data.presentAddress ?? "",
+                permanentAddress: data.permanentAddress ?? "",
+                avatarUrl: data.avatarUrl ?? "",
+            });
+        }
+    }, [data]);
 
     const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
+        const { name, value } = e.target;
+
         setSaved(false);
-        setErrors((prev) => ({
-            ...prev,
-            [e.target.name]: "",
-        }));
-        setForm((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
+
+        // Update main form state
+        setForm((prev) => (prev ? { ...prev, [name]: value } : null));
+
+        // Track only changed fields for partial update
+        setChangedFields((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const newErrors: Partial<FormState> = {};
 
-        // Name Validation
-        if (!form.name.trim()) {
-            newErrors.name = "Full name is required.";
+        // Check if there's actually anything to update
+        if (Object.keys(changedFields).length === 0) {
+            setSaved(true);
+            return;
         }
 
-        // Email Validation
-        if (!form.email.trim()) {
-            newErrors.email = "Email is required.";
-        } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(form.email)
-        ) {
-            newErrors.email = "Enter a valid email address.";
-        }
-
-        // Phone Validation
-        if (!form.phone.trim()) {
-            newErrors.phone = "Phone number is required.";
-        } else if (!/^01\d{9}$/.test(form.phone)) {
-            newErrors.phone = "Enter a valid Bangladeshi phone number.";
-        }
-
+        // Validate only the changed fields
+        const newErrors = validate(changedFields as FormState);
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
 
-        setLoading(true);
-        // TODO:
-        // await api.patch("/users/profile", form);
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setLoading(false);
-        setSaved(true);
+        try {
+            // Perform partial update
+            await updateProfile(changedFields).unwrap();
+            setSaved(true);
+            setChangedFields({}); // Reset tracker on success
+        } catch (err) {
+            console.error("Profile update failed:", err);
+            setSaved(false);
+        }
     };
 
+    if (isGettingProfile || !form) {
+        return (
+            <div className="flex h-64 items-center justify-center">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            </div>
+        );
+    }
+
+    if (isError) {
+        return (
+            <div className="flex h-64 flex-col items-center justify-center gap-2 text-center">
+                <p className="text-sm font-medium text-red-500">Failed to load profile data.</p>
+                <button
+                    onClick={() => router.replace("/student/dashboard")}
+                    className="text-xs text-slate-500 underline hover:text-primary"
+                >
+                    Back to Dashboard
+                </button>
+            </div>
+        );
+    }
+
     return (
-        <motion.main 
+        <motion.main
             initial="hidden"
             animate="visible"
             variants={stagger}
             className="space-y-6 p-6"
         >
-            {/* ─── PAGE HEADER & BACK NAV ─── */}
             <motion.div variants={fadeUp} className="space-y-3">
-                <button 
-                    onClick={()=> router.replace("/dashboard")}
+                <button
+                    onClick={() => router.replace("/student/dashboard")}
                     className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 transition-colors hover:text-primary cursor-pointer"
                 >
                     <ArrowLeft className="h-3.5 w-3.5" />
                     <span>Back to Dashboard</span>
                 </button>
-                
+
                 <div className="space-y-1">
                     <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 md:text-3xl">
                         Edit Profile
                     </h1>
-                    <p className="text-sm font-medium text-slate-500">
-                        Modify your public identity, account details, and active communication channels.
-                    </p>
                 </div>
             </motion.div>
 
-            {/* ─── ORIGINAL FORM CONTAINER (UNTOUCHED) ─── */}
-            <motion.div
-                variants={fadeUp}
-                className="rounded-2xl border border-border bg-white p-6"
-            >
-                <h2 className="mb-1 text-base font-bold text-[#111827]">
-                    Personal Information
-                </h2>
-                <p className="mb-5 text-xs text-[#6b7280]">
-                    Update your personal details and contact information.
-                </p>
+            <PersonalInfoSection form={form} errors={errors} onChange={handleChange} />
+            <IdentityDocsSection form={form} onChange={handleChange} />
+            <FamilyGuardianSection form={form} errors={errors} onChange={handleChange} />
+            <EmergencyContactSection form={form} errors={errors} onChange={handleChange} />
+            <AddressSection form={form} onChange={handleChange} />
+            <ProfilePhotoSection form={form} onChange={handleChange} />
 
-                <form onSubmit={handleSubmit} className="grid gap-x-10 gap-y-4 sm:grid-cols-2">
-                    <InputField
-                        label="Full Name"
-                        name="name"
-                        value={form.name}
-                        onChange={handleChange}
-                        placeholder="Your full name"
-                        error={errors.name}
-                        icon={User}
-                        required
-                    />
+            <motion.div variants={fadeUp} className="flex items-center gap-3 pb-4">
+                <button
+                    onClick={handleSubmit}
+                    disabled={isUpdating}
+                    className="inline-flex items-center gap-2 rounded-sm bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                    {isUpdating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                    Save Changes
+                </button>
 
-                    <InputField
-                        label="Email Address"
-                        name="email"
-                        type="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        placeholder="you@example.com"
-                        error={errors.email}
-                        icon={Mail}
-                        required
-                    />
-
-                    <InputField
-                        label="Phone Number"
-                        name="phone"
-                        type="text"
-                        value={form.phone}
-                        onChange={handleChange}
-                        placeholder="01XXXXXXXXX"
-                        error={errors.phone}
-                        hint="Use a valid Bangladeshi mobile number"
-                        icon={Phone}
-                        required
-                    />
-
-                    <div className="flex items-center gap-3 pt-1 sm:col-span-2">
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
-                        >
-                            {loading ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                                <Save className="h-4 w-4" />
-                            )}
-                            Save Changes
-                        </button>
-
-                        {saved && (
-                            <span className="text-sm font-medium text-green-600">
-                                ✓ Profile Updated
-                            </span>
-                        )}
-                    </div>
-                </form>
+                {saved && (
+                    <span className="text-sm font-medium text-green-600">
+                        <Check className="mr-1.5 inline h-4 w-4" /> Profile Updated
+                    </span>
+                )}
             </motion.div>
         </motion.main>
     );

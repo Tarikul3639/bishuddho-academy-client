@@ -31,16 +31,12 @@ export function ProfileBannerSkeleton() {
 
             {/* ── Main content ── */}
             <div className="relative z-10 p-4 sm:p-6 md:p-10">
-                <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-8">
+                <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-5">
                     
                     {/* Avatar Skeleton */}
                     <div className="relative shrink-0">
                         <div className="relative h-24 w-24 overflow-hidden rounded-full border-[3px] border-gray-200 bg-white p-0.5 shadow-sm md:h-28 md:w-28">
                             <Box className="h-full w-full rounded-full" />
-                        </div>
-                        {/* Camera button skeleton */}
-                        <div className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white">
-                            <Box className="h-4 w-4 rounded-full" />
                         </div>
                     </div>
 

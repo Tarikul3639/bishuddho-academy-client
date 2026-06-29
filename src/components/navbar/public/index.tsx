@@ -11,7 +11,7 @@ import MobileMenu from "./MobileMenu";
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { clearUser } from "@/redux/features/auth/authSlice";
-import { useGetMeQuery, useLogoutMutation } from "@/redux/features/auth/auth.api";
+import { useLogoutMutation } from "@/redux/features/auth/auth.api";
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -22,7 +22,6 @@ export default function Navbar() {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
     const isLoading = useAppSelector((state) => state.auth.isLoading);
-    // const { isLoading } = useGetMeQuery();
 
     const [logout, { isLoading: logoutLoading }] = useLogoutMutation();
 

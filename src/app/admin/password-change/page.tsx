@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, ShieldCheck, LockKeyhole, ArrowLeft } from "lucide-react";
+import { Loader2, ShieldCheck, LockKeyhole, ArrowLeft, Check, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeUp, stagger } from "@/components/animations";
 import { InputField } from "@/components/ui/InputField";
-import PageHeader from "@/components/ui/PageHeader";
+import { handleApiError } from "@/redux/api/handle-api-error";
+
+import { useChangePasswordMutation } from "@/redux/features/auth/auth.api";
 
 interface FormState {
     current: string;
@@ -23,9 +25,10 @@ const INITIAL: FormState = {
 export default function PasswordPage() {
     const router = useRouter();
     const [form, setForm] = useState<FormState>(INITIAL);
-    const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<Partial<FormState>>({});
     const [saved, setSaved] = useState(false);
+
+    const [changePassword, { isLoading, error }] = useChangePasswordMutation();
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -64,14 +67,11 @@ export default function PasswordPage() {
             return;
         }
 
-        setLoading(true);
-        // TODO:
-        // await api.patch("/users/password", {
-        //     current: form.current,
-        //     next: form.next,
-        // });
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setLoading(false);
+        await changePassword({
+            current: form.current,
+            next: form.next,
+        }).unwrap();
+
         setSaved(true);
         setForm(INITIAL);
     };
@@ -84,12 +84,24 @@ export default function PasswordPage() {
             className="space-y-6 p-6"
         >
             {/* ─── PAGE HEADER & BACK NAV ─── */}
-            <PageHeader
-                title="Change Password"
-                description="Use at least 8 characters with a mix of letters and numbers."
-                backLabel="Back to Dashboard"
-                backPath="/admin/dashboard"
-            />
+            <motion.div variants={fadeUp} className="space-y-3">
+                <button
+                    onClick={() => router.replace("/admin/dashboard")}
+                    className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 transition-colors hover:text-primary cursor-pointer"
+                >
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                    <span>Back to Dashboard</span>
+                </button>
+
+                <div className="space-y-1">
+                    <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 md:text-3xl">
+                        Password & Security
+                    </h1>
+                    <p className="text-sm font-medium text-slate-500">
+                        Manage your account security details and update your authentication keys.
+                    </p>
+                </div>
+            </motion.div>
 
             {/* ─── ORIGINAL FORM CONTAINER (UNTOUCHED) ─── */}
             <motion.div
@@ -102,6 +114,15 @@ export default function PasswordPage() {
                 <p className="mb-5 text-xs text-[#6b7280]">
                     Use at least 8 characters with a mix of letters and numbers.
                 </p>
+
+                {/* Error Message */}
+                {error && (
+                    <div className="mb-4 rounded-md bg-destructive/10 p-4 text-sm text-destructive">
+                        <AlertCircle className="inline-block h-4.5 w-4.5 mr-1" />
+                        {handleApiError(error, ["current", "next", "confirm"]).global || "An error occurred while changing the password."}
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="grid gap-x-10 gap-y-4 sm:grid-cols-2">
                     <InputField
                         label="Current Password"
@@ -147,10 +168,10 @@ export default function PasswordPage() {
                     <div className="flex items-center gap-3 pt-1 sm:col-span-2">
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={isLoading}
                             className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                         >
-                            {loading ? (
+                            {isLoading ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
                             ) : (
                                 <ShieldCheck className="h-4 w-4" />
@@ -159,7 +180,8 @@ export default function PasswordPage() {
                         </button>
                         {saved && (
                             <span className="text-sm font-medium text-green-600">
-                                ✓ Updated Successfully
+                                <Check className="inline-block h-4 w-4 mr-1" />
+                                Updated Successfully
                             </span>
                         )}
                     </div>
