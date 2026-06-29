@@ -1,17 +1,15 @@
 "use client";
 
-import { useRef } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { fadeUp, stagger } from "@/components/animations";
-import { ShieldCheck, BookOpen, CalendarDays, Camera, GraduationCap, Mail } from "lucide-react";
+import { ShieldCheck, BookOpen, CalendarDays, GraduationCap, Mail } from "lucide-react";
 import { useAppSelector } from "@/redux/hooks";
 import { ProfileBannerSkeleton } from "./ProfileBannerSkeleton";
 
 export default function ProfileBanner() {
     const user = useAppSelector((state) => state.auth.user);
     const isLoading = useAppSelector((state) => state.auth.isLoading);
-
-    const inputRef = useRef<HTMLInputElement>(null);
 
     const initials = user?.name
         ? user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
@@ -59,17 +57,19 @@ export default function ProfileBanner() {
             <div className="relative z-10 p-4 sm:p-6 md:p-10">
                 <motion.div
                     variants={fadeUp}
-                    className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-8"
+                    className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-5"
                 >
                     {/* Avatar */}
                     <motion.div variants={fadeUp} className="relative shrink-0">
                         <div className="relative h-24 w-24 overflow-hidden rounded-full border-[3px] border-[#e5e7eb] bg-white p-0.5 shadow-[0_8px_24px_rgba(0,0,0,0.08)] md:h-28 md:w-28">
                             <div className="h-full w-full overflow-hidden rounded-full">
                                 {user?.avatarUrl ? (
-                                    <img
+                                    <Image
                                         src={user.avatarUrl}
                                         alt={user.name}
                                         className="h-full w-full object-cover"
+                                        width={112}
+                                        height={112}
                                     />
                                 ) : (
                                     <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-[#1a56db] to-[#60a5fa] text-2xl font-bold tracking-wider text-white">
@@ -78,22 +78,6 @@ export default function ProfileBanner() {
                                 )}
                             </div>
                         </div>
-
-                        {/* Camera button */}
-                        <button
-                            onClick={() => inputRef.current?.click()}
-                            className="absolute bottom-0 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#e5e7eb] bg-white text-[#6b7280] shadow-sm transition-all hover:border-[#c7d7fd] hover:text-[#1a56db] active:scale-90"
-                            title="Update Photo"
-                        >
-                            <Camera className="h-4 w-4" />
-                        </button>
-                        <input
-                            ref={inputRef}
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) => console.log(e.target.files?.[0]?.name)}
-                        />
                     </motion.div>
 
                     {/* Info */}

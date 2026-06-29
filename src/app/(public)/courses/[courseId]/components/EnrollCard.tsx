@@ -38,14 +38,18 @@ export function EnrollCard({
         year: "numeric",
     });
 
+    const thumbnail = `${process.env.NEXT_PUBLIC_API_URL}${course.thumbnailUrl}`;
+    console.log(thumbnail);
+
     return (
         <div className="sticky top-24 overflow-hidden rounded-lg border border-border bg-white shadow capitalize">
             <div className="relative h-48 w-full">
                 <Image
-                    src={thumbnailImg}
+                    src={thumbnail}
                     priority
                     alt={course.title}
                     fill
+                    unoptimized
                     className="object-cover"
                     sizes="400px"
                 />
