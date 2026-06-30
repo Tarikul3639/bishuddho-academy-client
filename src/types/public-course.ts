@@ -17,10 +17,10 @@ export interface PublicCourse {
     originalPrice: number;
     averageRating: number;
     reviewCount: number;
-
     isEnrolled: boolean;
     enrollmentStatus?: EnrollmentStatus;
     payment?: PublicCoursePayment;
+    status?: "active" | "upcoming" | "completed";
 }
 
 export interface PublicCoursesResponse {

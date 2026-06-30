@@ -4,7 +4,7 @@ import {TakaSign} from "@/components/icons/TakaSign";
 import StarRating from "./StarRating";
 import { type PublicCourse } from "@/types/public-course";
 
-const STATUS_CONFIG = {
+const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string }> = {
     active: { label: "Active", bg: "#dcfce7", color: "#16a34a" },
     upcoming: { label: "Upcoming", bg: "#eef3ff", color: "#1a56db" },
     completed: { label: "Completed", bg: "#f3f4f6", color: "#6b7280" },
@@ -20,7 +20,7 @@ export default function CourseCard({ course }: { course: PublicCourse }) {
             ((course.originalPrice - course.price) / course.originalPrice) * 100,
         )
         : 0;
-    const status = STATUS_CONFIG[course.status];
+    const status = course.status ? STATUS_CONFIG[course.status] : null;
 
     return (
         <div className="group flex flex-col overflow-hidden rounded-xl border border-[#e5e7eb] bg-white transition-all hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.09)]">
@@ -35,18 +35,19 @@ export default function CourseCard({ course }: { course: PublicCourse }) {
                     sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
 
                 {/* Badges */}
                 <div className="absolute inset-x-0 bottom-0 flex items-center justify-between px-3 py-2">
-                    <span
-                        className="rounded-sm px-2 py-0.5 text-[10px] font-bold"
-                        style={{ background: status.bg, color: status.color }}
-                    >
-                        {status.label}
-                    </span>
+                    {status && (
+                        <span
+                            className="rounded-sm px-2 py-0.5 text-[10px] font-bold"
+                            style={{ background: status.bg, color: status.color }}
+                        >
+                            {status.label}
+                        </span>
+                    )}
                     {course.isEnrolled ? (
                         <span className="rounded-sm bg-[#16a34a] px-2 py-0.5 text-[10px] font-bold text-white">
                             Enrolled
