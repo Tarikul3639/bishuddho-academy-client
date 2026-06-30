@@ -8,13 +8,13 @@ import { useRef } from "react";
 
 // TODO: replace with real admin data from Redux/session
 const ADMIN = {
-    name:      "Tarikul Islam",
-    email:     "admin@bishuddho.com",
-    adminId:   "ADMIN-001",
-    role:      "Super Admin",
+    name: "Tarikul Islam",
+    email: "admin@bishuddho.com",
+    adminId: "ADMIN-001",
+    role: "Super Admin",
     joinedDate: "Jan 2026",
     totalStudents: 128,
-    avatar:    "",
+    avatar: "",
 };
 
 export default function AdminBanner() {
@@ -120,9 +120,9 @@ export default function AdminBanner() {
                         {/* Pills */}
                         <div className="flex flex-wrap items-center gap-2 pt-1">
                             {[
-                                { icon: ShieldCheck,    label: ADMIN.adminId                          },
-                                { icon: Users,          label: `${ADMIN.totalStudents} Total Students` },
-                                { icon: LayoutDashboard, label: `Joined ${ADMIN.joinedDate}`           },
+                                { icon: ShieldCheck, label: ADMIN.adminId },
+                                { icon: Users, label: `${ADMIN.totalStudents} Total Students` },
+                                { icon: LayoutDashboard, label: `Joined ${ADMIN.joinedDate}` },
                             ].map((pill) => (
                                 <span
                                     key={pill.label}

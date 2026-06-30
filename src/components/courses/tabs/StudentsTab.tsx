@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { stagger } from "@/components/animations";
-import { Search, ChevronDown, RotateCcw } from "lucide-react";
+import { Search, ChevronDown, RotateCcw, AlertTriangle } from "lucide-react";
 import type { EnrolledStudent } from "@/types/admin-course-details";
-import RejectModal from "./RejectModal";
+import ActionConfirmationModal from "@/components/ui/ActionConfirmationModal";
 import TableRow from "./TableRow";
 
 export default function StudentsTab({
@@ -39,10 +39,40 @@ export default function StudentsTab({
         <div className="space-y-4">
             <AnimatePresence>
                 {rejectTarget && (
-                    <RejectModal
-                        student={rejectTarget}
-                        isRejecting={rejectingPaymentId === rejectTarget.payment?.paymentId}
-                        onConfirm={(reason) => { onReject(rejectTarget.payment!.paymentId, reason); setRejectTarget(null); }}
+                    <ActionConfirmationModal
+                        open={!!rejectTarget}
+                        title="Reject Payment"
+                        description={
+                            <>
+                                Reject payment for{" "}
+                                <span className="font-medium text-gray-800">
+                                    {rejectTarget?.user.name}
+                                </span>
+                                . Add a short reason before confirming.
+                            </>
+                        }
+                        icon={
+                            <AlertTriangle className="h-4 w-4 text-red-500" />
+                        }
+                        confirmText="Confirm Reject"
+                        confirmColor="red"
+                        loading={
+                            rejectingPaymentId ===
+                            rejectTarget?.payment?.paymentId
+                        }
+                        showReason
+                        reasonPlaceholder="Write reason (optional)..."
+                        defaultReason="Rejected by admin"
+                        onConfirm={(reason) => {
+                            if (!rejectTarget?.payment) return;
+
+                            onReject(
+                                rejectTarget.payment.paymentId,
+                                reason || "Rejected by admin",
+                            );
+
+                            setRejectTarget(null);
+                        }}
                         onClose={() => setRejectTarget(null)}
                     />
                 )}

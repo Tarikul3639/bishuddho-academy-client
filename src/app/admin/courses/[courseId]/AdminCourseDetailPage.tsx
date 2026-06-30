@@ -23,10 +23,11 @@ import CourseHero from "@/components/courses/CourseHero";
 import type { CourseDetails } from "@/types/admin-course-details";
 import {
     useGetAdminCourseQuery,
-    useRejectPaymentMutation,
     useUpdateCourseMutation,
-    useVerifyPaymentMutation,
 } from "@/redux/features/courses/courses.api";
+import {
+    useUpdatePurchaseStatusMutation
+} from "@/redux/features/purchases/admin-purchases.api";
 import { NormalizeError } from "@/redux/api/apiError";
 
 // ── Tab config ────────────────────────────────────────────────────────────────
@@ -59,8 +60,7 @@ export default function AdminCourseDetailPage({
     const [updateCourse, { isLoading: isUpdating, isError: isUpdateError, error: updateError }] =
         useUpdateCourseMutation();
 
-    const [verifyPayment] = useVerifyPaymentMutation();
-    const [rejectPayment] = useRejectPaymentMutation();
+    const [updateStatus] = useUpdatePurchaseStatusMutation();
 
     const [verifyingPaymentId, setVerifyingPaymentId] = useState<string | null>(null);
     const [rejectingPaymentId, setRejectingPaymentId] = useState<string | null>(null);
@@ -122,7 +122,7 @@ export default function AdminCourseDetailPage({
         setVerifyingPaymentId(paymentId);
         const toastId = toast.loading("Verifying payment...");
         try {
-            await verifyPayment({ courseId, paymentId }).unwrap();
+            await updateStatus({ id: paymentId, status: "verified" }).unwrap();
             toast.success("Payment verified successfully.", { id: toastId });
         } catch (err) {
             const message = NormalizeError(err).message || "Failed to verify payment.";
@@ -136,7 +136,7 @@ export default function AdminCourseDetailPage({
         setRejectingPaymentId(paymentId);
         const toastId = toast.loading("Rejecting payment...");
         try {
-            await rejectPayment({ courseId, paymentId, reason }).unwrap();
+            await updateStatus({ id: paymentId, status: "rejected", rejectionReason: reason }).unwrap();
             toast.success("Payment rejected.", { id: toastId });
         } catch (err) {
             const message = NormalizeError(err).message || "Failed to reject payment.";
@@ -234,8 +234,8 @@ export default function AdminCourseDetailPage({
                                     router.replace(`?tab=${tab.id}`, { scroll: false })
                                 }
                                 className={`relative rounded-lg px-3.5 py-2 text-[12px] font-bold transition-colors cursor-pointer ${activeTab === tab.id
-                                        ? "text-[#0d1b3e]"
-                                        : "text-[#6b7280] hover:text-[#0d1b3e]"
+                                    ? "text-[#0d1b3e]"
+                                    : "text-[#6b7280] hover:text-[#0d1b3e]"
                                     }`}
                             >
                                 {activeTab === tab.id && (

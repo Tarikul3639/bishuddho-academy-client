@@ -1,8 +1,5 @@
-export enum EnrollmentStatus {
-    ACTIVE = "active",
-    PENDING = "pending",
-    COMPLETED = "completed",
-}
+import type { EnrollmentStatus } from "@/types/enrollment-status";
+import type { PaymentStatus } from "@/types/payment-status";
 
 export interface StudentMyCourse {
     courseId: string;
@@ -10,6 +7,8 @@ export interface StudentMyCourse {
     thumbnailUrl: string;
     instructor: string;
     status: EnrollmentStatus;
+    paymentStatus: PaymentStatus;
+    rejectionReason?: string;
     schedule: string;
     location: string;
     duration: string;

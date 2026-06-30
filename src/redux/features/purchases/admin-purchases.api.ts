@@ -31,12 +31,12 @@ export const adminPurchasesApi = baseApi.injectEndpoints({
         }),
         updatePurchaseStatus: builder.mutation<
             { success: boolean },
-            { id: string; status: string }
+            { id: string; status: string; rejectionReason?: string }
         >({
-            query: ({ id, status }) => ({
+            query: ({ id, status, rejectionReason }) => ({
                 url: `/purchases/admin/${id}/status`,
                 method: "PATCH",
-                body: { status },
+                body: { status, rejectionReason },
             }),
             invalidatesTags: [{ type: TAG_TYPES.ENROLLMENTS, id: "LIST" }],
         }),

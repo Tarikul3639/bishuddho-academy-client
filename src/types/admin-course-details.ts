@@ -1,26 +1,8 @@
 import type { CourseModule } from "@/types/course-create";
 import type { CourseStatus } from "@/types/course-status";
-
-/* ─────────────────────────────
-   ENUMS
-───────────────────────────── */
-
-export type PaymentMethod =
-    | "bkash"
-    | "nagad"
-    | "rocket"
-    | "bank_transfer"
-    | "cash";
-
-export type EnrollmentStatus =
-    | "pending"
-    | "active"
-    | "completed";
-
-export type PaymentStatus =
-    | "pending"
-    | "verified"
-    | "rejected";
+import type { PaymentMethod } from "@/types/payment-method";
+import type { EnrollmentStatus } from "@/types/enrollment-status";
+import type { PaymentStatus } from "@/types/payment-status";
 
 /* ─────────────────────────────
    STUDENT
@@ -30,7 +12,6 @@ export interface EnrolledStudent {
     enrollment: {
         enrollmentId: string;
         status: EnrollmentStatus;
-        currentSession: number;
     };
 
     user: {

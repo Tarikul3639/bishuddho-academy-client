@@ -65,13 +65,9 @@ export interface StudentCourseDetails {
     schedule: string;
     location: string;
     startDate: string;
-
     includes: string[];
 
-    currentSession: number;
     status: EnrollmentStatus;
-
     payment: StudentCoursePayment;
-
     modules: StudentCourseModule[];
 }

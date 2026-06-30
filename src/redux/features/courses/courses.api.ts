@@ -102,50 +102,6 @@ export const coursesApi = baseApi.injectEndpoints({
             ],
         }),
 
-        verifyPayment: builder.mutation<
-            void,
-            {
-                courseId: string;
-                paymentId: string;
-            }
-        >({
-            query: ({ paymentId }) => ({
-                url: `/admin/courses/payments/${paymentId}/verify`,
-                method: "PATCH",
-            }),
-
-            invalidatesTags: (_, __, { courseId }) => [
-                {
-                    type: TAG_TYPES.COURSES,
-                    id: courseId,
-                },
-            ],
-        }),
-
-        rejectPayment: builder.mutation<
-            void,
-            {
-                courseId: string;
-                paymentId: string;
-                reason: string;
-            }
-        >({
-            query: ({ paymentId, reason }) => ({
-                url: `/admin/courses/payments/${paymentId}/reject`,
-                method: "PATCH",
-                body: {
-                    reason,
-                },
-            }),
-
-            invalidatesTags: (_, __, { courseId }) => [
-                {
-                    type: TAG_TYPES.COURSES,
-                    id: courseId,
-                },
-            ],
-        }),
-
         /* ─────────────────────────────
                    PUBLIC
                 ───────────────────────────── */
@@ -203,6 +159,23 @@ export const coursesApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
         }),
+
+        cancelEnrollment: builder.mutation<
+            void,
+            string
+        >({
+            query: (courseId) => ({
+                url: `/student/courses/${courseId}`,
+                method: "DELETE",
+            }),
+
+            invalidatesTags: [
+                {
+                    type: TAG_TYPES.ENROLLMENTS,
+                    id: "LIST",
+                },
+            ],
+        }),
     }),
 });
 
@@ -212,8 +185,6 @@ export const {
     useUpdateCourseMutation,
     useGetAdminCoursesQuery,
     useGetAdminCourseQuery,
-    useVerifyPaymentMutation,
-    useRejectPaymentMutation,
 
     /* Public */
     useGetPublicCoursesQuery,
@@ -222,4 +193,5 @@ export const {
     /* Student */
     useGetMyCoursesQuery,
     useGetMyCourseDetailsQuery,
+    useCancelEnrollmentMutation,
 } = coursesApi;

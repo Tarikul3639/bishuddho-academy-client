@@ -29,13 +29,6 @@ const OPTIONS = [
         hoverBg: "group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600",
     },
     {
-        icon: UserCog,
-        label: "Enrollments",
-        href: "/admin/enrollments",
-        bg: "bg-cyan-100 text-cyan-600 border-cyan-100/50",
-        hoverBg: "group-hover:bg-cyan-600 group-hover:text-white group-hover:border-cyan-600",
-    },
-    {
         icon: CreditCard,
         label: "Payments",
         href: "/admin/payments",

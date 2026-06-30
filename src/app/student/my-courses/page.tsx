@@ -8,7 +8,8 @@ import { useRouter } from "next/navigation";
 import { fadeUp, stagger } from "@/components/animations";
 import { EnrolledCourseCard } from "@/components/courses/EnrolledCourseCard";
 import { EnrolledCourseCardSkeleton } from "@/components/courses/EnrolledCourseCardSkeleton";
-import { useGetMyCoursesQuery } from "@/redux/features/courses/courses.api";
+import { useGetMyCoursesQuery, useCancelEnrollmentMutation } from "@/redux/features/courses/courses.api";
+import { toast } from "sonner";
 
 export default function MyCoursesPage() {
     const router = useRouter();
@@ -18,6 +19,24 @@ export default function MyCoursesPage() {
         isLoading,
         isError,
     } = useGetMyCoursesQuery();
+
+    const [cancelEnrollment] = useCancelEnrollmentMutation();
+
+    const onDelete = async ({
+        courseId,
+    }: {
+        courseId: string;
+    }) => {
+        const promise = cancelEnrollment(courseId).unwrap();
+
+        toast.promise(promise, {
+            loading: "Cancelling enrollment...",
+            success: "Enrollment cancelled successfully.",
+            error: "Failed to cancel enrollment.",
+        });
+
+        await promise;
+    };
 
     return (
         <motion.main
@@ -111,7 +130,7 @@ export default function MyCoursesPage() {
                     className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
                 >
                     {myCourses.map((course) => (
-                        <EnrolledCourseCard key={course.courseId} course={course} />
+                        <EnrolledCourseCard key={course.courseId} course={course} onDelete={onDelete} />
                     ))}
                 </motion.div>
             )}

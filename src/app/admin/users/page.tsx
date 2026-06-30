@@ -1,4 +1,3 @@
-// app/admin/users/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -8,7 +7,12 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { useGetAdminUsersQuery, useToggleUserBlockMutation, useResetUserPasswordMutation } from "@/redux/features/users/admin-users.api";
+import {
+    useGetAdminUsersQuery,
+    useToggleUserBlockMutation,
+    useResetUserPasswordMutation,
+} from "@/redux/features/users/admin-users.api";
+
 import FilterBar from "./components/FilterBar";
 import SummaryBadges from "./components/SummaryBadges";
 import UsersTable from "./components/UsersTable";
