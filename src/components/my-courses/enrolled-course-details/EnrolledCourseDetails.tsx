@@ -8,9 +8,9 @@ import {
     ArrowLeft, CheckCircle,
 } from "lucide-react";
 
-import Sidebar from "./Sidebar";
-import ModuleAccordion from "./ModuleAccordion";
-import { EnrolledCourseDetailSkeleton } from "./EnrolledCourseDetailSkeleton";
+import Sidebar from "./sections/Sidebar";
+import ModuleAccordion from "./sections/ModuleAccordion";
+import { EnrolledCourseDetailSkeleton } from "./sections/EnrolledCourseDetailSkeleton";
 
 import { useGetMyCourseDetailsQuery } from "@/redux/features/courses/courses.api";
 
@@ -27,7 +27,7 @@ const stagger: Variants = {
     visible: { transition: { staggerChildren: 0.08 } },
 };
 
-export function EnrolledCourseDetailPage({ courseId }: { courseId: string }) {
+export function EnrolledCourseDetail({ courseId }: { courseId: string }) {
     const router = useRouter();
 
     const {
@@ -242,4 +242,4 @@ export function EnrolledCourseDetailPage({ courseId }: { courseId: string }) {
     );
 }
 
-export default EnrolledCourseDetailPage;
+export default EnrolledCourseDetail;

@@ -3,7 +3,7 @@
 
 import { motion } from "framer-motion";
 import { fadeUp, stagger } from "@/components/animations";
-import { BookOpen, LayoutDashboard, Users, PlusCircle, Lock, Edit3, CreditCard, UserCog } from "lucide-react";
+import { BookOpen, LayoutDashboard, Users, PlusCircle, Lock, Edit3, CreditCard } from "lucide-react";
 import Link from "next/link";
 
 const OPTIONS = [
@@ -55,6 +55,12 @@ const OPTIONS = [
         href: "/admin/profile-edit",
         bg: "bg-orange-100 text-orange-600 border-orange-100/50",
         hoverBg: "group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600",
+    }, {
+        icon: BookOpen,
+        label: "My Courses",
+        href: "/admin/my-courses",
+        bg: "bg-purple-100 text-purple-600 border-purple-100/50",
+        hoverBg: "group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600"
     },
 ] as const;
 
