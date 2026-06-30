@@ -93,7 +93,9 @@ export function EnrolledCourseDetailPage({ courseId }: { courseId: string }) {
     }
 
     // ── Success ───────────────────────────────────────────────────────────────
-    const progPct = Math.round((course.currentSession / course.lessons) * 100);
+    const completedClasses = course.modules.reduce((acc, mod) => acc + mod.classes.filter(c => c.completed).length, 0);
+    const totalClasses = course.modules.reduce((acc, mod) => acc + mod.classes.length, 0);
+    const progPct = totalClasses > 0 ? Math.round((completedClasses / totalClasses) * 100) : 0;
 
     return (
         <motion.main

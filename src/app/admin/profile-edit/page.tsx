@@ -8,6 +8,7 @@ import { fadeUp, stagger } from "@/components/animations";
 import { InputField } from "@/components/ui/InputField";
 import PageHeader from "@/components/ui/PageHeader";
 import { useAppSelector } from "@/redux/hooks";
+import { useUpdateProfileMutation } from "@/redux/features/auth/auth.api";
 
 interface FormState {
     name: string;
@@ -24,9 +25,9 @@ export default function EditProfilePage() {
         email: user?.email || "",
         phone: user?.phone || "",
     });
-    const [loading, setLoading] = useState(false);
     const [saved, setSaved] = useState(false);
     const [errors, setErrors] = useState<Partial<FormState>>({});
+    const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -72,12 +73,13 @@ export default function EditProfilePage() {
             return;
         }
 
-        setLoading(true);
-        // TODO:
-        // await api.patch("/users/profile", form);
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setLoading(false);
-        setSaved(true);
+        try {
+            await updateProfile({ name: form.name, phone: form.phone }).unwrap();
+            setSaved(true);
+        } catch (err) {
+            console.error("Profile update failed:", err);
+            setSaved(false);
+        }
     };
 
     return (
@@ -147,10 +149,10 @@ export default function EditProfilePage() {
                     <div className="flex items-center gap-3 pt-1 sm:col-span-2">
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={isUpdating}
                             className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                         >
-                            {loading ? (
+                            {isUpdating ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
                             ) : (
                                 <Save className="h-4 w-4" />

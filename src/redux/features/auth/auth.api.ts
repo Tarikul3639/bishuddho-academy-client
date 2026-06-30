@@ -51,7 +51,7 @@ export const authApi = baseApi.injectEndpoints({
             { current: string; next: string }
         >({
             query: (passwords) => ({
-                url: "/auth/password",
+                url: "/profile/password",
                 method: "PATCH",
                 body: passwords,
             }),
@@ -65,7 +65,7 @@ export const authApi = baseApi.injectEndpoints({
             void
         >({
             query: () => ({
-                url: "/auth/profile",
+                url: "/profile",
                 method: "GET",
             }),
 
@@ -78,7 +78,7 @@ export const authApi = baseApi.injectEndpoints({
             Partial<ProfileData>
         >({
             query: (profileData) => ({
-                url: "/auth/profile",
+                url: "/profile",
                 method: "PATCH",
                 body: profileData,
             }),
