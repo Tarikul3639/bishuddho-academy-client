@@ -1,6 +1,7 @@
 /* TAG TYPES */
 export const TAG_TYPES = {
     AUTH: "Auth",
+    PROFILE: "Profile",
     COURSES: "Courses",
     ENROLLMENTS: "Enrollments",
     SESSIONS: "Sessions",
