@@ -5,7 +5,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { stagger, fadeUp } from "@/components/animations";
 import { BookOpen } from "lucide-react";
-import { STATUS_CONFIG, type AdminUser } from "../../_data/users";
+import { type AdminUser } from "@/redux/features/users/admin-users.api";
+import { STATUS_CONFIG } from "../../_data/users";
 import { UserActionsDropdown } from "./UserActionsDropdown";
 
 function getInitials(name: string) {
@@ -19,7 +20,7 @@ function TableRow({
 }: {
     user: AdminUser;
     onResetPassword: (id: string) => void;
-    onToggleBlock: (id: string) => void;
+    onToggleBlock: (id: string, status: string) => void;
 }) {
     const status = STATUS_CONFIG[user.status];
 
@@ -80,7 +81,7 @@ function TableRow({
                 <UserActionsDropdown
                     user={user}
                     onResetPassword={onResetPassword}
-                    onToggleBlock={onToggleBlock}
+                    onToggleBlock={(id) => onToggleBlock(id, user.status)}
                 />
             </td>
         </motion.tr>
@@ -94,7 +95,7 @@ export default function UsersTable({
 }: {
     data: AdminUser[];
     onResetPassword: (id: string) => void;
-    onToggleBlock: (id: string) => void;
+    onToggleBlock: (id: string, status: string) => void;
 }) {
     if (data.length === 0) {
         return (

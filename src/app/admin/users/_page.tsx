@@ -1,12 +1,14 @@
 // app/admin/users/page.tsx
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { stagger, fadeUp } from "@/components/animations";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { USERS } from "../_data/users";
+import { toast } from "sonner";
+
+import { useGetAdminUsersQuery, useToggleUserBlockMutation, useResetUserPasswordMutation } from "@/redux/features/users/admin-users.api";
 import FilterBar from "./components/FilterBar";
 import SummaryBadges from "./components/SummaryBadges";
 import UsersTable from "./components/UsersTable";
@@ -16,26 +18,58 @@ export default function UsersPage() {
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("");
 
-    const filtered = useMemo(() => {
-        return USERS.filter((u) => {
-            const matchSearch = !search || [u.name, u.email, u.studentId]
-                .some((f) => f.toLowerCase().includes(search.toLowerCase()));
-            const matchStatus = !status || u.status === status;
-            return matchSearch && matchStatus;
-        });
-    }, [search, status]);
+    const { data, isLoading, isError } = useGetAdminUsersQuery({ search, status });
+    const [toggleBlock, { isLoading: isToggling }] = useToggleUserBlockMutation();
+    const [resetPassword, { isLoading: isResetting }] = useResetUserPasswordMutation();
+
+    const users = data?.users ?? [];
+    const total = data?.total ?? 0;
 
     const handleReset = () => { setSearch(""); setStatus(""); };
 
-    const handleResetPassword = (id: string) => {
-        // TODO: POST /admin/users/:id/reset-password
-        console.log("Reset password for:", id);
+    const handleResetPassword = async (id: string) => {
+        try {
+            await resetPassword({ id }).unwrap();
+            toast.success("Password reset successfully. Please inform the user.");
+        } catch {
+            toast.error("Failed to reset password.");
+        }
     };
 
-    const handleToggleBlock = (id: string) => {
-        // TODO: PATCH /admin/users/:id/toggle-block
-        console.log("Toggle block for:", id);
+    const handleToggleBlock = async (id: string, currentStatus: string) => {
+        try {
+            const newStatus = currentStatus === "active" ? "blocked" : "active";
+            await toggleBlock({ id, status: newStatus }).unwrap();
+            toast.success(`User ${newStatus === "blocked" ? "blocked" : "unblocked"} successfully.`);
+        } catch {
+            toast.error("Failed to update user status.");
+        }
     };
+
+    /* ── Loading ────────────────────────────────────────────────────── */
+    if (isLoading) {
+        return (
+            <div className="flex min-h-[400px] items-center justify-center gap-3">
+                <Loader2 className="h-6 w-6 animate-spin text-[#1a56db]" />
+                <span className="text-sm text-[#6b7280]">Loading users...</span>
+            </div>
+        );
+    }
+
+    /* ── Error ──────────────────────────────────────────────────────── */
+    if (isError) {
+        return (
+            <div className="flex min-h-[400px] flex-col items-center justify-center gap-3">
+                <p className="text-lg font-bold text-[#ef4444]">Failed to load users</p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="mt-2 rounded bg-[#1a56db] px-4 py-2 text-sm font-bold text-white hover:bg-[#1346c4]"
+                >
+                    Try Again
+                </button>
+            </div>
+        );
+    }
 
     return (
         <motion.div
@@ -62,7 +96,7 @@ export default function UsersPage() {
                         Manage student accounts, reset passwords and control access
                     </p>
                 </div>
-                <SummaryBadges data={USERS} />
+                <SummaryBadges data={users} />
             </motion.div>
 
             {/* Filters */}
@@ -76,13 +110,13 @@ export default function UsersPage() {
 
             {/* Result count */}
             <motion.p variants={fadeUp} className="text-[12px] text-[#9ca3af]">
-                Showing {filtered.length} of {USERS.length} users
+                Showing {users.length} of {total} users
             </motion.p>
 
             {/* Table */}
             <motion.div variants={fadeUp}>
                 <UsersTable
-                    data={filtered}
+                    data={users}
                     onResetPassword={handleResetPassword}
                     onToggleBlock={handleToggleBlock}
                 />

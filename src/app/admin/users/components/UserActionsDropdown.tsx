@@ -21,7 +21,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { MoreHorizontal, KeyRound, Ban, CheckCircle2 } from "lucide-react";
-import { type AdminUser } from "../../_data/users";
+import { type AdminUser } from "@/redux/features/users/admin-users.api";
 
 type PendingAction = "reset" | "block" | null;
 
@@ -32,14 +32,14 @@ export function UserActionsDropdown({
 }: {
     user: AdminUser;
     onResetPassword: (id: string) => void;
-    onToggleBlock: (id: string) => void;
+    onToggleBlock: (id: string, status: string) => void;
 }) {
     const [pending, setPending] = useState<PendingAction>(null);
     const isBlocked = user.status === "blocked";
 
     function handleConfirm() {
         if (pending === "reset") onResetPassword(user.id);
-        if (pending === "block") onToggleBlock(user.id);
+        if (pending === "block") onToggleBlock(user.id, user.status);
         setPending(null);
     }
 
