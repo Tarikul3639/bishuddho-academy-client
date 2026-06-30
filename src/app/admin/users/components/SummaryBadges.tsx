@@ -1,5 +1,5 @@
 // app/admin/users/components/SummaryBadges.tsx
-import type { AdminUser } from "@/redux/features/users/admin-users.api";
+import { AdminUser } from "@/types/admin-users";
 
 export default function SummaryBadges({ data }: { data: AdminUser[] }) {
     const total = data.length;

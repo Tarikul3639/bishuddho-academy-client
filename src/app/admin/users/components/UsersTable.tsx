@@ -1,59 +1,16 @@
 // app/admin/users/components/UsersTable.tsx
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { stagger, fadeUp } from "@/components/animations";
 import { BookOpen } from "lucide-react";
-// import { type AdminUser } from "@/redux/features/users/admin-users.api";
-// import { STATUS_CONFIG } from "../../_data/users";
+import { AdminUser, UserStatus } from "@/types/admin-users";
+import { STATUS_CONFIG } from "@/config/user.constants";
 import { UserActionsDropdown } from "./UserActionsDropdown";
 
 function getInitials(name: string) {
     return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
 }
-
-
-export type UserStatus = "active" | "blocked";
-
-export interface AdminUser {
-  id: string;
-  name: string;
-  email: string;
-  studentId: string;
-
-  status: UserStatus;
-
-  joinedDate: string;
-  lastLogin: string;
-
-  coursesCount: number;
-  lastPurchase: string;
-}
-
-export const STATUS_CONFIG: Record<
-  UserStatus,
-  {
-    label: string;
-    color: string;
-    bg: string;
-  }
-> = {
-  active: {
-    label: "Active",
-    color: "#16a34a",
-    bg: "#dcfce7",
-  },
-  blocked: {
-    label: "Blocked",
-    color: "#ef4444",
-    bg: "#fee2e2",
-  },
-};
-
-// Temporary demo data.
-// Remove this after connecting the backend.
-export const USERS: AdminUser[] = [];
 
 // ── Table Row ─────────────────────────────────────────────────────────────────
 
@@ -61,8 +18,8 @@ function TableRow({
     user, onResetPassword, onToggleBlock,
 }: {
     user: AdminUser;
-    onResetPassword: (id: string) => void;
-    onToggleBlock: (id: string, status: string) => void;
+    onResetPassword: (userId: string) => void;
+    onToggleBlock: (userId: string, status: UserStatus) => void;
 }) {
     const status = STATUS_CONFIG[user.status];
 
@@ -123,7 +80,7 @@ function TableRow({
                 <UserActionsDropdown
                     user={user}
                     onResetPassword={onResetPassword}
-                    onToggleBlock={(id) => onToggleBlock(id, user.status)}
+                    onToggleBlock={(userId) => onToggleBlock(userId, user.status)}
                 />
             </td>
         </motion.tr>
@@ -136,8 +93,8 @@ export default function UsersTable({
     data, onResetPassword, onToggleBlock,
 }: {
     data: AdminUser[];
-    onResetPassword: (id: string) => void;
-    onToggleBlock: (id: string, status: string) => void;
+    onResetPassword: (userId: string) => void;
+    onToggleBlock: (userId: string, status: UserStatus) => void;
 }) {
     if (data.length === 0) {
         return (
@@ -172,7 +129,7 @@ export default function UsersTable({
                     <motion.tbody initial="hidden" animate="visible" variants={stagger}>
                         {data.map((u) => (
                             <TableRow
-                                key={u.id}
+                                key={u.userId}
                                 user={u}
                                 onResetPassword={onResetPassword}
                                 onToggleBlock={onToggleBlock}

@@ -1,84 +1,64 @@
 import { baseApi } from "@/redux/api/baseApi";
 import { TAG_TYPES } from "@/redux/api/tag-types";
-
-export interface AdminUser {
-    id: string;
-    name: string;
-    email: string;
-    studentId: string;
-    joinedDate: string;
-    lastLogin: string;
-    status: "active" | "blocked";
-    coursesCount: number;
-    lastPurchase: string;
-}
-
-export interface AdminUsersResponse {
-    users: AdminUser[];
-    total: number;
-    active: number;
-    blocked: number;
-    newUsersCount: number;
-}
-
-export interface ToggleBlockResponse {
-    success: boolean;
-    message: string;
-    status: string;
-}
+import type { AdminUsersResponse, ToggleBlockResponse, UserStatus } from "@/types/admin-users";
 
 export const adminUsersApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getAdminUsers: builder.query<
             AdminUsersResponse,
-            { search?: string; status?: string }
+            { search?: string; status?: UserStatus }
         >({
             query: (params) => ({
                 url: "/admin/users",
                 method: "GET",
                 params,
             }),
-            providesTags: [{ type: "AdminUsers" as any, id: "LIST" }],
+            providesTags: [
+                {
+                    type: TAG_TYPES.ADMIN_USERS,
+                    id: "LIST",
+                },
+            ],
         }),
 
         toggleUserBlock: builder.mutation<
             ToggleBlockResponse,
-            { id: string; status?: "active" | "blocked"; reason?: string }
+            { userId: string; status?: UserStatus; reason?: string }
         >({
-            query: ({ id, status, reason }) => ({
-                url: `/admin/users/${id}/toggle-block`,
+            query: ({ userId, status, reason }) => ({
+                url: `/admin/users/${userId}/toggle-block`,
                 method: "PATCH",
                 body: { status, reason },
             }),
-            invalidatesTags: [{ type: "AdminUsers" as any, id: "LIST" }],
+            invalidatesTags: [{ type: TAG_TYPES.ADMIN_USERS, id: "LIST" }],
         }),
 
         blockUser: builder.mutation<
             ToggleBlockResponse,
-            { id: string; reason?: string }
+            { userId: string; reason?: string }
         >({
-            query: ({ id, reason }) => ({
-                url: `/admin/users/${id}/block`,
+            query: ({ userId, reason }) => ({
+                url: `/admin/users/${userId}/block`,
                 method: "PATCH",
                 body: { reason },
             }),
-            invalidatesTags: [{ type: "AdminUsers" as any, id: "LIST" }],
+            invalidatesTags: [{ type: TAG_TYPES.ADMIN_USERS, id: "LIST" }],
         }),
 
         unblockUser: builder.mutation<ToggleBlockResponse, string>({
-            query: (id) => ({
-                url: `/admin/users/${id}/unblock`,
+            query: (userId) => ({
+                url: `/admin/users/${userId}/unblock`,
                 method: "PATCH",
             }),
-            invalidatesTags: [{ type: "AdminUsers" as any, id: "LIST" }],
+            invalidatesTags: [{ type: TAG_TYPES.ADMIN_USERS, id: "LIST" }],
         }),
 
         resetUserPassword: builder.mutation<
             { success: boolean; message: string },
-            { id: string; reason?: string }
+            { userId: string; reason?: string }
         >({
-            query: ({ id, reason }) => ({
-                url: `/admin/users/${id}/reset-password`,
+            query: ({ userId, reason }) => ({
+                url: `/admin/users/${userId}/reset-password`,
                 method: "POST",
                 body: { reason },
             }),

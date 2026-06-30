@@ -12,6 +12,7 @@ import {
     useToggleUserBlockMutation,
     useResetUserPasswordMutation,
 } from "@/redux/features/users/admin-users.api";
+import { UserStatus, type AdminUser } from "@/types/admin-users";
 
 import FilterBar from "./components/FilterBar";
 import SummaryBadges from "./components/SummaryBadges";
@@ -20,31 +21,43 @@ import UsersTable from "./components/UsersTable";
 export default function UsersPage() {
     const router = useRouter();
     const [search, setSearch] = useState("");
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState<UserStatus>(UserStatus.ACTIVE);
 
-    const { data, isLoading, isError } = useGetAdminUsersQuery({ search, status });
+    const { data, isLoading, isError } = useGetAdminUsersQuery({
+        search,
+        status,
+    });
     const [toggleBlock, { isLoading: isToggling }] = useToggleUserBlockMutation();
-    const [resetPassword, { isLoading: isResetting }] = useResetUserPasswordMutation();
+    const [resetPassword, { isLoading: isResetting }] =
+        useResetUserPasswordMutation();
 
     const users = data?.users ?? [];
     const total = data?.total ?? 0;
 
-    const handleReset = () => { setSearch(""); setStatus(""); };
+    const handleReset = () => {
+        setSearch("");
+        setStatus(UserStatus.ACTIVE);
+    };
 
-    const handleResetPassword = async (id: string) => {
+    const handleResetPassword = async (userId: string) => {
         try {
-            await resetPassword({ id }).unwrap();
+            await resetPassword({ userId }).unwrap();
             toast.success("Password reset successfully. Please inform the user.");
         } catch {
             toast.error("Failed to reset password.");
         }
     };
 
-    const handleToggleBlock = async (id: string, currentStatus: string) => {
+    const handleToggleBlock = async (userId: string, currentStatus: UserStatus) => {
         try {
-            const newStatus = currentStatus === "active" ? "blocked" : "active";
-            await toggleBlock({ id, status: newStatus }).unwrap();
-            toast.success(`User ${newStatus === "blocked" ? "blocked" : "unblocked"} successfully.`);
+            const newStatus =
+                currentStatus === UserStatus.ACTIVE
+                    ? UserStatus.BLOCKED
+                    : UserStatus.ACTIVE;
+            await toggleBlock({ userId, status: newStatus }).unwrap();
+            toast.success(
+                `User ${newStatus === UserStatus.BLOCKED ? UserStatus.BLOCKED : UserStatus.ACTIVE} successfully.`,
+            );
         } catch {
             toast.error("Failed to update user status.");
         }
@@ -53,7 +66,7 @@ export default function UsersPage() {
     /* ── Loading ────────────────────────────────────────────────────── */
     if (isLoading) {
         return (
-            <div className="flex min-h-[400px] items-center justify-center gap-3">
+            <div className="flex min-h-100 items-center justify-center gap-3">
                 <Loader2 className="h-6 w-6 animate-spin text-[#1a56db]" />
                 <span className="text-sm text-[#6b7280]">Loading users...</span>
             </div>
@@ -63,7 +76,7 @@ export default function UsersPage() {
     /* ── Error ──────────────────────────────────────────────────────── */
     if (isError) {
         return (
-            <div className="flex min-h-[400px] flex-col items-center justify-center gap-3">
+            <div className="flex min-h-100 flex-col items-center justify-center gap-3">
                 <p className="text-lg font-bold text-[#ef4444]">Failed to load users</p>
                 <button
                     onClick={() => window.location.reload()}
@@ -93,7 +106,10 @@ export default function UsersPage() {
             </motion.button>
 
             {/* Header */}
-            <motion.div variants={fadeUp} className="flex flex-wrap items-start justify-between gap-4">
+            <motion.div
+                variants={fadeUp}
+                className="flex flex-wrap items-start justify-between gap-4"
+            >
                 <div>
                     <h1 className="text-2xl font-bold text-[#0d1b3e]">User Management</h1>
                     <p className="mt-1 text-[13px] text-[#6b7280]">
@@ -106,8 +122,10 @@ export default function UsersPage() {
             {/* Filters */}
             <motion.div variants={fadeUp}>
                 <FilterBar
-                    search={search} status={status}
-                    onSearch={setSearch} onStatus={setStatus}
+                    search={search}
+                    status={status}
+                    onSearch={setSearch}
+                    onStatus={setStatus}
                     onReset={handleReset}
                 />
             </motion.div>

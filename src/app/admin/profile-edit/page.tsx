@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Save, User, Mail, Phone, ArrowLeft } from "lucide-react";
+import { Loader2, Save, User, Mail, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeUp, stagger } from "@/components/animations";
 import { InputField } from "@/components/ui/InputField";
 import PageHeader from "@/components/ui/PageHeader";
+import { useAppSelector } from "@/redux/hooks";
 
 interface FormState {
     name: string;
@@ -14,17 +15,15 @@ interface FormState {
     phone: string;
 }
 
-// TODO: Replace with real initial data from Redux / API selector
-const MOCK_INITIAL_DATA: FormState = {
-    name: "Tarikul Islam",
-    email: "tarikul.dev@nexion.com",
-    phone: "01712345678", 
-};
-
 export default function EditProfilePage() {
     // Injected initial data directly into state since it's a top-level page
-    const router = useRouter();
-    const [form, setForm] = useState<FormState>(MOCK_INITIAL_DATA);
+    const user = useAppSelector((state) => state.auth.user);
+
+    const [form, setForm] = useState<FormState>({
+        name: user?.name || "",
+        email: user?.email || "",
+        phone: user?.phone || "",
+    });
     const [loading, setLoading] = useState(false);
     const [saved, setSaved] = useState(false);
     const [errors, setErrors] = useState<Partial<FormState>>({});

@@ -2,25 +2,25 @@
 "use client";
 
 import { Search, ChevronDown, RotateCcw } from "lucide-react";
-
+import { UserStatus } from "@/types/admin-users";
 interface Props {
     search:   string;
-    status:   string;
+    status:   UserStatus;
     onSearch: (v: string) => void;
-    onStatus: (v: string) => void;
+    onStatus: (v: UserStatus) => void;
     onReset:  () => void;
 }
 
 function SelectBox({
     value, onChange, children,
 }: {
-    value: string; onChange: (v: string) => void; children: React.ReactNode;
+    value: string; onChange: (v: UserStatus) => void; children: React.ReactNode;
 }) {
     return (
         <div className="relative">
             <select
                 value={value}
-                onChange={(e) => onChange(e.target.value)}
+                onChange={(e) => onChange(e.target.value as UserStatus)}
                 className="appearance-none rounded-lg border border-[#e5e7eb] bg-white py-2 pl-3.5 pr-8 text-[13px] text-[#374151] outline-none transition-colors focus:border-[#1a56db]"
             >
                 {children}
@@ -51,8 +51,8 @@ export default function FilterBar({
             <div className="flex flex-wrap items-center gap-2">
                 <SelectBox value={status} onChange={onStatus}>
                     <option value="">All Users</option>
-                    <option value="active">Active</option>
-                    <option value="blocked">Blocked</option>
+                    <option value={UserStatus.ACTIVE}>{UserStatus.ACTIVE}</option>
+                    <option value={UserStatus.BLOCKED}>{UserStatus.BLOCKED}</option>
                 </SelectBox>
 
                 {hasFilter && (
