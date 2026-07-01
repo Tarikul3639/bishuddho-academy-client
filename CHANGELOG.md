@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v1.7.0...v1.8.0) (2026-07-01)
+
+
+### Features
+
+* **ui:** redesign public website with improved layouts, illustrations, and user experience ([c134d03](https://github.com/Tarikul3639/bishuddho-academy-client/commit/c134d032042bcda9ca00d370bc8aa67feac3f2d0))
+
 # [0.8.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v0.7.0...v0.8.0) (2026-06-29)
 
 
