@@ -5,13 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { LogOut } from "lucide-react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { AuthUser } from "@/types/auth-user";
+import { NAV_LINKS } from "./constants";
 
-const NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "Courses", href: "/courses" },
-  { label: "Features", href: "/#features" },
-  { label: "Contact", href: "/#contact" },
-];
 
 interface Props {
   isOpen: boolean;

@@ -8,6 +8,7 @@ export const TAG_TYPES = {
     ADMIN_USERS: "AdminUsers",
     PURCHASES: "Purchases",
     PAYMENTS: "Payments",
+    TEACHERS: "Teachers",
 } as const;
 
 /* union type */
