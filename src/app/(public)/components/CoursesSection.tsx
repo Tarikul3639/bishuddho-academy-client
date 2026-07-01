@@ -25,7 +25,7 @@ export default function CoursesSection() {
   const courses = data?.courses ?? [];
 
   return (
-    <section className="px-4 py-20">
+    <section className="px-4 pt-10 lg:px-8 lg:pt-16">
       <div className="mx-auto max-w-7xl">
         <motion.div
           variants={stagger}

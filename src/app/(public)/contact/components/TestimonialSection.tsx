@@ -40,52 +40,83 @@ export function TestimonialSection() {
     return (
         <motion.section
             initial="hidden"
-            animate="visible"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
             variants={stagger}
             className="py-16"
         >
             {/* Header */}
             <motion.div variants={fadeUp} className="mb-12 text-center">
-                <p className="text-xs font-bold uppercase tracking-widest text-primary mb-3">
+                <p className="mb-3 text-xs font-bold uppercase tracking-widest text-primary">
                     TESTIMONIALS
                 </p>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+
+                <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
                     Trusted by students across
                     <br />
-                    <span className="text-primary">Bangladesh & Beyond</span>
+                    <span className="text-primary">
+                        Bangladesh & Beyond
+                    </span>
                 </h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
-                    Join thousands of learners who have transformed their careers with Bishuddho Academy
+
+                <p className="mx-auto max-w-2xl text-gray-600">
+                    Join thousands of learners who have transformed their
+                    careers with Bishuddho Academy
                 </p>
             </motion.div>
 
             {/* Testimonials Grid */}
             <motion.div
                 variants={stagger}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                className="grid grid-cols-1 gap-6 md:grid-cols-2"
             >
                 {TESTIMONIALS.map((testimonial) => (
-                    <motion.div key={testimonial.id} variants={fadeUp}>
-                        <div className="rounded-2xl border border-gray-200 bg-white p-6 hover:shadow-lg hover:border-primary/30 transition-all duration-300 h-full">
+                    <motion.div
+                        key={testimonial.id}
+                        variants={fadeUp}
+                        whileHover={{ y: -4 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <div className="h-full rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:border-primary/30 hover:shadow-lg">
                             {/* Stars */}
-                            <div className="flex gap-1 mb-4">
+                            <div className="mb-4 flex gap-1">
                                 {[...Array(5)].map((_, i) => (
-                                    <Star
+                                    <motion.div
                                         key={i}
-                                        size={16}
-                                        className="fill-yellow-400 text-yellow-400"
-                                    />
+                                        initial={{
+                                            opacity: 0,
+                                            scale: 0.8,
+                                        }}
+                                        whileInView={{
+                                            opacity: 1,
+                                            scale: 1,
+                                        }}
+                                        viewport={{ once: true }}
+                                        transition={{
+                                            delay: i * 0.3,
+                                            duration: 0.5,
+                                        }}
+                                    >
+                                        <Star
+                                            size={16}
+                                            className="fill-yellow-400 text-yellow-400"
+                                        />
+                                    </motion.div>
                                 ))}
                             </div>
 
                             {/* Quote */}
-                            <p className="text-gray-700 text-sm leading-relaxed mb-6 italic">
+                            <p className="mb-6 text-sm italic leading-relaxed text-gray-700">
                                 "{testimonial.text}"
                             </p>
 
                             {/* Author */}
-                            <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                                <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-gray-100">
+                            <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-gray-100"
+                                >
                                     <Image
                                         src={testimonial.image}
                                         alt={testimonial.author}
@@ -93,11 +124,13 @@ export function TestimonialSection() {
                                         height={44}
                                         className="h-full w-full object-cover"
                                     />
-                                </div>
+                                </motion.div>
+
                                 <div>
-                                    <p className="font-semibold text-gray-900 text-sm">
+                                    <p className="text-sm font-semibold text-gray-900">
                                         {testimonial.author}
                                     </p>
+
                                     <p className="text-xs text-gray-600">
                                         {testimonial.role}
                                     </p>

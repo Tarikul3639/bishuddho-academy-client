@@ -24,7 +24,7 @@ const stagger: Variants = {
 
 export default function CTABanner() {
   return (
-    <section className="bg-white px-4 py-10 sm:py-18">
+    <section className="bg-white px-4 lg:px-8 py-10 sm:py-18">
       <motion.div
         className="mx-auto max-w-7xl text-center"
         variants={stagger}

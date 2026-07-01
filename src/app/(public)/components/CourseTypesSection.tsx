@@ -43,7 +43,7 @@ const PERKS = [
 
 export default function PhysicalClassSection() {
   return (
-    <section className="px-4 py-10 sm:py-18">
+    <section className="px-4 lg:px-8 py-10 sm:py-18">
       <div className="mx-auto max-w-7xl">
         <motion.div
           variants={stagger}

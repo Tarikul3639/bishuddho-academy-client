@@ -21,7 +21,7 @@ export default function ContactPage() {
     return (
         <main className="min-h-screen bg-[#f9fafb]">
             {/* Hero Section */}
-            <section className="px-4 py-b pt-16 sm:pt-28">
+            <section className="px-4 py-b pt-16 sm:pt-28 bg-white">
                 <div className="mx-auto max-w-7xl">
                     <ContactHeader />
                 </div>

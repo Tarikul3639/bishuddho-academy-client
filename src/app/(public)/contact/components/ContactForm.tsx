@@ -28,6 +28,7 @@ export function ContactForm() {
 
     return (
         <motion.form
+            id="contact-form"
             onSubmit={handleSubmit}
             variants={stagger}
             initial="hidden"

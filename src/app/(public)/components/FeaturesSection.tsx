@@ -42,7 +42,7 @@ const FEATURES = [
 
 export default function FeaturesSection() {
   return (
-    <section className="bg-white px-4 py-10 sm:py-18" id="features">
+    <section className="bg-white px-4 lg:px-8 py-10 sm:py-18" id="features">
       <div className="mx-auto max-w-7xl">
         <motion.div
           variants={stagger}

@@ -1,6 +1,5 @@
 import { createMetadata } from "@/lib/metadata";
 import HeroSection from "./components/HeroSection";
-import StatsBar from "./components/StatsBar";
 import CourseTypesSection from "./components/CourseTypesSection";
 import CoursesSection from "./components/CoursesSection";
 import FeaturesSection from "./components/FeaturesSection";
@@ -25,7 +24,6 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <HeroSection />
-      <StatsBar />
       <CoursesSection />
       <FeaturesSection />
       <CourseTypesSection />
