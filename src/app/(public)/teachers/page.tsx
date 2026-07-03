@@ -1,6 +1,6 @@
-// app/(public)/teachers/page.tsx
-
 import { createMetadata } from "@/lib/metadata";
+
+import TeachersHero from "./components/TeachersHero";
 import TeachersPage from "./components/TeachersPage";
 
 export const metadata = createMetadata({
@@ -18,5 +18,10 @@ export const metadata = createMetadata({
 });
 
 export default function Page() {
-    return <TeachersPage />;
+    return (
+        <main className="min-h-screen bg-[#f9fafb]">
+            <TeachersHero />
+            <TeachersPage />
+        </main>
+    );
 }

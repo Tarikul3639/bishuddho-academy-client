@@ -21,7 +21,7 @@ function SelectBox({
             <select
                 value={value}
                 onChange={(e) => onChange(e.target.value as UserStatus)}
-                className="appearance-none rounded-lg border border-[#e5e7eb] bg-white py-2 pl-3.5 pr-8 text-[13px] text-[#374151] outline-none transition-colors focus:border-[#1a56db]"
+                className="appearance-none rounded-lg border border-[#e5e7eb] bg-white py-2 pl-3.5 pr-8 text-[13px] text-[#374151] outline-none transition-colors focus:border-[#1a56db] capitalize cursor-pointer"
             >
                 {children}
             </select>
@@ -58,7 +58,7 @@ export default function FilterBar({
                 {hasFilter && (
                     <button
                         onClick={onReset}
-                        className="flex items-center gap-1.5 rounded-lg border border-[#e5e7eb] bg-white px-3 py-2 text-[12px] font-semibold text-[#6b7280] transition-colors hover:border-[#fecaca] hover:bg-[#fef2f2] hover:text-[#ef4444]"
+                        className="flex items-center gap-1.5 rounded-lg border border-[#e5e7eb] bg-white px-3 py-2 text-[12px] font-semibold text-[#6b7280] transition-colors hover:border-[#fecaca] hover:bg-[#fef2f2] hover:text-[#ef4444] cursor-pointer"
                     >
                         <RotateCcw className="h-3.5 w-3.5" />
                         Reset

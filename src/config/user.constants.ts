@@ -18,6 +18,11 @@ export const STATUS_CONFIG: Record<
         color: "#ef4444",
         bg: "#fee2e2",
     },
+    "": {
+        label: "All",
+        color: "#6b7280",
+        bg: "#f3f4f6",
+    },
 };
 
 

@@ -4,11 +4,9 @@ import { baseApi } from '@/redux/api/baseApi';
 import { TAG_TYPES } from '@/redux/api/tag-types';
 
 import type {
-    TeacherListItem,
     TeacherDetails,
     AdminTeacherDetails,
     TeachersResponse,
-    CreateTeacherPayload,
 } from '@/types/teacher';
 
 interface GetTeachersParams {

@@ -12,7 +12,7 @@ import {
     useToggleUserBlockMutation,
     useResetUserPasswordMutation,
 } from "@/redux/features/users/admin-users.api";
-import { UserStatus, type AdminUser } from "@/types/admin-users";
+import { UserStatus } from "@/types/admin-users";
 
 import FilterBar from "./components/FilterBar";
 import SummaryBadges from "./components/SummaryBadges";
@@ -21,7 +21,7 @@ import UsersTable from "./components/UsersTable";
 export default function UsersPage() {
     const router = useRouter();
     const [search, setSearch] = useState("");
-    const [status, setStatus] = useState<UserStatus>(UserStatus.ACTIVE);
+    const [status, setStatus] = useState<UserStatus>(UserStatus.ALL);
 
     const { data, isLoading, isError } = useGetAdminUsersQuery({
         search,
@@ -36,7 +36,7 @@ export default function UsersPage() {
 
     const handleReset = () => {
         setSearch("");
-        setStatus(UserStatus.ACTIVE);
+        setStatus(UserStatus.ALL);
     };
 
     const handleResetPassword = async (userId: string) => {

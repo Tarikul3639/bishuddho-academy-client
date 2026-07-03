@@ -21,6 +21,7 @@ import {
 import type { StudentMyCourse } from "@/types/student-my-course";
 import { EnrollmentStatus } from "@/types/enrollment-status";
 import { PaymentStatus } from "@/types/payment-status";
+import { useAppSelector } from "@/redux/hooks";
 
 interface EnrolledCourseCardProps {
     course: StudentMyCourse;
@@ -31,6 +32,8 @@ export const EnrolledCourseCard = ({
     course,
     onDelete,
 }: EnrolledCourseCardProps) => {
+    const isAdmin = useAppSelector((state) => state.auth.user?.role === "admin");
+
     const thumbnail = `${process.env.NEXT_PUBLIC_API_URL}${course.thumbnailUrl}`;
 
     const enrollmentStatus = ENROLLMENT_STATUS_CONFIG[course.status];
@@ -136,7 +139,8 @@ export const EnrolledCourseCard = ({
                                         </p>
                                     )}
                                     <p className="mt-2 text-[10px] leading-relaxed text-[#7f1d1d]">
-                                        If you don't want to continue, you can cancel your enrollment.
+                                        If you don't want to continue, you can cancel your
+                                        enrollment.
                                     </p>
                                     <button
                                         onClick={() => onDelete({ courseId: course.courseId })}
@@ -154,7 +158,13 @@ export const EnrolledCourseCard = ({
                             Payment under review
                         </div>
                     ) : (
-                        <Link href={`/student/my-courses/${course.courseId}`}>
+                        <Link
+                            href={
+                                isAdmin
+                                    ? `/admin/my-courses/${course.courseId}`
+                                    : `/student/my-courses/${course.courseId}`
+                            }
+                        >
                             <button className="group/btn flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-sm bg-primary py-2.5 text-[13px] font-bold text-white transition-all duration-200 hover:bg-primary/95 hover:shadow-[0_4px_16px_rgba(26,86,219,0.3)]">
                                 View Details
                                 <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover/btn:translate-x-0.5" />

@@ -13,6 +13,8 @@ import ModuleAccordion from "./sections/ModuleAccordion";
 import { EnrolledCourseDetailSkeleton } from "./sections/EnrolledCourseDetailSkeleton";
 
 import { useGetMyCourseDetailsQuery } from "@/redux/features/courses/courses.api";
+import { useDownloadCertificateMutation, useViewCertificateMutation } from "@/redux/features/certificates/certificates.api";
+import { toast } from "sonner";
 
 const fadeUp: Variants = {
     hidden: { opacity: 0, y: 20 },
@@ -36,6 +38,91 @@ export function EnrolledCourseDetail({ courseId }: { courseId: string }) {
         isFetching,
         isError,
     } = useGetMyCourseDetailsQuery(courseId);
+
+    const [viewCertificate] =
+        useViewCertificateMutation();
+
+    const [downloadCertificate] =
+        useDownloadCertificateMutation();
+
+    const handleCertificateView = async () => {
+        if (!course?.certificate) {
+            toast.error("Certificate not available.");
+            return;
+        }
+
+        try {
+            const blob =
+                await viewCertificate(
+                    course.certificate.certificateId,
+                ).unwrap();
+
+            const url =
+                URL.createObjectURL(blob);
+
+            const newWindow =
+                window.open(
+                    url,
+                    "_blank",
+                    "noopener,noreferrer",
+                );
+
+            if (!newWindow) {
+                URL.revokeObjectURL(url);
+
+                toast.error(
+                    "Popup blocked.",
+                );
+
+                return;
+            }
+
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 5000);
+        } catch {
+            toast.error(
+                "Failed to open certificate.",
+            );
+        }
+    };
+
+    const handleCertificateDownload = async () => {
+        if (!course?.certificate) {
+            toast.error("Certificate not available.");
+            return;
+        }
+
+        try {
+            const blob =
+                await downloadCertificate(
+                    course.certificate.certificateId,
+                ).unwrap();
+
+            const url =
+                URL.createObjectURL(blob);
+
+            const a =
+                document.createElement("a");
+
+            a.href = url;
+
+            a.download =
+                `${course.certificate.certificateNo}.pdf`;
+
+            document.body.appendChild(a);
+
+            a.click();
+
+            a.remove();
+
+            URL.revokeObjectURL(url);
+        } catch {
+            toast.error(
+                "Failed to download certificate.",
+            );
+        }
+    };
 
     // ── Loading ───────────────────────────────────────────────────────────────
     if (isLoading || isFetching) {
@@ -227,14 +314,14 @@ export function EnrolledCourseDetail({ courseId }: { courseId: string }) {
 
                     {/* Mobile sidebar */}
                     <motion.div variants={fadeUp} className="lg:hidden">
-                        <Sidebar course={course} progPct={progPct} />
+                        <Sidebar handleCertificateDownload={handleCertificateDownload} handleCertificateView={handleCertificateView} course={course} progPct={progPct} />
                     </motion.div>
                 </motion.div>
 
                 {/* RIGHT — desktop sidebar */}
                 <motion.div variants={fadeUp} className="hidden lg:block">
                     <div className="sticky top-6">
-                        <Sidebar course={course} progPct={progPct} />
+                        <Sidebar handleCertificateDownload={handleCertificateDownload} handleCertificateView={handleCertificateView} course={course} progPct={progPct} />
                     </div>
                 </motion.div>
             </div>

@@ -42,6 +42,11 @@ export interface StudentCoursePayment {
     rejectionReason?: string;
 }
 
+export interface StudentCourseCertificate {
+    certificateId: string;
+    certificateNo: string;
+    issuedAt: string;
+}
 export interface StudentCourseDetails {
     courseId: string;
 
@@ -70,4 +75,6 @@ export interface StudentCourseDetails {
     status: EnrollmentStatus;
     payment: StudentCoursePayment;
     modules: StudentCourseModule[];
+
+    certificate: StudentCourseCertificate | null;
 }

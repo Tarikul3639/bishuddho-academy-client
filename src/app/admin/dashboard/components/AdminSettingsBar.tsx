@@ -50,6 +50,13 @@ const OPTIONS = [
         hoverBg: "group-hover:bg-red-600 group-hover:text-white group-hover:border-red-600",
     },
     {
+        icon: Users,
+        label: "Teachers",
+        href: "/admin/teachers",
+        bg: "bg-fuchsia-100 text-fuchsia-600 border-fuchsia-100/50",
+        hoverBg: "group-hover:bg-fuchsia-600 group-hover:text-white group-hover:border-fuchsia-600",
+    },
+    {
         icon: Edit3,
         label: "Edit Profile",
         href: "/admin/profile-edit",

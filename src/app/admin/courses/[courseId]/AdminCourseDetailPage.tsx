@@ -19,6 +19,7 @@ import StudentsTab from "@/components/courses/tabs/StudentsTab";
 import PricingTab from "@/components/courses/tabs/PricingTab";
 import CourseSidebar from "@/components/courses/CourseSidebar";
 import CourseHero from "@/components/courses/CourseHero";
+import CertificatesTab from "@/components/courses/tabs/certificates/CertificatesTab";
 
 import type { CourseDetails } from "@/types/admin-course-details";
 import {
@@ -39,6 +40,7 @@ const TABS = [
     { id: "batch", label: "Batch Info" },
     { id: "included", label: "Included" },
     { id: "pricing", label: "Pricing & Offer" },
+    { id: "certificates", label: "Certificates" },
 ] as const;
 
 export default function AdminCourseDetailPage({
@@ -313,6 +315,11 @@ export default function AdminCourseDetailPage({
                             onChange={(field, value) =>
                                 setCourse({ ...course, [field]: value })
                             }
+                        />
+                    )}
+                    {activeTab === "certificates" && (
+                        <CertificatesTab
+                            courseId={course.courseId}
                         />
                     )}
                 </motion.div>
