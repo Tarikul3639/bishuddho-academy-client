@@ -74,15 +74,15 @@ export default function MobileMenu({
                   </div>
                 </div>
 
-                <Link href={isAdmin ? "/admin/dashboard" : "/dashboard"} onClick={onClose}>
-                  <button className="w-full rounded-sm bg-primary/80 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-primary">
+                <Link href={isAdmin ? "/admin/dashboard" : "/student/dashboard"} onClick={onClose}>
+                  <button className="w-full rounded-sm bg-primary/80 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-primary cursor-pointer">
                     {isAdmin ? "Admin Panel" : "Go to Dashboard"}
                   </button>
                 </Link>
 
                 <button
                   onClick={onLogout}
-                  className="flex w-full items-center justify-center gap-2 rounded-sm border border-red-200 bg-red-50/60 px-4 py-2.5 text-sm font-semibold text-red-500 transition-colors hover:bg-red-100"
+                  className="flex w-full items-center justify-center gap-2 rounded-sm border border-red-200 bg-red-50/60 px-4 py-2.5 text-sm font-semibold text-red-500 transition-colors hover:bg-red-100 cursor-pointer"
                 >
                   <LogOut className="h-4 w-4" />
                   Log Out
@@ -91,12 +91,12 @@ export default function MobileMenu({
             ) : (
               <>
                 <Link href="/auth" onClick={onClose}>
-                  <button className="w-full rounded-sm border border-white/50 bg-white/30 px-4 py-2.5 text-sm font-semibold text-[#374151] backdrop-blur-sm transition-colors hover:text-primary">
+                  <button className="w-full rounded-sm border border-white/50 bg-white/30 px-4 py-2.5 text-sm font-semibold text-[#374151] backdrop-blur-sm transition-colors hover:text-primary cursor-pointer">
                     Log In
                   </button>
                 </Link>
                 <Link href="/auth" onClick={onClose}>
-                  <button className="w-full rounded-sm bg-primary/80 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_2px_12px_0_rgba(26,86,219,0.30)] backdrop-blur-sm transition-colors hover:bg-primary">
+                  <button className="w-full rounded-sm bg-primary/80 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_2px_12px_0_rgba(26,86,219,0.30)] backdrop-blur-sm transition-colors hover:bg-primary cursor-pointer">
                     Sign Up
                   </button>
                 </Link>

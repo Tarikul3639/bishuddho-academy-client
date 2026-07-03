@@ -1,18 +1,29 @@
 import type { Metadata } from "next";
+
 import { ContactHeader } from "./components/ContactHeader";
-import { SocialSection } from "./components/SocialSection";
+import { LocationSection } from "./components/LocationSection";
 import { InfoSection } from "./components/InfoSection";
-import { TestimonialSection } from "./components/TestimonialSection";
 import { FAQSection } from "./components/FAQSection";
+import { TestimonialSection } from "./components/TestimonialSection";
+import { SocialSection } from "./components/SocialSection";
 import { CTASection } from "./components/CTASection";
 
 export const metadata: Metadata = {
     title: "Contact Us - Bishuddho Academy",
-    description: "Get in touch with Bishuddho Academy. Fill out our contact form and our team will get back to you within 1-2 business days.",
-    keywords: ["contact", "bishuddho academy", "support", "email", "phone", "help"],
+    description:
+        "Get in touch with Bishuddho Academy. Fill out our contact form and our team will get back to you within 1–2 business days.",
+    keywords: [
+        "contact",
+        "bishuddho academy",
+        "support",
+        "email",
+        "phone",
+        "help",
+    ],
     openGraph: {
         title: "Contact Us - Bishuddho Academy",
-        description: "Get in touch with Bishuddho Academy. Fill out our contact form and our team will get back to you.",
+        description:
+            "Get in touch with Bishuddho Academy. Fill out our contact form and our team will get back to you.",
         type: "website",
     },
 };
@@ -21,41 +32,48 @@ export default function ContactPage() {
     return (
         <main className="min-h-screen bg-[#f9fafb]">
             {/* Hero Section */}
-            <section className="px-4 py-b pt-16 sm:pt-28 bg-white">
+            <section className="bg-white px-4 pt-16 pb-8 sm:pt-28">
                 <div className="mx-auto max-w-7xl">
                     <ContactHeader />
                 </div>
             </section>
 
-            {/* Info Section */}
-            <section className="px-4 py-8 bg-white">
+            {/* Location Section */}
+            <section className="bg-white px-4 py-8">
+                <div className="mx-auto max-w-7xl">
+                    <LocationSection />
+                </div>
+            </section>
+
+            {/* Contact Information */}
+            <section className="bg-white px-4 py-8">
                 <div className="mx-auto max-w-7xl">
                     <InfoSection />
                 </div>
             </section>
 
-            {/* Social Section */}
-            <section className="px-4 py-8 bg-white">
+            {/* Frequently Asked Questions */}
+            <section className="bg-white px-4 py-8">
                 <div className="mx-auto max-w-7xl">
-                    <SocialSection />
+                    <FAQSection />
                 </div>
             </section>
 
-            {/* Testimonials Section */}
+            {/* Student Testimonials */}
             <section className="px-4 py-8">
                 <div className="mx-auto max-w-7xl">
                     <TestimonialSection />
                 </div>
             </section>
 
-            {/* FAQ Section */}
-            <section className="px-4 py-8 bg-white">
+            {/* Social Links */}
+            <section className="bg-white px-4 py-8">
                 <div className="mx-auto max-w-7xl">
-                    <FAQSection />
+                    <SocialSection />
                 </div>
             </section>
 
-            {/* CTA Section */}
+            {/* Call To Action */}
             <section className="px-4 py-8">
                 <div className="mx-auto max-w-7xl">
                     <CTASection />

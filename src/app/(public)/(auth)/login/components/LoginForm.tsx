@@ -42,8 +42,7 @@ export function LoginForm({
     setErrors,
     onSubmit,
 }: LoginFormProps) {
-    const [showPass, setShowPass] = useState(false);
-    const [remember, setRemember] = useState(false);
+    const [remember, setRemember] = useState(true);
 
     return (
         <div>
@@ -87,7 +86,7 @@ export function LoginForm({
                     <InputField
                         label="Password"
                         name="password"
-                        type={showPass ? "text" : "password"}
+                        type={"password"}
                         value={form.password}
                         onChange={(e) => {
                             setForm((p) => ({ ...p, password: e.target.value }));
