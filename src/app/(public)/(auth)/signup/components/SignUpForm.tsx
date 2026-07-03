@@ -12,22 +12,24 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { InputField } from "@/components/ui/InputField";
+import { useSignupMutation } from "@/redux/features/auth/auth.api";
+import { NormalizeError } from "@/redux/api/apiError";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function RegisterForm() {
+    const router = useRouter();
+    const [signup, { isLoading, error: signupApiError, isError }] = useSignupMutation();
     const [form, setForm] = useState({
-        firstName: "",
-        lastName: "",
+        name: "",
         email: "",
         phone: "",
         password: "",
         confirm: "",
     });
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [showPass, setShowPass] = useState(false);
-    const [showConfirm, setShowConfirm] = useState(false);
     const [error, setError] = useState({
-        firstName: "",
+        name: "",
         email: "",
         phone: "",
         password: "",
@@ -50,18 +52,35 @@ export function RegisterForm() {
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        setError({
+            name: "",
+            email: "",
+            phone: "",
+            password: "",
+            confirm: "",
+        });
+
+        if (form.phone.length !== 11) {
+            setError((prev) => ({
+                ...prev,
+                phone: "Phone number must be 11 digits.",
+            }));
+
+            return;
+        }
+
         if (
-            !form.firstName ||
+            !form.name ||
             !form.email ||
             !form.phone ||
             !form.password ||
             !form.confirm
         ) {
             setError({
-                firstName: !form.firstName ? "First name is required" : "",
+                name: !form.name ? "Name is required" : "",
                 email: !form.email ? "Email is required" : "",
                 phone: !form.phone ? "Phone number is required" : "",
                 password: !form.password ? "Password is required" : "",
@@ -85,10 +104,25 @@ export function RegisterForm() {
             });
             return;
         }
-        // Simulate API call
-        setIsLoading(true);
 
-        setTimeout(() => setIsLoading(false), 3000);
+        try {
+            await signup({
+                name: form.name.trim(),
+                email: form.email.trim(),
+                phone: form.phone.trim(),
+                password: form.password,
+            }).unwrap();
+
+            toast.success(
+                "Account created successfully.",
+            );
+
+            router.push("/login");
+        } catch (err) {
+            toast.error(
+                NormalizeError(err).message,
+            );
+        }
     };
 
     return (
@@ -103,25 +137,15 @@ export function RegisterForm() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
-                    <InputField
-                        label="First name"
-                        name="firstName"
-                        value={form.firstName}
-                        error={error.firstName}
-                        onChange={handleChange("firstName")}
-                        placeholder="Rafi"
-                        icon={User}
-                    />
-                    <InputField
-                        label="Last name"
-                        name="lastName"
-                        value={form.lastName}
-                        onChange={handleChange("lastName")}
-                        placeholder="Ahmed"
-                        icon={User}
-                    />
-                </div>
+                <InputField
+                    label="Name"
+                    name="name"
+                    value={form.name}
+                    error={error.name}
+                    onChange={handleChange("name")}
+                    placeholder="Rafi Ahmed"
+                    icon={User}
+                />
 
                 <InputField
                     label="Email address"
@@ -150,7 +174,7 @@ export function RegisterForm() {
                     <InputField
                         label="Password"
                         name="password"
-                        type={showPass ? "text" : "password"}
+                        type={"password"}
                         error={error.password}
                         value={form.password}
                         onChange={handleChange("password")}
@@ -162,7 +186,7 @@ export function RegisterForm() {
                 <InputField
                     label="Confirm password"
                     name="confirm"
-                    type={showConfirm ? "text" : "password"}
+                    type={"password"}
                     error={error.confirm}
                     value={form.confirm}
                     onChange={handleChange("confirm")}
@@ -174,6 +198,13 @@ export function RegisterForm() {
                             : undefined
                     }
                 />
+
+                {/* Error Message */}
+                {isError && (
+                    <p className="mt-2 text-sm text-red-500">
+                        {NormalizeError(signupApiError).message || "An error occurred. Please try again."}
+                    </p>
+                )}
 
                 <button
                     type="submit"

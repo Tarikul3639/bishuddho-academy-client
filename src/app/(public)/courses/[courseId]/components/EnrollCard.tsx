@@ -46,10 +46,6 @@ export function EnrollCard({ course }: EnrollCardProps) {
         year: "numeric",
     });
 
-    const thumbnail = thumbnailUrl.startsWith("http")
-        ? thumbnailUrl
-        : `${process.env.NEXT_PUBLIC_API_URL}${thumbnailUrl}`;
-
     const paymentStatus = payment?.status;
 
     type CardState = "new" | "pending" | "verified" | "rejected";
@@ -116,7 +112,7 @@ export function EnrollCard({ course }: EnrollCardProps) {
             {/* ── Thumbnail ── */}
             <div className="relative h-44 w-full sm:h-52">
                 <Image
-                    src={thumbnail}
+                    src={thumbnailUrl}
                     alt={title}
                     fill
                     priority

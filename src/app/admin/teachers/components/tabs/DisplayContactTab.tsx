@@ -11,6 +11,7 @@ interface DisplayContactTabProps {
 
         featured: boolean;
         isActive: boolean;
+        displayOrder: number;
 
         socialLinks: {
             facebook?: string;
@@ -23,6 +24,16 @@ interface DisplayContactTabProps {
     errors?: {
         email?: string;
         phone?: string;
+        featured?: string;
+        isActive?: string;
+        displayOrder?: string;
+
+        socialLinks?: {
+            facebook?: string;
+            linkedin?: string;
+            github?: string;
+            website?: string;
+        };
     };
 
     onContactChange: (
@@ -31,8 +42,8 @@ interface DisplayContactTabProps {
     ) => void;
 
     onDisplayChange: (
-        field: "featured" | "isActive",
-        value: boolean
+        field: "featured" | "isActive" | "displayOrder",
+        value: boolean | number
     ) => void;
 
     onSocialChange: (
@@ -63,7 +74,9 @@ export default function DisplayContactTab({
                 form={{
                     featured: form.featured,
                     isActive: form.isActive,
+                    displayOrder: form.displayOrder,
                 }}
+                errors={errors}
                 onChange={onDisplayChange}
             />
 

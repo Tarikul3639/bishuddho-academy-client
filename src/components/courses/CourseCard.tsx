@@ -11,9 +11,6 @@ const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string }
 };
 
 export default function CourseCard({ course }: { course: PublicCourse }) {
-    const thumbnail = course.thumbnailUrl?.startsWith("http")
-        ? course.thumbnailUrl
-        : `${process.env.NEXT_PUBLIC_API_URL}${course.thumbnailUrl}`;
     const hasDiscount = course.originalPrice > course.price;
     const discount = hasDiscount
         ? Math.round(
@@ -27,7 +24,7 @@ export default function CourseCard({ course }: { course: PublicCourse }) {
             {/* ── Thumbnail ── */}
             <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-[#eff6ff]">
                 <Image
-                    src={thumbnail}
+                    src={course.thumbnailUrl}
                     alt={course.title}
                     fill
                     loading="lazy"

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -28,10 +28,21 @@ import {
 import {
     handleApiError,
 } from "@/redux/api/handle-api-error";
+import { toast } from "sonner";
 
 export default function AuthLoginPage() {
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const searchParams = useSearchParams();
+    const reset = searchParams.get("reset");
+
+    useEffect(() => {
+        if (reset === "success") {
+            toast.success(
+                "Password updated successfully."
+            );
+        }
+    }, [reset]);
 
     const [
         login,

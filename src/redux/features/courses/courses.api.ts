@@ -102,6 +102,20 @@ export const coursesApi = baseApi.injectEndpoints({
             ],
         }),
 
+        deleteCourse: builder.mutation<void, string>({
+            query: (courseId) => ({
+                url: `/admin/courses/${courseId}`,
+                method: "DELETE",
+            }),
+
+            invalidatesTags: [
+                {
+                    type: TAG_TYPES.COURSES,
+                    id: "LIST",
+                },
+            ],
+        }),
+
         /* ─────────────────────────────
                    PUBLIC
                 ───────────────────────────── */
@@ -185,6 +199,7 @@ export const {
     useUpdateCourseMutation,
     useGetAdminCoursesQuery,
     useGetAdminCourseQuery,
+    useDeleteCourseMutation,
 
     /* Public */
     useGetPublicCoursesQuery,

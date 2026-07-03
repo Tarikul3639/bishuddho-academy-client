@@ -4,15 +4,17 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { stagger, fadeUp } from "@/components/animations";
-import { ArrowLeft, AlertTriangle } from "lucide-react";
+import { ArrowLeft, AlertTriangle, CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { useGetAdminPurchasesQuery, useUpdatePurchaseStatusMutation } from "@/redux/features/purchases/admin-purchases.api";
+import {
+    useGetAdminPurchasesQuery,
+    useUpdatePurchaseStatusMutation,
+} from "@/redux/features/purchases/admin-purchases.api";
 import FilterBar from "./components/FilterBar";
 import SummaryBadges from "./components/SummaryBadges";
 import PaymentsTable from "./components/PaymentsTable";
-
 import ActionConfirmationModal from "@/components/ui/ActionConfirmationModal";
 
 export default function PaymentsPage() {
@@ -23,28 +25,46 @@ export default function PaymentsPage() {
     const [course, setCourse] = useState("");
 
     const [rejectTargetId, setRejectTargetId] = useState<string | null>(null);
-    const [isRejecting, setIsRejecting] = useState(false);
+    const [verifyTargetId, setVerifyTargetId] = useState<string | null>(null);
 
-    const { data: payments = [], isLoading } = useGetAdminPurchasesQuery({ status, method });
-    const [updateStatus] = useUpdatePurchaseStatusMutation();
+    const { data: payments = [], isLoading } = useGetAdminPurchasesQuery({
+        status,
+        method,
+    });
+    const [updateStatus, { isLoading: isUpdating, error, isError }] = useUpdatePurchaseStatusMutation();
 
     const filtered = useMemo(() => {
         return payments.filter((e) => {
-            const matchSearch = !search || [e.studentName, e.studentEmail, e.courseTitle]
-                .some((f) => f.toLowerCase().includes(search.toLowerCase()));
+            const matchSearch =
+                !search ||
+                [e.studentName, e.studentEmail, e.courseTitle].some((f) =>
+                    f.toLowerCase().includes(search.toLowerCase()),
+                );
             const matchCourse = !course || e.courseTitle === course;
             return matchSearch && matchCourse;
         });
     }, [payments, search, course]);
 
     const handleReset = () => {
-        setSearch(""); setStatus(""); setMethod(""); setCourse("");
+        setSearch("");
+        setStatus("");
+        setMethod("");
+        setCourse("");
     };
 
-    const handleVerify = async (id: string) => {
+    const handleVerify = async () => {
+        if (!verifyTargetId) return;
+
         try {
-            await updateStatus({ id, status: "verified" }).unwrap();
+
+            await updateStatus({
+                id: verifyTargetId,
+                status: "verified",
+            }).unwrap();
+
             toast.success("Payment verified successfully");
+
+            setVerifyTargetId(null);
         } catch {
             toast.error("Failed to verify payment");
         }
@@ -54,7 +74,6 @@ export default function PaymentsPage() {
         if (!rejectTargetId) return;
 
         try {
-            setIsRejecting(true);
 
             await updateStatus({
                 id: rejectTargetId,
@@ -67,8 +86,6 @@ export default function PaymentsPage() {
             setRejectTargetId(null);
         } catch {
             toast.error("Failed to reject payment");
-        } finally {
-            setIsRejecting(false);
         }
     };
 
@@ -91,7 +108,10 @@ export default function PaymentsPage() {
                 </motion.button>
 
                 {/* Header */}
-                <motion.div variants={fadeUp} className="flex flex-wrap items-start justify-between gap-4">
+                <motion.div
+                    variants={fadeUp}
+                    className="flex flex-wrap items-start justify-between gap-4"
+                >
                     <div>
                         <h1 className="text-2xl font-bold text-[#0d1b3e]">All Payments</h1>
                         <p className="mt-1 text-[13px] text-[#6b7280]">
@@ -104,9 +124,14 @@ export default function PaymentsPage() {
                 {/* Filters */}
                 <motion.div variants={fadeUp}>
                     <FilterBar
-                        search={search} status={status} method={method} course={course}
-                        onSearch={setSearch} onStatus={setStatus}
-                        onMethod={setMethod} onCourse={setCourse}
+                        search={search}
+                        status={status}
+                        method={method}
+                        course={course}
+                        onSearch={setSearch}
+                        onStatus={setStatus}
+                        onMethod={setMethod}
+                        onCourse={setCourse}
                         onReset={handleReset}
                     />
                 </motion.div>
@@ -121,11 +146,25 @@ export default function PaymentsPage() {
                     <PaymentsTable
                         data={filtered}
                         isLoading={isLoading}
-                        onVerify={handleVerify}
+                        onVerify={(id) => setVerifyTargetId(id)}
                         onReject={(id) => setRejectTargetId(id)}
                     />
                 </motion.div>
             </motion.div>
+
+            {/* Verify Confirmation Modal */}
+            <ActionConfirmationModal
+                open={!!verifyTargetId}
+                title="Verify Payment"
+                description="Are you sure you want to verify this payment? The student's enrollment will be activated immediately."
+                icon={<CheckCircle className="text-green-600" />}
+                confirmText="Verify Payment"
+                confirmColor="green"
+                error={isError ? error : undefined}
+                loading={isUpdating}
+                onConfirm={handleVerify}
+                onClose={() => setVerifyTargetId(null)}
+            />
 
             {/* Reject Confirmation Modal */}
             <ActionConfirmationModal
@@ -135,7 +174,8 @@ export default function PaymentsPage() {
                 icon={<AlertTriangle />}
                 confirmText="Confirm Reject"
                 confirmColor="red"
-                loading={isRejecting}
+                loading={isUpdating}
+                error={isError ? error : undefined}
                 showReason
                 reasonPlaceholder="Write reason (optional)..."
                 defaultReason="Rejected by admin"

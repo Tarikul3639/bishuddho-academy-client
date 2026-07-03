@@ -3,20 +3,17 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { stagger, fadeUp } from "@/components/animations";
-import { ArrowLeft, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
-import {
-    useGetAdminUsersQuery,
-    useToggleUserBlockMutation,
-    useResetUserPasswordMutation,
-} from "@/redux/features/users/admin-users.api";
+import { useGetAdminUsersQuery } from "@/redux/features/users/admin-users.api";
 import { UserStatus } from "@/types/admin-users";
 
 import FilterBar from "./components/FilterBar";
-import SummaryBadges from "./components/SummaryBadges";
-import UsersTable from "./components/UsersTable";
+import UsersTable from "./components/table/UsersTable";
+import UsersPageHeader from "./components/UsersPageHeader";
+import UserActionDialog from "./components/UserActionDialog";
+import { LoadingState, ErrorState } from "@/components/query-states";
+import { useUserActions } from "./components/hooks/useUserActions";
 
 export default function UsersPage() {
     const router = useRouter();
@@ -27,9 +24,16 @@ export default function UsersPage() {
         search,
         status,
     });
-    const [toggleBlock, { isLoading: isToggling }] = useToggleUserBlockMutation();
-    const [resetPassword, { isLoading: isResetting }] =
-        useResetUserPasswordMutation();
+
+    const {
+        confirmAction,
+        isToggling,
+        isResetting,
+        handleResetPassword,
+        handleToggleBlock,
+        handleConfirm,
+        closeConfirm,
+    } = useUserActions();
 
     const users = data?.users ?? [];
     const total = data?.total ?? 0;
@@ -39,53 +43,9 @@ export default function UsersPage() {
         setStatus(UserStatus.ALL);
     };
 
-    const handleResetPassword = async (userId: string) => {
-        try {
-            await resetPassword({ userId }).unwrap();
-            toast.success("Password reset successfully. Please inform the user.");
-        } catch {
-            toast.error("Failed to reset password.");
-        }
-    };
-
-    const handleToggleBlock = async (userId: string, currentStatus: UserStatus) => {
-        try {
-            const newStatus =
-                currentStatus === UserStatus.ACTIVE
-                    ? UserStatus.BLOCKED
-                    : UserStatus.ACTIVE;
-            await toggleBlock({ userId, status: newStatus }).unwrap();
-            toast.success(
-                `User ${newStatus === UserStatus.BLOCKED ? UserStatus.BLOCKED : UserStatus.ACTIVE} successfully.`,
-            );
-        } catch {
-            toast.error("Failed to update user status.");
-        }
-    };
-
-    /* ── Loading ────────────────────────────────────────────────────── */
-    if (isLoading) {
-        return (
-            <div className="flex min-h-100 items-center justify-center gap-3">
-                <Loader2 className="h-6 w-6 animate-spin text-[#1a56db]" />
-                <span className="text-sm text-[#6b7280]">Loading users...</span>
-            </div>
-        );
-    }
-
-    /* ── Error ──────────────────────────────────────────────────────── */
+    if (isLoading) return <LoadingState />;
     if (isError) {
-        return (
-            <div className="flex min-h-100 flex-col items-center justify-center gap-3">
-                <p className="text-lg font-bold text-[#ef4444]">Failed to load users</p>
-                <button
-                    onClick={() => window.location.reload()}
-                    className="mt-2 rounded bg-[#1a56db] px-4 py-2 text-sm font-bold text-white hover:bg-[#1346c4]"
-                >
-                    Try Again
-                </button>
-            </div>
-        );
+        return <ErrorState onRetry={() => window.location.reload()} />;
     }
 
     return (
@@ -95,29 +55,10 @@ export default function UsersPage() {
             variants={stagger}
             className="space-y-5 p-4 sm:p-6"
         >
-            {/* Back */}
-            <motion.button
-                variants={fadeUp}
-                onClick={() => router.replace("/admin/dashboard")}
-                className="inline-flex cursor-pointer items-center gap-2 text-xs font-bold text-[#6b7280] transition-colors hover:text-[#1a56db]"
-            >
-                <ArrowLeft className="h-3.5 w-3.5" />
-                Back to Dashboard
-            </motion.button>
-
-            {/* Header */}
-            <motion.div
-                variants={fadeUp}
-                className="flex flex-wrap items-start justify-between gap-4"
-            >
-                <div>
-                    <h1 className="text-2xl font-bold text-[#0d1b3e]">User Management</h1>
-                    <p className="mt-1 text-[13px] text-[#6b7280]">
-                        Manage student accounts, reset passwords and control access
-                    </p>
-                </div>
-                <SummaryBadges data={users} />
-            </motion.div>
+            <UsersPageHeader
+                users={users}
+                onBack={() => router.replace("/admin/dashboard")}
+            />
 
             {/* Filters */}
             <motion.div variants={fadeUp}>
@@ -143,6 +84,14 @@ export default function UsersPage() {
                     onToggleBlock={handleToggleBlock}
                 />
             </motion.div>
+
+            {/* Confirmation Dialog */}
+            <UserActionDialog
+                confirmAction={confirmAction}
+                loading={confirmAction?.type === "reset" ? isResetting : isToggling}
+                onConfirm={handleConfirm}
+                onClose={closeConfirm}
+            />
         </motion.div>
     );
 }

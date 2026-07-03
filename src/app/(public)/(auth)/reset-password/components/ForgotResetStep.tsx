@@ -1,8 +1,10 @@
 "use client";
 
-import { Lock, ArrowRight, Loader2 } from "lucide-react";
+import { Lock, ArrowRight, Loader2, ShieldCheck } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { InputField } from "@/components/ui/InputField";
+import { PasswordRequirements } from "./PasswordRequirements";
 
 interface Props {
     loading: boolean;
@@ -26,50 +28,59 @@ export function ForgotResetStep({
     return (
         <div>
             <div className="mb-7">
+                <div className="mb-3 flex items-center gap-2 text-primary">
+                    <ShieldCheck className="h-5 w-5" />
+                    <span className="text-sm font-medium">Secure Password Reset</span>
+                </div>
+
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-                    Set a new password
+                    Create a new password
                 </h2>
-                <p className="mt-1 text-sm text-gray-500">
-                    Create a strong password for your account
+
+                <p className="mt-2 text-sm leading-6 text-gray-500">
+                    Your new password should be strong and different from your previous
+                    password.
                 </p>
             </div>
 
-            <form onSubmit={onSend} className="space-y-4">
+            <form onSubmit={onSend} className="space-y-5">
                 <InputField
-                    label="New password"
-                    name="new-pass"
+                    label="New Password"
+                    name="password"
                     type="password"
-                    placeholder="Min 8 characters"
+                    placeholder="Enter new password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     icon={Lock}
-                    error={error}
                 />
 
                 <InputField
-                    label="Confirm password"
-                    name="confirm-pass"
+                    label="Confirm Password"
+                    name="confirmPassword"
                     type="password"
-                    placeholder="Repeat password"
+                    placeholder="Confirm password"
                     value={confirm}
                     onChange={(e) => setConfirm(e.target.value)}
                     icon={Lock}
                     error={error}
                 />
 
+                <PasswordRequirements />
+
                 <Button
                     type="submit"
                     disabled={loading}
-                    className="mt-2 w-full py-6 font-semibold shadow-sm cursor-pointer transition-all"
+                    className="mt-2 w-full cursor-pointer py-6 font-semibold shadow-sm transition-all"
                 >
                     {loading ? (
                         <>
                             <Loader2 className="h-4 w-4 animate-spin" />
-                            Updating
+                            Updating Password...
                         </>
                     ) : (
                         <>
-                            Reset password <ArrowRight className="h-4 w-4" />
+                            Reset Password
+                            <ArrowRight className="h-4 w-4" />
                         </>
                     )}
                 </Button>

@@ -15,16 +15,13 @@ interface CourseHeaderCardProps {
 }
 
 export default function CourseHeaderCard({ course }: CourseHeaderCardProps) {
-    const thumbnailSrc = course.thumbnailUrl?.startsWith("http")
-        ? course.thumbnailUrl
-        : `${process.env.NEXT_PUBLIC_API_URL}${course.thumbnailUrl}`;
 
     return (
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-3 sm:gap-4">
             {/* Thumbnail */}
             <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-sm bg-muted sm:h-18 sm:w-24">
                 <Image
-                    src={thumbnailSrc}
+                    src={course.thumbnailUrl}
                     alt={course.title}
                     fill
                     unoptimized

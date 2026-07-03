@@ -85,57 +85,60 @@ export default function AddNewCoursesPage() {
     };
 
     const handleSave = async () => {
-
         setLocalError(null);
+
         const validationError = validateCourse();
 
         if (validationError) {
             setLocalError(validationError);
-            return toast.error(validationError);
+            toast.error(validationError);
+            return;
         }
 
         const formData = new FormData();
 
+        // Thumbnail
         if (course.thumbnailFile) {
             formData.append("thumbnailFile", course.thumbnailFile);
         }
 
-        formData.append(
-            "courseData",
-            JSON.stringify({
-                title: course.title,
-                instructor: course.instructor,
-                schedule: course.schedule,
-                location: course.location,
-                startDate: course.startDate,
-                duration: course.duration,
-                totalSeats: course.totalSeats,
-                tagline: course.tagline,
-                description: course.description,
-                status: course.status,
-                price: course.price,
-                originalPrice: course.originalPrice,
-                discountStarts: course.discountStarts,
-                discountEnds: course.discountEnds,
-                includes: course.includes,
-                modules: course.modules,
-            })
-        );
+        // Basic Info
+        formData.append("title", course.title);
+        formData.append("tagline", course.tagline);
+        formData.append("description", course.description);
+        formData.append("instructor", course.instructor);
+
+        // Batch Info
+        formData.append("schedule", course.schedule);
+        formData.append("location", course.location);
+        formData.append("startDate", course.startDate);
+        formData.append("duration", course.duration);
+        formData.append("totalSeats", String(course.totalSeats));
+        formData.append("status", course.status);
+
+        // Pricing
+        formData.append("price", String(course.price));
+        formData.append("originalPrice", String(course.originalPrice));
+
+        if (course.discountStarts) {
+            formData.append("discountStarts", course.discountStarts);
+        }
+
+        if (course.discountEnds) {
+            formData.append("discountEnds", course.discountEnds);
+        }
+
+        // Arrays
+        formData.append("includes", JSON.stringify(course.includes));
+        formData.append("modules", JSON.stringify(course.modules));
 
         try {
             await createCourse(formData).unwrap();
             setSaved(true);
             toast.success("Course created successfully!");
-            // setTimeout(() => {
-            //     router.replace("/admin/courses");
-            // }, 1500);
         } catch (err) {
             console.error("Create course error:", err);
-            toast.error("Failed to create course.");
-        } finally {
-            setTimeout(() => {
-                setSaved(false);
-            }, 2000);
+            toast.error(NormalizeError(err).message);
         }
     };
 

@@ -73,31 +73,45 @@ export default function TeachersTable({
         }
     };
 
-    const handleMove = async (index: number, direction: "up" | "down") => {
-        const target = direction === "up" ? index - 1 : index + 1;
+    const handleMove = async (
+        index: number,
+        direction: "up" | "down",
+    ) => {
+        const target =
+            direction === "up"
+                ? index - 1
+                : index + 1;
 
-        if (target < 0 || target >= allTeachers.length) {
+        if (
+            target < 0 ||
+            target >= allTeachers.length
+        ) {
             return;
         }
 
-        const sorted = [...allTeachers].sort(
-            (a, b) => a.displayOrder - b.displayOrder
-        );
+        const sorted = [...allTeachers]
+            .sort(
+                (a, b) =>
+                    a.displayOrder -
+                    b.displayOrder,
+            )
+            .map((teacher) => ({
+                teacherId: teacher.teacherId,
+                displayOrder: teacher.displayOrder,
+            }));
 
-        const current = sorted[index];
-        const next = sorted[target];
+        const temp =
+            sorted[index].displayOrder;
 
-        [current.displayOrder, next.displayOrder] = [
-            next.displayOrder,
-            current.displayOrder,
-        ];
+        sorted[index].displayOrder =
+            sorted[target].displayOrder;
+
+        sorted[target].displayOrder =
+            temp;
 
         try {
             await reorderTeachers({
-                items: sorted.map((t) => ({
-                    teacherId: t.teacherId,
-                    displayOrder: t.displayOrder,
-                })),
+                items: sorted,
             }).unwrap();
         } catch (err) {
             console.error(err);

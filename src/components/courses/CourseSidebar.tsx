@@ -7,11 +7,18 @@ import {
   Clock,
   MapPin,
   Calendar,
+  Trash2,
 } from "lucide-react";
 
 import type { CourseDetails } from "@/types/admin-course-details";
 
-export default function CourseSidebar({ course }: { course: CourseDetails }) {
+export default function CourseSidebar({
+  course,
+  onDelete,
+}: {
+  course: CourseDetails;
+  onDelete: () => void;
+}) {
   const bookedSeats = course.bookedSeats ?? 0;
 
   const seatPct =
@@ -98,8 +105,8 @@ export default function CourseSidebar({ course }: { course: CourseDetails }) {
                 seatPct >= 90
                   ? "#ef4444"
                   : seatPct >= 60
-                  ? "#f59e0b"
-                  : "#1a56db",
+                    ? "#f59e0b"
+                    : "#1a56db",
             }}
           />
         </div>
@@ -148,6 +155,25 @@ export default function CourseSidebar({ course }: { course: CourseDetails }) {
             <p className="text-[12px] text-[#6b7280]">Lead Instructor</p>
           </div>
         </div>
+      </div>
+
+      {/* Danger Zone */}
+      <div className="rounded-lg border border-red-100 bg-red-50/50 p-4">
+        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-red-400">
+          Danger Zone
+        </p>
+
+        <p className="mb-4 text-[11px] leading-relaxed text-red-600">
+          Deleting this course will permanently remove all student enrollments and data. This action cannot be undone.
+        </p>
+
+        <button
+          onClick={onDelete}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2 text-[12px] font-bold text-red-600 shadow-xs transition-colors hover:bg-red-600 hover:text-white cursor-pointer"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          Delete Course
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 import { createMetadata } from "@/lib/metadata";
 import AuthLoginPage from "./components/AuthLoginPage";
+import { LoadingState } from "@/components/query-states";
+import { Suspense } from "react";
 
 export const metadata = createMetadata({
     title: "Sign In",
@@ -17,5 +19,9 @@ export const metadata = createMetadata({
 });
 
 export default function Page() {
-    return <AuthLoginPage />;
+    return (
+        <Suspense fallback={<LoadingState />}>
+            <AuthLoginPage />
+        </Suspense>
+    );
 }

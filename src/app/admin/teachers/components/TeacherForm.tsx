@@ -81,6 +81,7 @@ export default function TeacherForm({
                         phone: form.phone ?? "",
                         featured: form.featured ?? false,
                         isActive: form.isActive ?? true,
+                        displayOrder: form.displayOrder ?? 1,
                         socialLinks: {
                             facebook: form.socialLinks?.facebook ?? "",
                             linkedin: form.socialLinks?.linkedin ?? "",

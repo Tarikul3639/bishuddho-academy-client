@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { stagger, fadeUp } from "@/components/animations";
-import { ArrowLeft, CircleAlert, Loader2, RefreshCw, Save } from "lucide-react";
+import { ArrowLeft, CircleAlert, Loader2, RefreshCw, Save, Trash2 } from "lucide-react";
 
 import { useFormDirty } from "@/hooks/useFormDirty";
 
@@ -25,11 +25,14 @@ import type { CourseDetails } from "@/types/admin-course-details";
 import {
     useGetAdminCourseQuery,
     useUpdateCourseMutation,
+    useDeleteCourseMutation
 } from "@/redux/features/courses/courses.api";
 import {
     useUpdatePurchaseStatusMutation
 } from "@/redux/features/purchases/admin-purchases.api";
 import { NormalizeError } from "@/redux/api/apiError";
+
+import ActionConfirmationModal from "@/components/ui/ActionConfirmationModal";
 
 // ── Tab config ────────────────────────────────────────────────────────────────
 
@@ -63,9 +66,11 @@ export default function AdminCourseDetailPage({
         useUpdateCourseMutation();
 
     const [updateStatus] = useUpdatePurchaseStatusMutation();
+    const [deleteCourse, { isLoading: isDeleting, isError: isDeleteError, error: deleteError }] = useDeleteCourseMutation();
 
     const [verifyingPaymentId, setVerifyingPaymentId] = useState<string | null>(null);
     const [rejectingPaymentId, setRejectingPaymentId] = useState<string | null>(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const [course, setCourse] = useState<CourseDetails | null>(null);
     const [saved, setSaved] = useState(false);
@@ -100,23 +105,53 @@ export default function AdminCourseDetailPage({
 
     const handleSave = async () => {
         const toastId = toast.loading("Saving changes...");
+
         try {
             const changedValues = getChangedValues();
             const formData = new FormData();
 
+            // Thumbnail
             if (course.thumbnailFile) {
                 formData.append("thumbnailFile", course.thumbnailFile);
             }
-            formData.append("courseData", JSON.stringify(changedValues));
 
-            await updateCourse({ courseId, formData }).unwrap();
+            // Append changed values
+            Object.entries(changedValues).forEach(([key, value]) => {
+                if (value === undefined || value === null) {
+                    return;
+                }
+
+                // Arrays / Objects
+                if (typeof value === "object" && !(value instanceof File)) {
+                    formData.append(key, JSON.stringify(value));
+                    return;
+                }
+
+                formData.append(key, String(value));
+            });
+
+            await updateCourse({
+                courseId,
+                formData,
+            }).unwrap();
 
             resetBaseline(course);
             setSaved(true);
-            toast.success("Changes saved successfully.", { id: toastId });
+
+            toast.success("Changes saved successfully.", {
+                id: toastId,
+            });
+
+            setTimeout(() => {
+                setSaved(false);
+            }, 2000);
         } catch (err) {
-            const message = NormalizeError(err).message || "Failed to save changes.";
-            toast.error(message, { id: toastId });
+            toast.error(
+                NormalizeError(err).message || "Failed to save changes.",
+                {
+                    id: toastId,
+                },
+            );
         }
     };
 
@@ -148,189 +183,252 @@ export default function AdminCourseDetailPage({
         }
     };
 
+    const handleConfirmDelete =
+        async () => {
+            const toastId =
+                toast.loading(
+                    "Deleting course...",
+                );
+
+            try {
+                await deleteCourse(
+                    courseId,
+                ).unwrap();
+
+                toast.success(
+                    "Course deleted successfully.",
+                    {
+                        id: toastId,
+                    },
+                );
+
+                router.replace(
+                    "/admin/courses",
+                );
+            } catch (err) {
+                toast.error(
+                    NormalizeError(err)
+                        .message,
+                    {
+                        id: toastId,
+                    },
+                );
+            } finally {
+                setIsDeleteModalOpen(
+                    false,
+                );
+            }
+        };
+
     return (
-        <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={stagger}
-            className="space-y-6 p-4 sm:p-6"
-        >
-            {/* Top bar */}
-            <motion.div variants={fadeUp} className="flex items-center justify-between">
-                <button
-                    onClick={() => router.replace("/admin/courses")}
-                    className="inline-flex cursor-pointer items-center gap-2 text-xs font-bold text-[#6b7280] transition-colors hover:text-[#1a56db]"
-                >
-                    <ArrowLeft className="h-3.5 w-3.5" /> Back to Courses
-                </button>
+        <>
+            <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={stagger}
+                className="space-y-6 p-4 sm:p-6"
+            >
+                {/* Top bar */}
+                <motion.div variants={fadeUp} className="flex items-center justify-between">
+                    <button
+                        onClick={() => router.replace("/admin/courses")}
+                        className="inline-flex cursor-pointer items-center gap-2 text-xs font-bold text-[#6b7280] transition-colors hover:text-[#1a56db]"
+                    >
+                        <ArrowLeft className="h-3.5 w-3.5" /> Back to Courses
+                    </button>
 
-                {isDirty && (
-                    <div className="flex items-center gap-3">
-                        <button
-                            onClick={handleSave}
-                            className={`flex items-center gap-2 rounded-sm px-4 py-2 text-[13px] font-bold text-white transition-all cursor-pointer ${saved ? "bg-[#16a34a]" : "bg-[#1a56db] hover:bg-[#1346c4]"
-                                }`}
-                        >
-                            {isUpdating ? (
-                                <>
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                    Saving...
-                                </>
-                            ) : (
-                                <>
-                                    <Save className="h-4 w-4" />
-                                    {saved ? "Saved!" : "Save Changes"}
-                                </>
-                            )}
-                        </button>
-
-                        <button
-                            onClick={() => {
-                                if (!courseData) return;
-                                setCourse(courseData);
-                                resetBaseline(courseData);
-                            }}
-                            className="flex items-center gap-2 rounded-sm px-4 py-2 text-[13px] font-bold text-white transition-all cursor-pointer bg-[#6b7280] hover:bg-[#5b626a]"
-                        >
-                            <RefreshCw className="h-4 w-4" />
-                            Reset Baseline
-                        </button>
-                    </div>
-                )}
-            </motion.div>
-
-            {/* Course load / update error banner */}
-            {(isError || isUpdateError) && (
-                <motion.div
-                    variants={fadeUp}
-                    className="flex items-center gap-1.5 rounded-md bg-red-50 p-4"
-                >
-                    <CircleAlert strokeWidth={2.5} className="h-5 w-5 text-red-600" />
-                    <p className="text-sm font-medium text-red-800">
-                        {NormalizeError(updateError || error).message ||
-                            "Failed to load course details. Please try again later."}
-                    </p>
-                </motion.div>
-            )}
-
-            {/* Hero */}
-            <CourseHero
-                status={course.status}
-                title={course.title}
-                tagline={course.tagline}
-                schedule={course.schedule}
-                location={course.location}
-                startDate={course.startDate}
-            />
-
-            {/* Body */}
-            <div className="grid gap-6 lg:grid-cols-[1fr_260px]">
-                {/* LEFT — tabs */}
-                <motion.div variants={fadeUp} className="space-y-4">
-                    {/* Tab bar */}
-                    <div className="flex flex-wrap gap-1 rounded-xl border border-[#e5e7eb] bg-[#f9fafb] p-1">
-                        {TABS.map((tab) => (
+                    {isDirty && (
+                        <div className="flex items-center gap-3">
                             <button
-                                key={tab.id}
-                                onClick={() =>
-                                    router.replace(`?tab=${tab.id}`, { scroll: false })
-                                }
-                                className={`relative rounded-lg px-3.5 py-2 text-[12px] font-bold transition-colors cursor-pointer ${activeTab === tab.id
-                                    ? "text-[#0d1b3e]"
-                                    : "text-[#6b7280] hover:text-[#0d1b3e]"
+                                onClick={handleSave}
+                                className={`flex items-center gap-2 rounded-sm px-4 py-2 text-[13px] font-bold text-white transition-all cursor-pointer ${saved ? "bg-[#16a34a]" : "bg-[#1a56db] hover:bg-[#1346c4]"
                                     }`}
                             >
-                                {activeTab === tab.id && (
-                                    <motion.span
-                                        layoutId="active-tab"
-                                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                                        className="absolute inset-0 rounded-lg bg-white shadow-sm"
-                                    />
+                                {isUpdating ? (
+                                    <>
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                        Saving...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Save className="h-4 w-4" />
+                                        {saved ? "Saved!" : "Save Changes"}
+                                    </>
                                 )}
-                                <span className="relative z-10">{tab.label}</span>
                             </button>
-                        ))}
-                    </div>
 
-                    {/* Tab content */}
-                    {activeTab === "about" && (
-                        <AboutTab
-                            thumbnailUrl={course.thumbnailUrl}
-                            thumbnailFile={course.thumbnailFile}
-                            title={course.title}
-                            tagline={course.tagline}
-                            description={course.description}
-                            onChange={handleChange}
-                            onThumbnailChange={(file) => {
-                                setCourse({
-                                    ...course,
-                                    thumbnailFile: file,
-                                    ...(file === null && { thumbnailUrl: "" }),
-                                });
-                            }}
-                        />
-                    )}
-                    {activeTab === "curriculum" && (
-                        <CurriculumTab
-                            modules={course.modules}
-                            onChange={(modules) => setCourse({ ...course, modules })}
-                        />
-                    )}
-                    {activeTab === "students" && (
-                        <StudentsTab
-                            students={course.students}
-                            onVerify={handleVerify}
-                            onReject={handleReject}
-                            verifyingPaymentId={verifyingPaymentId}
-                            rejectingPaymentId={rejectingPaymentId}
-                        />
-                    )}
-                    {activeTab === "batch" && (
-                        <BatchInfoTab
-                            instructor={course.instructor}
-                            status={course.status}
-                            bookedSeats={course.bookedSeats}
-                            totalSeats={course.totalSeats}
-                            schedule={course.schedule}
-                            location={course.location}
-                            duration={course.duration}
-                            startDate={course.startDate}
-                            onChange={(field, value) =>
-                                setCourse({ ...course, [field]: value })
-                            }
-                        />
-                    )}
-                    {activeTab === "included" && (
-                        <IncludedTab
-                            includes={course.includes}
-                            onChange={(items) => setCourse({ ...course, includes: items })}
-                        />
-                    )}
-                    {activeTab === "pricing" && (
-                        <PricingTab
-                            price={course.price}
-                            originalPrice={course.originalPrice}
-                            discountStarts={course.discountStarts}
-                            discountEnds={course.discountEnds}
-                            onChange={(field, value) =>
-                                setCourse({ ...course, [field]: value })
-                            }
-                        />
-                    )}
-                    {activeTab === "certificates" && (
-                        <CertificatesTab
-                            courseId={course.courseId}
-                        />
+                            <button
+                                onClick={() => {
+                                    if (!courseData) return;
+                                    setCourse(courseData);
+                                    resetBaseline(courseData);
+                                }}
+                                className="flex items-center gap-2 rounded-sm px-4 py-2 text-[13px] font-bold text-white transition-all cursor-pointer bg-[#6b7280] hover:bg-[#5b626a]"
+                            >
+                                <RefreshCw className="h-4 w-4" />
+                                Reset Baseline
+                            </button>
+                        </div>
                     )}
                 </motion.div>
 
-                {/* RIGHT — sidebar */}
-                <motion.div variants={fadeUp} className="hidden lg:block">
-                    <div className="sticky top-6">
-                        <CourseSidebar course={course} />
-                    </div>
-                </motion.div>
-            </div>
-        </motion.div>
+                {/* Course load / update error banner */}
+                {(isError || isUpdateError) && (
+                    <motion.div
+                        variants={fadeUp}
+                        className="flex items-center gap-1.5 rounded-md bg-red-50 p-4"
+                    >
+                        <CircleAlert strokeWidth={2.5} className="h-5 w-5 text-red-600" />
+                        <p className="text-sm font-medium text-red-800">
+                            {NormalizeError(updateError || error).message ||
+                                "Failed to load course details. Please try again later."}
+                        </p>
+                    </motion.div>
+                )}
+
+                {/* Hero */}
+                <CourseHero
+                    status={course.status}
+                    title={course.title}
+                    tagline={course.tagline}
+                    schedule={course.schedule}
+                    location={course.location}
+                    startDate={course.startDate}
+                />
+
+                {/* Body */}
+                <div className="grid gap-6 lg:grid-cols-[1fr_260px]">
+                    {/* LEFT — tabs */}
+                    <motion.div variants={fadeUp} className="space-y-4">
+                        {/* Tab bar */}
+                        <div className="flex flex-wrap gap-1 rounded-xl border border-[#e5e7eb] bg-[#f9fafb] p-1">
+                            {TABS.map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() =>
+                                        router.replace(`?tab=${tab.id}`, { scroll: false })
+                                    }
+                                    className={`relative rounded-lg px-3.5 py-2 text-[12px] font-bold transition-colors cursor-pointer ${activeTab === tab.id
+                                        ? "text-[#0d1b3e]"
+                                        : "text-[#6b7280] hover:text-[#0d1b3e]"
+                                        }`}
+                                >
+                                    {activeTab === tab.id && (
+                                        <motion.span
+                                            layoutId="active-tab"
+                                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                            className="absolute inset-0 rounded-lg bg-white shadow-sm"
+                                        />
+                                    )}
+                                    <span className="relative z-10">{tab.label}</span>
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Tab content */}
+                        {activeTab === "about" && (
+                            <AboutTab
+                                thumbnailUrl={course.thumbnailUrl}
+                                thumbnailFile={course.thumbnailFile}
+                                title={course.title}
+                                tagline={course.tagline}
+                                description={course.description}
+                                onChange={handleChange}
+                                onThumbnailChange={(file) => {
+                                    setCourse({
+                                        ...course,
+                                        thumbnailFile: file,
+                                        ...(file === null && { thumbnailUrl: "" }),
+                                    });
+                                }}
+                            />
+                        )}
+                        {activeTab === "curriculum" && (
+                            <CurriculumTab
+                                modules={course.modules}
+                                onChange={(modules) => setCourse({ ...course, modules })}
+                            />
+                        )}
+                        {activeTab === "students" && (
+                            <StudentsTab
+                                students={course.students}
+                                onVerify={handleVerify}
+                                onReject={handleReject}
+                                verifyingPaymentId={verifyingPaymentId}
+                                rejectingPaymentId={rejectingPaymentId}
+                            />
+                        )}
+                        {activeTab === "batch" && (
+                            <BatchInfoTab
+                                instructor={course.instructor}
+                                status={course.status}
+                                bookedSeats={course.bookedSeats}
+                                totalSeats={course.totalSeats}
+                                schedule={course.schedule}
+                                location={course.location}
+                                duration={course.duration}
+                                startDate={course.startDate}
+                                onChange={(field, value) =>
+                                    setCourse({ ...course, [field]: value })
+                                }
+                            />
+                        )}
+                        {activeTab === "included" && (
+                            <IncludedTab
+                                includes={course.includes}
+                                onChange={(items) => setCourse({ ...course, includes: items })}
+                            />
+                        )}
+                        {activeTab === "pricing" && (
+                            <PricingTab
+                                price={course.price}
+                                originalPrice={course.originalPrice}
+                                discountStarts={course.discountStarts}
+                                discountEnds={course.discountEnds}
+                                onChange={(field, value) =>
+                                    setCourse({ ...course, [field]: value })
+                                }
+                            />
+                        )}
+                        {activeTab === "certificates" && (
+                            <CertificatesTab
+                                courseId={course.courseId}
+                            />
+                        )}
+                    </motion.div>
+
+                    {/* RIGHT — sidebar */}
+                    <motion.div variants={fadeUp} className="hidden lg:block">
+                        <div className="sticky top-6">
+                            <CourseSidebar onDelete={() => setIsDeleteModalOpen(true)} course={course} />
+                        </div>
+                    </motion.div>
+                </div>
+            </motion.div>
+
+            {/* Delete Confirmation */}
+            <ActionConfirmationModal
+                open={
+                    isDeleteModalOpen
+                }
+                title="Delete Course"
+                description="Are you sure you want to permanently delete this course? This action cannot be undone."
+                icon={
+                    <Trash2 className="text-red-600" />
+                }
+                confirmText="Delete Course"
+                confirmColor="red"
+                loading={isDeleting}
+                error={deleteError}
+                onConfirm={
+                    handleConfirmDelete
+                }
+                onClose={() =>
+                    setIsDeleteModalOpen(
+                        false,
+                    )
+                }
+            />
+        </>
     );
 }

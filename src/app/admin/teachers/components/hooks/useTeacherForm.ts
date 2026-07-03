@@ -150,11 +150,36 @@ export default function useTeacherForm(
     const buildFormData = () => {
         const fd = new FormData();
 
-        fd.append("teacherData", JSON.stringify(form));
-
         if (profileImageFile) {
             fd.append("profileImageFile", profileImageFile);
         }
+
+        fd.append("fullName", form.fullName);
+        fd.append("slug", form.slug);
+        fd.append("designation", form.designation);
+
+        fd.append("shortBio", form.shortBio ?? "");
+        fd.append("biography", form.biography ?? "");
+
+        fd.append("email", form.email ?? "");
+        fd.append("phone", form.phone ?? "");
+
+        fd.append("yearsOfExperience", String(form.yearsOfExperience ?? 0));
+        fd.append("featured", String(form.featured ?? false));
+        fd.append("isActive", String(form.isActive ?? true));
+        fd.append("displayOrder", String(form.displayOrder ?? 0));
+
+        fd.append("skills", JSON.stringify(form.skills ?? []));
+
+        fd.append(
+            "socialLinks",
+            JSON.stringify({
+                facebook: form.socialLinks?.facebook ?? "",
+                linkedin: form.socialLinks?.linkedin ?? "",
+                github: form.socialLinks?.github ?? "",
+                website: form.socialLinks?.website ?? "",
+            }),
+        );
 
         return fd;
     };

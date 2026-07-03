@@ -30,12 +30,7 @@ export default function AboutTab({
             return;
         }
 
-        const imageUrl =
-            thumbnailUrl.startsWith("http")
-                ? thumbnailUrl
-                : `${process.env.NEXT_PUBLIC_API_URL}${thumbnailUrl}`;
-
-        setPreview(imageUrl);
+        setPreview(thumbnailUrl);
     }, [thumbnailUrl]);
 
     return (
@@ -49,8 +44,8 @@ export default function AboutTab({
 
                 <label
                     className={`group relative block cursor-pointer overflow-hidden rounded-xl border border-dashed transition-all duration-200 ${isDragging
-                            ? "border-blue-500 bg-blue-50 scale-[1.01]"
-                            : "border-[#d1d5db] bg-[#f9fafb] hover:border-[#9ca3af] hover:bg-white"
+                        ? "border-blue-500 bg-blue-50 scale-[1.01]"
+                        : "border-[#d1d5db] bg-[#f9fafb] hover:border-[#9ca3af] hover:bg-white"
                         }`}
                     onDragOver={(e) => {
                         e.preventDefault();

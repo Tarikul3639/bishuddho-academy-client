@@ -6,7 +6,7 @@ export const metadata = createMetadata({
   description:
     "Reset your Bishuddho Academy account password securely in a few steps.",
   ogDescription: "Reset your Bishuddho Academy password securely.",
-  path: "/forgot",
+  path: "/forgot-password",
   image: "/og-auth.png",
   keywords: [
     "forgot password",
