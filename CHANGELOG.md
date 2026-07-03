@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v1.8.1...v1.9.0) (2026-07-03)
+
+
+### Features
+
+* revamp auth flow, payments, users table and shared UI components ([652095e](https://github.com/Tarikul3639/bishuddho-academy-client/commit/652095e89b199b8466bba69204c3c5cc4ad5e55a))
+
 # [1.8.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v1.7.0...v1.8.0) (2026-07-01)
 
 
