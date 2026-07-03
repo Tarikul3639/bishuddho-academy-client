@@ -48,6 +48,7 @@ const INFO_ITEMS = [
         title: "Head Office",
         value: "Taragang, Dhaka 1201",
         description: "Visit us at our main campus for in-person support.",
+        href: "https://maps.app.goo.gl/Y68apavA18g6F6o17",
     },
     {
         icon: Gmail,
@@ -55,13 +56,15 @@ const INFO_ITEMS = [
         title: "Email Us",
         value: "hello@bishuddho.com",
         description: "We respond to all emails within 24 working hours.",
+        href: "mailto:hello@bishuddho.com",
     },
     {
         icon: WhatsApp,
         tag: "Chat",
         title: "WhatsApp Support",
-        value: "+880 1XXX-XXXXXX",
+        value: "+8801XXXXXXXXX",
         description: "Fastest way to reach us — we're usually online.",
+        href: "https://wa.me/8801XXXXXXXXX",
     },
     {
         icon: Clock,
@@ -69,10 +72,11 @@ const INFO_ITEMS = [
         title: "Working Hours",
         value: "Mon–Fri · 7AM–5PM",
         description: "We're closed on weekends and public holidays.",
+        href: "#",
     },
 ] as const;
 
-// ── Signature divider (abstracted interlace line) ──────────────────────────────
+// ── Signature divider ─────────────────────────────────────────────────────────
 
 function InterlaceDivider() {
     return (
@@ -97,10 +101,12 @@ function InterlaceDivider() {
 
 export function InfoSection() {
     return (
-        <section id="contact-form" className="relative w-full overflow-hidden py-16">
+        <section
+            id="contact-form"
+            className="relative w-full overflow-hidden py-16"
+        >
             <div className="mx-auto">
-
-                {/* Header — asymmetric, ledger-title style */}
+                {/* Header */}
                 <motion.div
                     variants={fadeUp}
                     initial="hidden"
@@ -112,10 +118,12 @@ export function InfoSection() {
                         <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.24em] text-primary">
                             Directory · Get In Touch
                         </p>
+
                         <h2 className="font-serif text-3xl font-bold text-foreground lg:text-[2.75rem] lg:leading-[1.1]">
                             Reach the academy
                         </h2>
                     </div>
+
                     <motion.div
                         initial="hidden"
                         whileInView="visible"
@@ -135,13 +143,29 @@ export function InfoSection() {
                 >
                     {INFO_ITEMS.map((item) => {
                         const Icon = item.icon;
+
+                        const isExternal =
+                            item.href.startsWith("http") ||
+                            item.href.startsWith("mailto:");
+
                         return (
-                            <motion.div
+                            <motion.a
                                 key={item.title}
                                 variants={rowReveal}
-                                className="group relative border-b border-border px-1 py-6 transition-colors duration-300 sm:px-2"
+                                href={item.href}
+                                target={
+                                    item.href.startsWith("http")
+                                        ? "_blank"
+                                        : undefined
+                                }
+                                rel={
+                                    item.href.startsWith("http")
+                                        ? "noopener noreferrer"
+                                        : undefined
+                                }
+                                className="group relative block border-b border-border px-1 py-6 transition-colors duration-300 hover:bg-muted/20 sm:px-2"
                             >
-                                {/* Left accent bar on hover */}
+                                {/* Left accent bar */}
                                 <span
                                     className="absolute inset-y-0 left-0 w-0.5 origin-top scale-y-0 bg-primary transition-transform duration-300 group-hover:scale-y-100"
                                     aria-hidden="true"
@@ -168,7 +192,7 @@ export function InfoSection() {
                                         {item.description}
                                     </p>
                                 </div>
-                            </motion.div>
+                            </motion.a>
                         );
                     })}
                 </motion.div>
