@@ -62,6 +62,11 @@ export function proxy(
             "access_token",
         )?.value;
 
+    console.log(
+        "Middleware token:",
+        request.cookies.get("access_token")?.value,
+    );
+
     /* ─────────────────────────────
        PUBLIC ROUTES
     ───────────────────────────── */
