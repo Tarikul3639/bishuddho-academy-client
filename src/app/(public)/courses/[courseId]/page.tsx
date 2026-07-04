@@ -11,7 +11,7 @@ export async function generateMetadata({
     const { courseId } = await params;
 
     const course = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_PREFIX}/public/courses/${courseId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/public/courses/${courseId}`,
     )
         .then((res) => res.json())
         .catch((err) => {

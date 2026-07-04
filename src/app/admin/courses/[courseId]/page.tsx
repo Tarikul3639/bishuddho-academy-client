@@ -6,7 +6,7 @@ import { createMetadata } from "@/lib/metadata";
 
 async function getCourse(courseId: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/courses/${courseId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/courses/${courseId}`,
     {
       cache: "no-store",
     }
