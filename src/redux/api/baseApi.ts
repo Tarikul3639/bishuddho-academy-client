@@ -7,9 +7,7 @@ import type {
 } from "@reduxjs/toolkit/query";
 
 const rawBaseQuery = fetchBaseQuery({
-    baseUrl:
-        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_PREFIX}` ||
-        "http://localhost:5000/api/v1",
+    baseUrl: "/api/v1",
     credentials: "include",
 });
 
