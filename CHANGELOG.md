@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v1.9.0...v1.10.0) (2026-08-14)
+
+
+### Features
+
+* **pwa:** configure application icons and web manifest ([797c32b](https://github.com/Tarikul3639/bishuddho-academy-client/commit/797c32b06fc3acfe5c48670ac6cceaa5dd3a2975))
+
 # [1.9.0](https://github.com/Tarikul3639/bishuddho-academy-client/compare/v1.8.1...v1.9.0) (2026-07-03)
 
 
